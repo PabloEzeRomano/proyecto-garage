@@ -1,0 +1,7 @@
+.primary,
+.secondary {
+  @apply flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#ee7c2b] text-[#221811] text-sm font-bold leading-normal tracking-[0.015em];
+}
+.secondary {
+  @apply bg-[#483323] text-white;
+}

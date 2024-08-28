@@ -1,0 +1,71 @@
+.modal-overlay {
+  @apply fixed inset-0 z-10 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center;
+}
+
+.modal-container {
+  @apply bg-[#221811] text-white rounded-lg shadow-lg max-w-[960px] w-full;
+}
+
+.modal-image-wrapper {
+  @apply md:px-4 md:py-3;
+}
+
+.modal-image {
+  @apply w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden md:rounded-lg min-h-[218px];
+}
+
+.modal-title-container {
+  @apply flex flex-wrap justify-between gap-3 p-4;
+}
+
+.modal-title-wrapper {
+  @apply flex min-w-72 flex-col gap-3;
+}
+
+.modal-title {
+  @apply text-white text-[32px] font-bold leading-tight;
+}
+
+.modal-date {
+  @apply text-[#c9a992] text-sm font-normal leading-normal;
+}
+
+.modal-reminder-button-container {
+  @apply flex px-4 py-3 justify-end;
+}
+
+.modal-section-title {
+  @apply text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4;
+}
+
+.modal-description {
+  @apply text-white text-base font-normal leading-normal pb-3 pt-1 px-4;
+}
+
+.modal-info-grid {
+  @apply p-4 grid grid-cols-[20%_1fr] gap-x-6;
+}
+
+.modal-info-item {
+  @apply col-span-2 grid grid-cols-subgrid border-t border-t-[#674832] py-5;
+}
+
+.modal-info-label {
+  @apply text-[#c9a992] text-sm font-normal leading-normal;
+}
+
+.modal-info-value {
+  @apply text-white text-sm font-normal leading-normal;
+}
+
+.modal-ticket-button-container {
+  @apply flex px-4 py-3 justify-start;
+}
+
+.modal-ticket-button {
+  @apply modal-button bg-[#ee7c2b] text-[#221811] flex-1;
+}
+
+.modal-button {
+  @apply flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 text-sm font-bold leading-normal tracking-[0.015em];
+}

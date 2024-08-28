@@ -1,0 +1,50 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  name     String
+  role     Role   @default(USER)
+}
+
+model Item {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  price       Float
+  imageUrl    String?
+
+  stock Stock[] @ignore
+}
+
+model Stock {
+  id       Int    @id @default(autoincrement())
+  itemId   Int
+  quantity Int
+  name     String
+  cost     Float
+  item     Item   @relation(fields: [itemId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Event {
+  id               Int      @id @default(autoincrement())
+  title            String
+  description      String
+  shortDescription String
+  price            Float?
+  date             DateTime
+  imageUrl         String?
+}

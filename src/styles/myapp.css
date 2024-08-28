@@ -1,0 +1,7 @@
+.app-container {
+  @apply min-h-screen flex-col bg-[#221811];
+}
+
+.content {
+  @apply min-h-[calc(100vh-4.1rem)] flex flex-col justify-center items-center text-black flex-grow p-4 rounded-lg;
+}

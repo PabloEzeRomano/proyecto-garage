@@ -1,0 +1,23 @@
+.navbar-container {
+  @apply flex flex-1 items-center justify-end gap-8;
+}
+
+.home-link {
+  @apply flex items-center text-2xl gap-1;
+}
+
+.navigation-item {
+  @apply flex gap-1 text-white text-sm font-medium leading-normal;
+}
+
+.active-tab {
+  @apply text-[#946b4d] font-bold;
+}
+
+.header-container {
+  @apply flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#483323] px-10 py-3;
+}
+
+.navigation-items {
+  @apply flex items-center gap-9;
+}

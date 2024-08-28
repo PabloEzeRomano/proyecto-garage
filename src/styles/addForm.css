@@ -1,0 +1,47 @@
+.add-container {
+  @apply container mx-auto px-4 py-8;
+}
+
+.add-title {
+  @apply text-4xl font-bold text-white mb-8;
+}
+
+.form-container {
+  @apply bg-[#221811] p-8 rounded-lg shadow-lg border border-[#ee7c2b];
+}
+
+.input-container {
+  @apply mb-6 relative;
+}
+
+.input-label {
+  @apply block text-[#c9a992] text-lg font-semibold mb-2;
+}
+
+.add-input {
+  @apply w-full p-3 rounded-md bg-[#483323] text-white focus:border-none focus:outline-none focus:ring-2 focus:ring-[#ee7c2b] mb-2;
+}
+
+.submit {
+  @apply flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 sm:h-12 sm:px-5 bg-[#ee7c2b] text-[#221811] text-sm font-bold leading-normal tracking-[0.015em] sm:text-base sm:font-bold sm:leading-normal sm:tracking-[0.015em] w-full;
+}
+
+.error {
+  @apply border-red-500 border-2;
+}
+
+.error-message {
+  @apply text-red-500 text-sm absolute left-0 -bottom-5;
+}
+
+.add-input.error {
+  @apply border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500;
+}
+
+.dropzone {
+  @apply border-2 border-dashed border-[#674832] rounded-lg p-5 text-center cursor-pointer mb-5 text-[#c9a992];
+}
+
+.dropzone:hover {
+  @apply border-[#ee7c2b];
+}

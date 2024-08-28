@@ -1,0 +1,33 @@
+.session-container {
+  @apply flex items-center justify-center bg-cover bg-center shadow-md rounded-lg;
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.1) 0%,
+      rgba(0, 0, 0, 0.4) 100%
+    ),
+    url('../../public/motor.jpg');
+  min-width: 36em;
+}
+
+.session-form {
+  @apply w-full bg-[rgba(0,0,0,0.6)] shadow-md rounded-lg px-8 pt-6 pb-8;
+}
+
+.session-title {
+  @apply text-4xl font-bold text-center mb-6 text-white uppercase tracking-widest;
+}
+
+.session-input {
+  @apply w-full mb-4 bg-transparent border border-[#c9a992] text-white rounded-md px-3 py-2;
+}
+
+.session-button {
+  @apply w-full bg-[#ee7c2b] hover:bg-orange-500 text-[#221811] font-bold py-2 px-4 rounded-md focus:outline-none transition duration-300 tracking-wide;
+}
+
+.session-link {
+  @apply inline-block align-baseline font-bold text-sm text-[#c9a992] hover:text-white transition duration-300;
+}
+
+.session-divider {
+  @apply my-4 border-t border-[#c9a992];
+}

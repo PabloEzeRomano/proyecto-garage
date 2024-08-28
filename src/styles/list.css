@@ -1,0 +1,31 @@
+.add-button {
+  @apply inline-block bg-orange-600 hover:bg-orange-500 text-white font-semibold py-2 px-4 rounded-md transition duration-300 tracking-wide;
+}
+
+.date {
+  @apply text-[#c9a992] text-sm font-normal leading-normal;
+}
+
+.item-title {
+  @apply text-white text-base font-medium leading-normal;
+}
+
+.list-container {
+  @apply container mx-auto px-4 py-8;
+}
+
+.list {
+  @apply grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4;
+}
+
+.list-item {
+  @apply flex flex-col gap-3 pb-3;
+}
+
+.title {
+  @apply text-4xl font-bold text-white mb-6;
+}
+
+.event-button {
+  @apply w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg;
+}
