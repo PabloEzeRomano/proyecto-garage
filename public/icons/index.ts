@@ -1,3 +1,4 @@
+export * from './AboutIcon';
 export * from './AddEventIcon';
 export * from './AddItemIcon';
 export * from './AddStockIcon';
@@ -10,4 +11,3 @@ export * from './MenuIcon';
 export * from './StockIcon';
 export * from './TrashIcon';
 export * from './UsersIcon';
-

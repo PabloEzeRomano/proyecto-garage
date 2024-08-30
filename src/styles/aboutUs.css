@@ -1,0 +1,65 @@
+.about-container {
+  @apply relative flex min-h-screen flex-col bg-[#221811] overflow-x-hidden font-['Space_Grotesk','Noto_Sans',sans-serif];
+}
+
+.layout-content-container {
+  @apply flex flex-col max-w-[960px] flex-1 px-4 py-5;
+}
+
+.hero-image {
+  @apply w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden bg-[#221811] rounded-lg min-h-[218px];
+  background-image: url("https://cdn.usegalileo.ai/sdxl10/9ccbf532-4ab3-41bc-b2e3-d931c8db27ca.png");
+}
+
+.about-title {
+  @apply text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5;
+}
+
+.about-subtitle {
+  @apply text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5;
+}
+
+.about-text {
+  @apply text-white text-base font-normal leading-normal pb-3 pt-1;
+}
+
+.about-list {
+  @apply text-white text-base font-normal leading-normal pb-3 pt-1 list-disc pl-6;
+}
+
+.about-list li {
+  @apply mb-2;
+}
+
+.image-container {
+  @apply flex w-full grow bg-[#221811] py-3;
+}
+
+.full-width-image {
+  @apply w-full bg-center bg-no-repeat bg-cover aspect-[3/2] rounded-lg;
+  background-image: url("https://cdn.usegalileo.ai/sdxl10/75c7b7d7-f631-4980-9a74-f5c1a960657b.png");
+}
+
+.team-members {
+  @apply flex flex-col gap-2;
+}
+
+.team-member {
+  @apply flex items-center gap-4 bg-[#221811] min-h-[72px] py-2;
+}
+
+.member-image {
+  @apply bg-center bg-no-repeat aspect-square bg-cover rounded-full h-14 w-14;
+}
+
+.member-info {
+  @apply flex flex-col justify-center;
+}
+
+.member-name {
+  @apply text-white text-base font-medium leading-normal line-clamp-1;
+}
+
+.member-role {
+  @apply text-[#c9a992] text-sm font-normal leading-normal line-clamp-2;
+}

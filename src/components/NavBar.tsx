@@ -11,6 +11,7 @@ import {
   MenuIcon,
   StockIcon,
   UsersIcon,
+  AboutIcon,
 } from '../../public/icons';
 import { SessionButton } from './SesionButton';
 
@@ -28,6 +29,7 @@ export const NavBar = () => {
     { href: '/add-event', icon: AddEventIcon, text: 'Agregar Evento', roles: [Role.ADMIN] },
     { href: '/items', icon: MenuIcon, text: 'Menu', roles: [] },
     { href: '/events', icon: EventsIcons, text: 'Proximos Eventos', roles: [] },
+    { href: '/about-us', icon: AboutIcon, text: 'Sobre Nosotros', roles: [] }, // New item
   ];
 
   return (
