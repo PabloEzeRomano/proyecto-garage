@@ -8,7 +8,7 @@
 
 .hero-image {
   @apply w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden bg-[#221811] rounded-lg min-h-[218px];
-  background-image: url("https://cdn.usegalileo.ai/sdxl10/9ccbf532-4ab3-41bc-b2e3-d931c8db27ca.png");
+  background-image: url("../../public/motor.jpg");
 }
 
 .about-title {
@@ -37,7 +37,7 @@
 
 .full-width-image {
   @apply w-full bg-center bg-no-repeat bg-cover aspect-[3/2] rounded-lg;
-  background-image: url("https://cdn.usegalileo.ai/sdxl10/75c7b7d7-f631-4980-9a74-f5c1a960657b.png");
+  background-image: url("../../public/apaisada.jpg");
 }
 
 .team-members {
