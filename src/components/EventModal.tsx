@@ -67,31 +67,25 @@ export const EventModal = ({
         </div>
         <div className="modal-reminder-button-container">
           <button className="modal-button bg-[#483323]">
-            <span className="truncate">Set reminder</span>
+            <span className="truncate">Establecer recordatorio</span>
           </button>
         </div>
-        <h3 className="modal-section-title">Description</h3>
+        <h3 className="modal-section-title">Descripción</h3>
         <p className="modal-description">{selectedEvent.description}</p>
-        <h3 className="modal-section-title">Information</h3>
+        <h3 className="modal-section-title">Información</h3>
         <div className="modal-info-grid">
           <div className="modal-info-item">
-            <p className="modal-info-label">Date & Time</p>
+            <p className="modal-info-label">Fecha y Hora</p>
             <p className="modal-info-value">
               {selectedEvent.date.toLocaleString()}
             </p>
           </div>
-          {/* <div className="modal-info-item">
-            <p className="modal-info-label">Location</p>
-            <p className="modal-info-value">{selectedEvent.location}</p>
-          </div> */}
-          <div className="modal-info-item">
-            <p className="modal-info-label">Price</p>
-            <p className="modal-info-value">${selectedEvent.price}</p>
-          </div>
-          {/* <div className="modal-info-item">
-            <p className="modal-info-label">Age Limit</p>
-            <p className="modal-info-value">{selectedEvent.ageLimit}</p>
-          </div> */}
+          {selectedEvent.price && (
+            <div className="modal-info-item">
+              <p className="modal-info-label">Precio</p>
+              <p className="modal-info-value">${selectedEvent.price}</p>
+            </div>
+          )}
         </div>
         <div className="modal-ticket-button-container">
           <a
@@ -100,7 +94,7 @@ export const EventModal = ({
             rel="noopener noreferrer"
             className="modal-ticket-button"
           >
-            <span className="truncate">Get Tickets</span>
+            <span className="truncate">Obtener Entradas</span>
           </a>
         </div>
       </motion.div>
