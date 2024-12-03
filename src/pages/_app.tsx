@@ -6,6 +6,7 @@ import Head from 'next/head';
 
 import '@/styles/globals.css';
 import '@/styles/myapp.css';
+import { useEffect } from 'react';
 
 const osvaldito = Oswald({
   weight: '400',

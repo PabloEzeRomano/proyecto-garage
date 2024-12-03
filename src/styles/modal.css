@@ -3,7 +3,7 @@
 }
 
 .modal-container {
-  @apply bg-[#221811] text-white rounded-lg shadow-lg max-w-[960px] w-full;
+  @apply bg-[#221811] text-white rounded-lg shadow-lg max-w-[960px];
 }
 
 .modal-image-wrapper {
@@ -11,7 +11,7 @@
 }
 
 .modal-image {
-  @apply w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden md:rounded-lg min-h-[218px];
+  @apply bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden md:rounded-lg;
 }
 
 .modal-title-container {

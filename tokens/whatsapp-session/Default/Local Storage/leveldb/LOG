@@ -1,0 +1,6 @@
+2024/12/03-11:47:20.608 2a07 Reusing MANIFEST /Users/barbusclo/Projects/project-garage/tokens/whatsapp-session/Default/Local Storage/leveldb/MANIFEST-000001
+2024/12/03-11:47:20.625 2a07 Recovering log #3
+2024/12/03-11:47:20.625 2a07 Reusing old log /Users/barbusclo/Projects/project-garage/tokens/whatsapp-session/Default/Local Storage/leveldb/000003.log 
+2024/12/03-12:31:21.215 2d03 Level-0 table #5: started
+2024/12/03-12:31:21.229 2d03 Level-0 table #5: 16913 bytes OK
+2024/12/03-12:31:21.239 2d03 Delete type=0 #3

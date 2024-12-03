@@ -1,4 +1,5 @@
 import { Input } from '@/components/Input';
+import { Select } from '@/components/Select';
 import useAuth from '@/hooks/useAuth';
 import { prisma } from '@/lib/prisma';
 import { Event, Role } from '@prisma/client';
@@ -145,7 +146,9 @@ export default function AddEvent({ events }: AddEventProps) {
       <h1 className="add-title">Agregar Evento</h1>
       <Input
         label="Agregar más"
-        onChange={(e) => setAddMore(e.target.checked)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setAddMore(!!e.target.checked)
+        }
         type="checkbox"
         checked={addMore}
       />
@@ -158,7 +161,9 @@ export default function AddEvent({ events }: AddEventProps) {
           {isDragActive ? (
             <p>Suelta la imagen aquí ...</p>
           ) : (
-            <p>Arrastra y suelta una imagen aquí, o haz clic para seleccionar una</p>
+            <p>
+              Arrastrá y soltá una imagen, o hacé click para seleccionar una
+            </p>
           )}
         </div>
         {eventData.imageUrl && (
@@ -167,7 +172,7 @@ export default function AddEvent({ events }: AddEventProps) {
             alt="Subida"
             width={200}
             height={200}
-            style={{ marginTop: '10px' }}
+            style={{ marginTop: '10px', borderRadius: '10px' }}
           />
         )}
         <button type="submit" className="submit">

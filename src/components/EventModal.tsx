@@ -1,6 +1,7 @@
 import { Event } from '@prisma/client';
+import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import '@/styles/modal.css';
 
@@ -62,24 +63,13 @@ export const EventModal = ({
         <div className="modal-title-container">
           <div className="modal-title-wrapper">
             <p className="modal-title">{selectedEvent.title}</p>
-            <p className="modal-date">{selectedEvent.date.toLocaleString()}</p>
+            <p className="modal-date">{dayjs(selectedEvent.date).format('DD/MM/YYYY')}</p>
           </div>
-        </div>
-        <div className="modal-reminder-button-container">
-          <button className="modal-button bg-[#483323]">
-            <span className="truncate">Establecer recordatorio</span>
-          </button>
         </div>
         <h3 className="modal-section-title">Descripción</h3>
         <p className="modal-description">{selectedEvent.description}</p>
         <h3 className="modal-section-title">Información</h3>
         <div className="modal-info-grid">
-          <div className="modal-info-item">
-            <p className="modal-info-label">Fecha y Hora</p>
-            <p className="modal-info-value">
-              {selectedEvent.date.toLocaleString()}
-            </p>
-          </div>
           {selectedEvent.price && (
             <div className="modal-info-item">
               <p className="modal-info-label">Precio</p>
@@ -94,7 +84,7 @@ export const EventModal = ({
             rel="noopener noreferrer"
             className="modal-ticket-button"
           >
-            <span className="truncate">Obtener Entradas</span>
+            <span className="truncate">Reservar</span>
           </a>
         </div>
       </motion.div>

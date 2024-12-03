@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { getSession } from 'next-auth/react';
 import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -6,6 +7,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getSession({ req });
+
+  if (!session) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
   const { method, body } = req;
 
   try {
@@ -25,9 +32,17 @@ export default async function handler(
 
     if (method === 'PATCH') {
       const { id, ...updateData } = body;
-      if (updateData.password) {
-        updateData.password = await bcrypt.hash(updateData.password, 10);
+
+      // Check if the user is updating their own profile or if they're an admin
+      if (session.user.id !== id && session.user.role !== 'ADMIN') {
+        return res.status(403).json({ error: 'Forbidden' });
       }
+
+      // If the user is not an admin, remove the role from updateData
+      if (session.user.role !== 'ADMIN') {
+        delete updateData.role;
+      }
+
       const { password: _, ...updatedUser } = await prisma.user.update({
         where: { id },
         data: updateData,

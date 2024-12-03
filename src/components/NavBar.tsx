@@ -37,6 +37,10 @@ export const NavBar = () => {
   const navItems = [
     { href: '/users', icon: UsersIcon, text: 'Usuarios', roles: [Role.ADMIN] },
     { href: '/stocks', icon: StockIcon, text: 'Stock', roles: [Role.ADMIN] },
+    { href: '/profile', icon: UsersIcon, text: 'Perfil', roles: [] },
+    { href: '/edit-user', icon: UsersIcon, text: 'Editar Usuario', roles: [Role.ADMIN] },
+    { href: '/createQR', icon: UsersIcon, text: 'Crear QR', roles: [] },
+    { href: '/testMessages', icon: UsersIcon, text: 'Enviar Mensaje', roles: [] },
     {
       href: '/add-stock',
       icon: AddStockIcon,
@@ -123,3 +127,5 @@ export const NavBar = () => {
     </header>
   );
 };
+
+export default NavBar;

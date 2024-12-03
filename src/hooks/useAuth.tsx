@@ -16,7 +16,7 @@ const useAuth = (allowedRoles: Role[] = [], requireAuth = true) => {
       allowedRoles.length &&
       !allowedRoles.includes(session.user.role)
     ) {
-      router.push('/sign-in');
+      router.push('/auth/sign-in');
     }
   }, [allowedRoles, router, session, status, requireAuth]);
 
