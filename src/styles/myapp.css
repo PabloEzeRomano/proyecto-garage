@@ -3,5 +3,5 @@
 }
 
 .content {
-  @apply min-h-[calc(100vh-4.1rem)] flex flex-col justify-center items-center text-black flex-grow p-4 rounded-lg;
+  @apply min-h-[calc(100vh+3rem)] flex flex-col justify-center items-center text-black flex-grow p-4 rounded-lg;
 }
