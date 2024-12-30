@@ -1,15 +1,17 @@
-export const LogoIcon = () => (
+interface LogoIconProps {
+  className?: string;
+}
+
+export const LogoIcon: React.FC<LogoIconProps> = ({
+  className = "w-6 h-6 text-current"
+}) => (
   <svg
-    version="1.0"
     xmlns="http://www.w3.org/2000/svg"
-    height="36"
-    width="36"
-    viewBox="0 0 797.000000 837.000000"
-    fill='currentColor'
+    viewBox="0 0 797 837"
+    fill="currentColor"
+    className={className}
   >
-    <g
-      transform="translate(0.000000,837.000000) scale(0.100000,-0.100000)"
-    >
+    <g transform="translate(0.000000,837.000000) scale(0.100000,-0.100000)">
       <path
         d="M5929 8336 c-14 -9 -33 -26 -42 -39 -8 -13 -61 -164 -117 -337 -73
  -227 -99 -320 -95 -341 11 -49 42 -75 127 -110 202 -80 521 -260 667 -377 234

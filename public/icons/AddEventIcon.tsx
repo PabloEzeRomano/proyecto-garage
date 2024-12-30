@@ -1,12 +1,15 @@
-export const AddEventIcon = () => (
+interface AddEventIconProps {
+  className?: string;
+}
+
+export const AddEventIcon: React.FC<AddEventIconProps> = ({
+  className = "w-6 h-6 text-current"
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    fill="none"
     viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    height="24"
-    width="24"
+    fill="none"
+    className={className}
   >
     <path
       strokeLinecap="round"
