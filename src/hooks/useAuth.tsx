@@ -1,39 +1,33 @@
 import { Role } from '@prisma/client';
-import { signIn, useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
-const useAuth = (allowedRoles: Role[] = [], requireAuth = true) => {
+export default function useAuth(allowedRoles: Role[] = [], requireAuth: boolean = true) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (status === 'loading') return;
-    if (!session && requireAuth) {
-      signIn();
-    } else if (
-      session &&
-      allowedRoles.length &&
-      !allowedRoles.includes(session.user.role)
-    ) {
+
+    if (requireAuth && !session) {
       router.push('/auth/sign-in');
+      return;
     }
-  }, [allowedRoles, router, session, status, requireAuth]);
 
-  const isAllowed = useCallback(
-    (roles: Role[]) => {
-      if (!session) return false;
-      return roles.includes(session.user.role);
-    },
-    [session]
-  );
+    if (session?.user && allowedRoles.length > 0) {
+      const hasRequiredRole = allowedRoles.includes(session.user.role as Role);
+      if (!hasRequiredRole) {
+        router.push('/');
+      }
+    }
+  }, [session, status, requireAuth, allowedRoles, router]);
 
-  const isAdmin = useMemo(() => {
-    if (!session || !session.user) return false;
-    return session.user.role === Role.ADMIN;
-  }, [session]);
+  const isAllowed = (roles: Role[]) => {
+    if (!session?.user) return false;
+    if (roles.length === 0) return true;
+    return roles.includes(session.user.role as Role);
+  };
 
-  return { session, status, isAllowed, isAdmin };
-};
-
-export default useAuth;
+  return { session, status, isAllowed };
+}

@@ -8,7 +8,8 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import '@/styles/addForm.css';
-import { getSession } from 'next-auth/react';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "./api/auth/[...nextauth]";
 
 interface ProfileProps {
   user: User;
@@ -103,8 +104,9 @@ export default function Profile({ user: initialUser }: ProfileProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-  if (!session || !session.user) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (!session?.user?.email) {
     return {
       redirect: {
         destination: '/auth/sign-in',
