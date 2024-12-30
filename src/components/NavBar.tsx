@@ -18,12 +18,15 @@ import {
   StockIcon,
   AddStockIcon,
   LogoutIcon,
+  LoginIcon,
+  UserPlusIcon,
 } from '../../public/icons';
 import { CartButton } from './CartButton';
 import { sendTextMessage } from '@/lib/whatsapp';
 import { ClientOnly } from './ClientOnly';
 import '@/styles/navbar.css';
 import { signOut } from 'next-auth/react';
+import { SessionButton } from './SesionButton';
 
 const variants = {
   open: { opacity: 1, y: 0, scale: 1 },
@@ -39,7 +42,6 @@ interface NavItem {
   icon: React.FC<{ className?: string }>;
   text: string;
   roles: Role[];
-  onClick?: () => void;
 }
 
 export const NavBar = () => {
@@ -49,7 +51,7 @@ export const NavBar = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const baseNavItems = [
+  const navItems = [
     { href: '/users', icon: UsersIcon, text: 'Usuarios', roles: [Role.ADMIN] },
     { href: '/stocks', icon: StockIcon, text: 'Stock', roles: [Role.ADMIN] },
     { href: '/profile', icon: UsersIcon, text: 'Perfil', roles: [] },
@@ -76,22 +78,6 @@ export const NavBar = () => {
     },
     { href: '/items', icon: MenuIcon, text: 'Menu', roles: [Role.ADMIN] },
     { href: '/about-us', icon: AboutIcon, text: 'Sobre Nosotros', roles: [] },
-  ];
-
-  const navItems: NavItem[] = [
-    ...baseNavItems,
-    session ? {
-      href: '#',
-      icon: LogoutIcon,
-      text: 'Cerrar Sesión',
-      roles: [],
-      onClick: () => signOut()
-    } : {
-      href: '/auth/sign-in',
-      icon: MenuIcon,
-      text: 'Iniciar Sesión',
-      roles: []
-    }
   ];
 
   const handleOutsideNotification = async () => {
@@ -163,48 +149,29 @@ export const NavBar = () => {
           className={`menu-items ${isMenuOpen ? 'open' : ''}`}
         >
           {navItems.map(
-            ({ href, icon: Icon, text, roles, onClick }) =>
+            ({ href, icon: Icon, text, roles }) =>
               (roles.length === 0 || isAllowed(roles)) && (
-                onClick ? (
-                  <button
-                    key={href}
-                    onClick={() => {
-                      onClick();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full"
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <motion.div
+                    whileHover="hover"
+                    variants={linkVariants}
+                    className={`navigation-item ${
+                      pathname?.includes(href) ? 'active-tab' : ''
+                    }`}
                   >
-                    <motion.div
-                      whileHover="hover"
-                      variants={linkVariants}
-                      className={`navigation-item ${
-                        pathname?.includes(href) ? 'active-tab' : ''
-                      }`}
-                    >
-                      <Icon />
-                      {text}
-                    </motion.div>
-                  </button>
-                ) : (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <motion.div
-                      whileHover="hover"
-                      variants={linkVariants}
-                      className={`navigation-item ${
-                        pathname?.includes(href) ? 'active-tab' : ''
-                      }`}
-                    >
-                      <Icon />
-                      {text}
-                    </motion.div>
-                  </Link>
-                )
+                    <Icon />
+                    {text}
+                  </motion.div>
+                </Link>
               )
           )}
+          <div className="auth-buttons">
+            <SessionButton />
+          </div>
         </motion.div>
       </nav>
     </header>
