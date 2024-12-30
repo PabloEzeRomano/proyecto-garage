@@ -18,3 +18,5 @@ export * from './MenuIcon';
 export * from './StockIcon';
 export * from './TrashIcon';
 export * from './UsersIcon';
+export * from './LoginIcon';
+export * from './UserPlusIcon';
