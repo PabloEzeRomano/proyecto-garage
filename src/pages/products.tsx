@@ -11,21 +11,21 @@ const exampleProducts = [
     name: 'Hamburguesa Clásica',
     description: 'Carne, lechuga, tomate, queso y salsa especial',
     price: 2500,
-    image: '/images/burger.jpg'
+    image: '/images/burger.jpg',
   },
   {
     id: '2',
     name: 'Pizza Margherita',
     description: 'Salsa de tomate, mozzarella y albahaca',
     price: 3000,
-    image: '/images/pizza.jpg'
+    image: '/images/pizza.jpg',
   },
   {
     id: '3',
     name: 'Papas Fritas',
     description: 'Papas fritas crocantes con sal',
     price: 1200,
-    image: '/images/fries.jpg'
+    image: '/images/fries.jpg',
   }
 ];
 

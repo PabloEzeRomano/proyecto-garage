@@ -1,3 +1,5 @@
+'use client';
+
 import { EventModal } from '@/components/EventModal';
 import useAuth from '@/hooks/useAuth';
 import { prisma } from '@/lib/prisma';
@@ -7,25 +9,48 @@ import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { EditIcon, TrashIcon } from '../../public/icons';
-
-import '@/styles/list.css';
-import { motion } from 'framer-motion';
+import { useCart } from '@/context/CartContext';
+import Image from 'next/image';
+import { ClientOnly } from '@/components/ClientOnly';
 
 interface EventProps {
   events: Event[];
 }
 
-export default function Events({ events: initialEvents }: EventProps) {
+interface EventQuantity {
+  [key: string]: number;
+}
+
+export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
   const { session, status } = useAuth([], false);
   const router = useRouter();
   const [events, setEvents] = useState<Event[]>(initialEvents);
-  const [selectedEvent, setSelectedEvent] = useState<Event | undefined>(
-    undefined
-  );
+  const [quantities, setQuantities] = useState<EventQuantity>({});
+  const { addToCart } = useCart();
 
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
+
+  const handleQuantityChange = (eventId: number, quantity: number) => {
+    setQuantities(prev => ({
+      ...prev,
+      [eventId]: quantity
+    }));
+  };
+
+  const handleAddToCart = (event: Event) => {
+    const quantity = quantities[event.id] || 1;
+    const eventProduct = {
+      id: event.id.toString(),
+      name: event.title,
+      description: event.description,
+      price: event.price || 0,
+      image: event.imageUrl || undefined,
+    };
+
+    addToCart(eventProduct, quantity);
+  };
 
   const deleteEvent = async (id: number) => {
     const response = await fetch('/api/events', {
@@ -41,77 +66,83 @@ export default function Events({ events: initialEvents }: EventProps) {
     }
   };
 
-  const selectEvent = (eventId: number) => {
-    setSelectedEvent(events.find(({ id }) => id === eventId));
-  };
-
-  const buildURL = () => {
-    const data = {
-      text: `Hola! Me interesa este evento: ${selectedEvent?.title}`,
-    };
-    const urlSearchParams = new URLSearchParams(data);
-    let whatsAppURL = `https://wa.me/+5491122535526?${urlSearchParams.toString()}`;
-    return whatsAppURL;
-  };
-
   return (
-    <div className="list-container">
-      <h1 className="title">Eventos</h1>
-      <ul className="list">
-        {events.map(({ id, title, date }) => (
-          <li key={id} className="list-item">
-            <motion.button
-              className="event-button"
-              style={{
-                backgroundImage: `url("https://cdn.usegalileo.ai/stability/c852de51-b9f1-4363-a925-ba207724a92f.png")`,
-              }}
-              onClick={() => selectEvent(id)}
-              whileHover={{
-                scale: 1.05,
-                boxShadow: '0 0 8px #ff6347',
-                textShadow: '0 0 8px #ff6347',
-              }}
-            />
-            <div>
-              <p className="item-title">{title}</p>
-              <p className="date">{dayjs(date).format('DD/MM/YYYY HH:mm')}</p>
-            </div>
-            <div className="flex justify-between items-center mt-auto">
-              {session?.user.role && (
-                <div className="flex items-center justify-between">
-                  <button
-                    className="add-button mr-2"
-                    onClick={() => deleteEvent(id)}
+    <ClientOnly>
+      <div className="container mx-auto p-6 text-white">
+        <h1 className="text-3xl font-bold mb-6">Próximos Eventos</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {events.map((event) => (
+            <div
+              key={event.id}
+              className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-gray-800"
+            >
+              {event.imageUrl && (
+                <Image
+                  src={event.imageUrl}
+                  alt={event.title}
+                  width={400}
+                  height={300}
+                  className="w-full h-48 object-cover rounded-md mb-4"
+                />
+              )}
+              <h3 className="text-lg font-semibold mb-2">{event.title}</h3>
+              <p className="text-gray-300 text-sm mb-2">
+                {dayjs(event.date).format('DD/MM/YYYY HH:mm')}
+              </p>
+              <p className="text-gray-300 text-sm mb-3">{event.description}</p>
+              <div className="flex justify-between items-center">
+                <p className="text-lg font-bold text-blue-400">
+                  ${event.price?.toFixed(2) || 'Gratis'}
+                </p>
+                <div className="flex gap-2">
+                  {session?.user.role && (
+                    <>
+                      <button
+                        className="p-2 hover:bg-gray-700 rounded text-red-400"
+                        onClick={() => deleteEvent(event.id)}
+                      >
+                        <TrashIcon />
+                      </button>
+                      <button
+                        className="p-2 hover:bg-gray-700 rounded text-blue-400"
+                        onClick={() => router.push(`/add-event?id=${event.id}`)}
+                      >
+                        <EditIcon />
+                      </button>
+                    </>
+                  )}
+                  <select
+                    value={quantities[event.id] || 1}
+                    onChange={(e) => handleQuantityChange(event.id, parseInt(e.target.value))}
+                    className="text-black bg-white rounded-md p-1"
                   >
-                    <TrashIcon />
-                  </button>
+                    {Array.from({ length: 10 }, (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    ))}
+                  </select>
                   <button
-                    className="add-button"
-                    onClick={() => router.push(`/add-event?id=${id}`)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors"
+                    onClick={() => handleAddToCart(event)}
                   >
-                    <EditIcon />
+                    Reservar
                   </button>
                 </div>
-              )}
+              </div>
             </div>
-          </li>
-        ))}
-      </ul>
-      {selectedEvent && (
-        <EventModal
-          selectedEvent={selectedEvent}
-          closeModal={() => setSelectedEvent(undefined)}
-          buildURL={buildURL}
-        />
-      )}
-    </div>
+          ))}
+        </div>
+      </div>
+    </ClientOnly>
   );
-}
+};
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const events = await prisma.event.findMany();
-
   return {
     props: { events: JSON.parse(JSON.stringify(events)) },
   };
 };
+
+export default EventsPage;
