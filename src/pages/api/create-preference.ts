@@ -2,7 +2,10 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 const client = new MercadoPagoConfig({
-  accessToken: process.env.NEXT_PUBLIC_MP_ACCESS_TOKEN!
+  accessToken: process.env.NEXT_PUBLIC_MP_ACCESS_TOKEN!,
+  options: {
+    integratorId: process.env.NEXT_PUBLIC_MP_INTEGRATOR_ID!
+  }
 });
 
 export default async function handler(

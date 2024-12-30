@@ -7,5 +7,6 @@ export interface Product {
 }
 
 export interface CartItem extends Product {
+  // type: 'ticket' | 'product';
   quantity: number;
 }

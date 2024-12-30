@@ -10,7 +10,6 @@ import { Spinner } from './Spinner';
 
 export const ShoppingCart: React.FC = () => {
   const { items, removeFromCart, updateQuantity, totalPrice } = useCart();
-  const router = useRouter();
   const [preferenceId, setPreferenceId] = useState<string>("");
 
   useEffect(() => {
