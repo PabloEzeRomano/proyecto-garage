@@ -1,3 +1,14 @@
+interface WhatsAppTemplate {
+  name: string;
+  language: {
+    code: string;
+  };
+  components?: Array<{
+    type: string;
+    parameters: Array<Record<string, any>>;
+  }>;
+}
+
 interface WhatsAppMessage {
   messaging_product: string;
   recipient_type: string;
@@ -7,27 +18,7 @@ interface WhatsAppMessage {
     preview_url?: boolean;
     body: string;
   };
-  template?: {
-    name: string;
-    language: {
-      code: string;
-    };
-    components: Array<{
-      type: string;
-      parameters: Array<{
-        type: string;
-        text?: string;
-        currency?: {
-          fallback_value: string;
-          code: string;
-          amount_1000: number;
-        };
-        datetime?: {
-          fallback_value: string;
-        };
-      }>;
-    }>;
-  };
+  template?: WhatsAppTemplate;
 }
 
 const getApiConfig = () => {
@@ -85,7 +76,7 @@ export async function sendTemplateMessage(
   to: string,
   templateName: string,
   languageCode: string = 'en',
-  components?: WhatsAppMessage['template']['components']
+  components?: WhatsAppTemplate['components']
 ): Promise<any> {
   const { accessToken, apiUrl } = getApiConfig();
 
@@ -100,9 +91,18 @@ export async function sendTemplateMessage(
         language: {
           code: languageCode,
         },
-        components,
       },
     };
+
+    if (components) {
+      messageData.template = {
+        name: templateName,
+        language: {
+          code: languageCode
+        },
+        components
+      };
+    }
 
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -124,5 +124,3 @@ export async function sendTemplateMessage(
     throw error;
   }
 }
-
-
