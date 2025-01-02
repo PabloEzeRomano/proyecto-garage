@@ -1,31 +1,26 @@
 'use client';
 
 import useAuth from '@/hooks/useAuth';
+import { sendTextMessage } from '@/lib/whatsapp';
+import '@/styles/navbar.css';
 import { Role } from '@prisma/client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import {
-  LogoIcon,
-  MenuIcon,
-  EventsIcons,
-  CartIcon,
   AboutIcon,
   AddEventIcon,
   AddItemIcon,
-  UsersIcon,
-  StockIcon,
   AddStockIcon,
-  LogoutIcon,
-  LoginIcon,
-  UserPlusIcon,
+  EventsIcons,
+  LogoIcon,
+  MenuIcon,
+  StockIcon,
+  UsersIcon
 } from '../../public/icons';
 import { CartButton } from './CartButton';
-import { sendTextMessage } from '@/lib/whatsapp';
 import { ClientOnly } from './ClientOnly';
-import '@/styles/navbar.css';
-import { signOut } from 'next-auth/react';
 import { SessionButton } from './SesionButton';
 
 const variants = {
@@ -55,9 +50,19 @@ export const NavBar = () => {
     { href: '/users', icon: UsersIcon, text: 'Usuarios', roles: [Role.ADMIN] },
     { href: '/stocks', icon: StockIcon, text: 'Stock', roles: [Role.ADMIN] },
     { href: '/profile', icon: UsersIcon, text: 'Perfil', roles: [] },
-    { href: '/edit-user', icon: UsersIcon, text: 'Editar Usuario', roles: [Role.ADMIN] },
+    {
+      href: '/edit-user',
+      icon: UsersIcon,
+      text: 'Editar Usuario',
+      roles: [Role.ADMIN],
+    },
     { href: '/createQR', icon: UsersIcon, text: 'Crear QR', roles: [] },
-    { href: '/testMessages', icon: UsersIcon, text: 'Enviar Mensaje', roles: [] },
+    {
+      href: '/testMessages',
+      icon: UsersIcon,
+      text: 'Enviar Mensaje',
+      roles: [],
+    },
     {
       href: '/add-stock',
       icon: AddStockIcon,

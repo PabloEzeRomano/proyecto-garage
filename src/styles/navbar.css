@@ -83,3 +83,33 @@
     @apply text-xs;
   }
 }
+
+/* Add responsive styles for quick actions */
+@media (max-width: 768px) {
+  .quick-actions {
+    @apply fixed bottom-4 left-4 right-4;  /* Fixed at bottom */
+    @apply flex justify-center gap-1;       /* Smaller gap */
+    @apply  backdrop-blur-sm; /* Semi-transparent background */
+    @apply p-2 rounded-lg;                  /* Add padding and round corners */
+    @apply shadow-lg;                       /* Add shadow */
+  }
+
+  .quick-action-button {
+    @apply text-sm px-2 py-1.5;            /* Smaller padding */
+    @apply flex-1;                         /* Equal width buttons */
+  }
+
+  .quick-action-button span {
+    @apply text-xs;                        /* Smaller text */
+  }
+
+  /* Adjust header container for mobile */
+  .header-container {
+    @apply px-2;                           /* Less horizontal padding */
+  }
+
+  /* Make logo text smaller on mobile */
+  .home-link span {
+    @apply text-sm;
+  }
+}
