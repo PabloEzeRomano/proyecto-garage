@@ -2,8 +2,8 @@
 
 import { EventModal } from '@/components/EventModal';
 import useAuth from '@/hooks/useAuth';
-import { prisma } from '@/lib/prisma';
-import { Event } from '@prisma/client';
+import { supabase } from '@/lib/supabase';
+import { Event, Role } from '@/types/database';
 import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -22,13 +22,13 @@ interface EventQuantity {
 }
 
 export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
-  const { session, status } = useAuth([], false);
+  const { user, loading } = useAuth([], [], false);
   const router = useRouter();
   const [events, setEvents] = useState<Event[]>(initialEvents);
   const [quantities, setQuantities] = useState<EventQuantity>({});
   const { addToCart } = useCart();
 
-  if (status === 'loading') {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -95,7 +95,7 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
                   ${event.price?.toFixed(2) || 'Gratis'}
                 </p>
                 <div className="flex gap-2">
-                  {session?.user.role && (
+                  {user?.user_metadata.role === Role.ADMIN && (
                     <>
                       <button
                         className="p-2 hover:bg-gray-700 rounded text-red-400"
@@ -139,7 +139,17 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const events = await prisma.event.findMany();
+  const { data: events, error } = await supabase
+    .from('events')
+    .select('*');
+
+  if (error) {
+    console.error('Error fetching events:', error);
+    return {
+      props: { events: [] }
+    };
+  }
+
   return {
     props: { events: JSON.parse(JSON.stringify(events)) },
   };

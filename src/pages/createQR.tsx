@@ -1,15 +1,15 @@
 import useAuth from '@/hooks/useAuth';
-import { Role } from '@prisma/client';
+import { Role } from '@/types/database';
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import '../styles/createQR.css';
 
 const CreateQR = () => {
   const [url, setUrl] = useState('');
-  const { status } = useAuth([], false);
+  const { loading } = useAuth([], [], false);
   // const router = useRouter();
 
-  if (status === 'loading') {
+  if (loading) {
     return <div>Loading...</div>;
   }
 

@@ -1,12 +1,12 @@
 import useAuth from '@/hooks/useAuth';
-import { prisma } from '@/lib/prisma';
-import { Role, Stock } from '@prisma/client';
+import { supabase } from '@/lib/supabase';
+import { Role, Stock } from '@/types/database';
 import { GetServerSideProps } from 'next';
 
 export default function Stocks({ stocks }: { stocks: Stock[] }) {
-  const { session, status } = useAuth([Role.ADMIN]);
+  const { session, loading } = useAuth([Role.ADMIN]);
 
-  if (status === 'loading' || !session) {
+  if (loading || !session) {
     return <div>Loading...</div>;
   }
 
@@ -29,8 +29,15 @@ export default function Stocks({ stocks }: { stocks: Stock[] }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const stocks = await prisma.stock.findMany();
+  const { data: stocks, error } = await supabase
+    .from('stock')
+    .select('*');
+
+  if (error) {
+    throw error;
+  }
+
   return {
-    props: { stocks },
+    props: { stocks: stocks || [] },
   };
 };

@@ -1,6 +1,6 @@
 import { Input } from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
-import { Role } from '@prisma/client';
+import { Role } from '@/types/database';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -12,9 +12,9 @@ export default function AddItem() {
   const [price, setPrice] = useState(0);
   const [imageUrl, setImageUrl] = useState('');
   const router = useRouter();
-  const { session, status } = useAuth([Role.ADMIN]);
+  const { session, loading } = useAuth([Role.ADMIN]);
 
-  if (status === 'loading' || !session) {
+  if (loading || !session) {
     return <div>Loading...</div>;
   }
 

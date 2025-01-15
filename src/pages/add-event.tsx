@@ -1,8 +1,8 @@
 import { Input } from '@/components/Input';
 import { Select } from '@/components/Select';
 import useAuth from '@/hooks/useAuth';
-import { prisma } from '@/lib/prisma';
-import { Event, Role } from '@prisma/client';
+import { supabase } from '@/lib/supabase';
+import { Event, Role } from '@/types/database';
 import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
@@ -17,24 +17,26 @@ interface AddEventProps {
   events: Event[];
 }
 
+const defaultEvent: Event = {
+  id: -1,
+  title: '',
+  description: '',
+  shortDescription: '',
+  price: 0,
+  date: dayjs().format('YYYY-MM-DD'),
+  imageUrl: null,
+};
+
 export default function AddEvent({ events }: AddEventProps) {
   const searchParams = useSearchParams();
   const eventId = searchParams?.get('id');
   const router = useRouter();
   const [eventData, setEventData] = useState<Event>(
-    events.find((event) => eventId && event.id === Number(eventId)) || {
-      id: -1,
-      title: '',
-      description: '',
-      shortDescription: '',
-      price: null,
-      date: dayjs().toDate(),
-      imageUrl: null,
-    }
+    events.find((event) => eventId && event.id === Number(eventId)) || defaultEvent
   );
   const [addMore, setAddMore] = useState(false);
 
-  const { session, status } = useAuth([Role.ADMIN]);
+  const { session, loading } = useAuth([Role.ADMIN]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -56,18 +58,13 @@ export default function AddEvent({ events }: AddEventProps) {
     multiple: false,
   });
 
-  if (status === 'loading' || !session) {
+  if (loading || !session) {
     return <div>Cargando...</div>;
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
-    const parsedValue =
-      type === 'number'
-        ? parseFloat(value)
-        : type === 'date'
-        ? dayjs(value).toDate()
-        : value;
+    const parsedValue = type === 'number' ? parseFloat(value) : value;
     setEventData({ ...eventData, [name]: parsedValue });
   };
 
@@ -88,15 +85,7 @@ export default function AddEvent({ events }: AddEventProps) {
     });
 
     if (addMore) {
-      setEventData({
-        id: -1,
-        title: '',
-        description: '',
-        shortDescription: '',
-        price: null,
-        date: dayjs().toDate(),
-        imageUrl: null,
-      });
+      setEventData(defaultEvent);
       setAddMore(false);
     } else {
       router.push('/events');
@@ -184,6 +173,14 @@ export default function AddEvent({ events }: AddEventProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const events = await prisma.event.findMany();
+  const { data: events, error } = await supabase
+    .from('events')
+    .select('*');
+
+  if (error) {
+    console.error('Error fetching events:', error);
+    return { props: { events: [] } };
+  }
+
   return { props: { events: JSON.parse(JSON.stringify(events)) } };
 };

@@ -1,9 +1,9 @@
 'use client';
 
 import useAuth from '@/hooks/useAuth';
-import { Item } from '@prisma/client';
+import { Item, Role } from '@/types/database';
 import { GetServerSideProps } from 'next';
-import { prisma } from '@/lib/prisma';
+import { supabase } from '@/lib/supabase';
 import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { ClientOnly } from '@/components/ClientOnly';
@@ -16,13 +16,13 @@ interface ItemQuantity {
 }
 
 export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) => {
-  const { session, status } = useAuth([], false);
+  const { user, loading } = useAuth([], [], false);
   const router = useRouter();
   const [items, setItems] = useState<Item[]>(initialItems);
   const [quantities, setQuantities] = useState<ItemQuantity>({});
   const { addToCart } = useCart();
 
-  if (status === 'loading') {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -86,7 +86,7 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
                   ${item.price?.toFixed(2) || 'Gratis'}
                 </p>
                 <div className="flex gap-2">
-                  {session?.user.role && (
+                  {user?.user_metadata.role === Role.ADMIN && (
                     <>
                       <button
                         className="p-2 hover:bg-gray-700 rounded text-red-400"
@@ -130,7 +130,17 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const items = await prisma.item.findMany();
+  const { data: items, error } = await supabase
+    .from('items')
+    .select('*');
+
+  if (error) {
+    console.error('Error fetching items:', error);
+    return {
+      props: { items: [] }
+    };
+  }
+
   return {
     props: { items: JSON.parse(JSON.stringify(items)) },
   };
