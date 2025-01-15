@@ -1,147 +1,114 @@
-import { Input } from '@/components/Input';
-import { Select } from '@/components/Select';
 import useAuth from '@/hooks/useAuth';
-import { supabase, supabaseAdmin } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-server';
+import { supabaseAdmin } from '@/lib/supabase';
 import { Role } from '@/types/database';
-import { User } from '@supabase/supabase-js';
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { User } from '@supabase/supabase-js';
+import { useState, useEffect } from 'react';
+import { Input } from '@/components/Input';
 
-import '@/styles/addForm.css';
+export default function EditUser() {
+  const { user, loading } = useAuth([Role.ROOT]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-interface EditUserProps {
-  users: User[];
-}
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (!supabaseAdmin) return;
+      const { data: { users }, error } = await supabaseAdmin.auth.admin.listUsers();
+      if (error) {
+        console.error('Error fetching users:', error);
+        return;
+      }
+      setUsers(users);
+    };
+    fetchUsers();
+  }, []);
 
-function EditUser({ users }: EditUserProps) {
-  const router = useRouter();
-  const [selectedUser, setSelectedUser] = useState<User | null>(users[0] || null);
-
-  const { user, loading } = useAuth([Role.ADMIN]);
-
-  if (loading || !user) {
-    return <div>Cargando...</div>;
-  }
-
-  const handleUserSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const userId = e.target.value;
-    const user = users.find((u) => u.id === userId) || null;
-    setSelectedUser(user);
+  const handleUserSelect = (userId: string) => {
+    const user = users.find(u => u.id === userId);
+    setSelectedUser(user || null);
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    if (!selectedUser) return;
-    const { name, value } = e.target;
-    setSelectedUser({ ...selectedUser, [name]: value });
-  };
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    if (!selectedUser) return;
-    setSelectedUser({ ...selectedUser, user_metadata: { name: value } });
-  };
-
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
-    if (!selectedUser) return;
-    setSelectedUser({ ...selectedUser, app_metadata: { roles: [value] } });
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedUser) return;
+    if (!selectedUser || !supabaseAdmin) return;
 
-    const { error } = (await supabaseAdmin?.auth.admin.updateUserById(
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(
       selectedUser.id,
       {
         email: selectedUser.email,
         user_metadata: { name: selectedUser.user_metadata?.name },
-        app_metadata: { roles: [selectedUser.app_metadata?.roles?.[0]] },
+        app_metadata: { roles: selectedUser.app_metadata?.roles }
       }
-    )) || { error: new Error('Admin client not available') };
+    );
 
     if (error) {
-      console.error('Error updating user:', error);
+      alert('Error updating user: ' + error.message);
       return;
     }
 
-    router.push('/edit-user');
+    alert('User updated successfully');
   };
 
-  const inputs = [
-    {
-      label: 'Nombre',
-      onChange: handleNameChange,
-      type: 'text',
-      name: 'user_metadata.name',
-      value: selectedUser?.user_metadata?.name || '',
-    },
-    {
-      label: 'Email',
-      onChange: handleInputChange,
-      type: 'email',
-      name: 'email',
-      value: selectedUser?.email || '',
-    },
-    {
-      label: 'Rol',
-      onChange: handleRoleChange,
-      type: 'select',
-      name: 'app_metadata.roles',
-      value: selectedUser?.app_metadata?.roles?.[0] || '',
-      options: [Role.USER, Role.ADMIN],
-    },
-    // Add more fields as needed
-  ];
-
-  console.log('Users fetched:', users);
+  if (loading || !user) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div className="add-container">
-      <h1 className="add-title">Editar Usuario</h1>
-      <Select
-        label="Seleccionar usuario"
-        name="userSelect"
-        value={selectedUser?.id?.toString() || ''}
-        options={users.map((user) => ({
-          value: user.id.toString(),
-          label: `${user.user_metadata?.name || ''} (${user.email})`,
-        }))}
-        onChange={handleUserSelect}
-      />
+    <div>
+      <h1>Edit User</h1>
+      <select onChange={(e) => handleUserSelect(e.target.value)}>
+        <option value="">Select a user</option>
+        {users.map((user) => (
+          <option key={user.id} value={user.id}>
+            {user.email} - {user.user_metadata?.name}
+          </option>
+        ))}
+      </select>
+
       {selectedUser && (
-        <form onSubmit={handleFormSubmit} className="form-container">
-          {inputs.map((input, index) => (
-            <Input key={index} {...input} />
-          ))}
-          <button type="submit" className="submit">
-            Actualizar Usuario
-          </button>
+        <form onSubmit={handleSubmit}>
+          <Input
+            label="Email"
+            type="email"
+            value={selectedUser.email}
+            onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
+          />
+          <Input
+            label="Name"
+            type="text"
+            value={selectedUser.user_metadata?.name}
+            onChange={(e) => setSelectedUser({ ...selectedUser, user_metadata: { ...selectedUser.user_metadata, name: e.target.value } })}
+          />
+          <Input
+            label="Role"
+            type="select"
+            value={selectedUser.app_metadata?.roles[0] || ''}
+            options={[Role.USER, Role.ADMIN, Role.ROOT]}
+            onChange={(e) => setSelectedUser({ ...selectedUser, app_metadata: { ...selectedUser.app_metadata, roles: [e.target.value as Role] } })}
+          />
+          <button type="submit">Update User</button>
         </form>
       )}
     </div>
   );
 }
 
-export default EditUser;
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const supabase = createClient(req as any, res as any);
+  const { data: { user }, error } = await supabase.auth.getUser();
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  if (supabaseAdmin) {
-    const {
-      data: { users },
-      error,
-    } = await supabaseAdmin.auth.admin.listUsers();
-
-    if (error) {
-      console.error('Error fetching users:', error);
-      return { props: { users: [] } };
-    }
-
-    return { props: { users: JSON.parse(JSON.stringify(users)) } };
+  if (!user || error || !user.app_metadata?.roles?.includes(Role.ROOT)) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
   }
 
-  return { props: { users: [] } };
+  return {
+    props: {}
+  };
 };
