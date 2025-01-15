@@ -3,7 +3,6 @@
 import useAuth from '@/hooks/useAuth';
 import { sendTextMessage } from '@/lib/whatsapp';
 import '@/styles/navbar.css';
-import { Role } from '@prisma/client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -22,6 +21,7 @@ import {
 import { CartButton } from './CartButton';
 import { ClientOnly } from './ClientOnly';
 import { SessionButton } from './SesionButton';
+import { Role } from '@/types/database';
 
 const variants = {
   open: { opacity: 1, y: 0, scale: 1 },
@@ -40,7 +40,7 @@ interface NavItem {
 }
 
 export const NavBar = () => {
-  const { session, isAllowed } = useAuth([], false);
+  const { user, hasRole } = useAuth([], [], false);
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -54,7 +54,7 @@ export const NavBar = () => {
       href: '/edit-user',
       icon: UsersIcon,
       text: 'Editar Usuario',
-      roles: [Role.ADMIN],
+      roles: [],
     },
     { href: '/createQR', icon: UsersIcon, text: 'Crear QR', roles: [] },
     {
@@ -73,7 +73,7 @@ export const NavBar = () => {
       href: '/add-item',
       icon: AddItemIcon,
       text: 'Agregar Item',
-      roles: [Role.ADMIN],
+        roles: [Role.ADMIN],
     },
     {
       href: '/add-event',
@@ -155,7 +155,7 @@ export const NavBar = () => {
         >
           {navItems.map(
             ({ href, icon: Icon, text, roles }) =>
-              (roles.length === 0 || isAllowed(roles)) && (
+              (roles.length === 0 || hasRole(roles)) && (
                 <Link
                   key={href}
                   href={href}
