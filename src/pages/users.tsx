@@ -1,12 +1,12 @@
 import useAuth from '@/hooks/useAuth';
-import { prisma } from '@/lib/prisma';
-import { Role, User } from '@prisma/client';
+import { supabase } from '@/lib/supabase';
+import { Role, User } from '@/types/database';
 import { GetServerSideProps } from 'next';
 
 export default function Users({ users }: { users: User[] }) {
-  const { session, status } = useAuth([Role.ADMIN]);
+  const { session, loading } = useAuth([Role.ADMIN]);
 
-  if (status === 'loading' || !session) {
+  if (loading || !session) {
     return <div>Loading...</div>;
   }
 
@@ -23,8 +23,13 @@ export default function Users({ users }: { users: User[] }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const users = await prisma.user.findMany();
+  const { data: users, error } = await supabase
+    .from('users')
+    .select('*');
+
+  if (error) throw error;
+
   return {
-    props: { users },
+    props: { users: users || [] },
   };
 };

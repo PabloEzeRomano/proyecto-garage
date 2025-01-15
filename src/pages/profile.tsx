@@ -1,15 +1,12 @@
 import { Input } from '@/components/Input';
-import { Select } from '@/components/Select';
 import useAuth from '@/hooks/useAuth';
-import { prisma } from '@/lib/prisma';
-import { User, Role } from '@prisma/client';
+import { supabase } from '@/lib/supabase';
+import { Role, User } from '@/types/database';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import '@/styles/addForm.css';
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "./api/auth/[...nextauth]";
 
 interface ProfileProps {
   user: User;
@@ -23,9 +20,9 @@ export default function Profile({ user: initialUser }: ProfileProps) {
     confirmPassword: '',
   });
 
-  const { session, status } = useAuth();
+  const { session, loading } = useAuth();
 
-  if (status === 'loading' || !session) {
+  if (loading || !session) {
     return <div>Cargando...</div>;
   }
 
@@ -38,7 +35,7 @@ export default function Profile({ user: initialUser }: ProfileProps) {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { id, role, ...updateData } = userData;
+    const { id, roles, ...updateData } = userData;
 
     await fetch('/api/users', {
       method: 'PATCH',
@@ -69,8 +66,8 @@ export default function Profile({ user: initialUser }: ProfileProps) {
       onChange: handleInputChange,
       type: 'select',
       name: 'role',
-      value: userData.role || '',
-      options: Object.values(Role),
+      value: userData.roles[0] || '',
+      options: [Role.USER, Role.ADMIN],
     },
     {
       label: 'Contraseña',
@@ -103,8 +100,8 @@ export default function Profile({ user: initialUser }: ProfileProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getServerSession(context.req, context.res, authOptions);
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { data: { session } } = await supabase.auth.getSession();
 
   if (!session?.user?.email) {
     return {
@@ -115,9 +112,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
-  });
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', session.user.email)
+    .single();
 
-  return { props: { user: JSON.parse(JSON.stringify(user)) } };
+  if (error) {
+    console.error('Error fetching user:', error);
+    return {
+      redirect: {
+        destination: '/auth/sign-in',
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: { user } };
 };

@@ -1,9 +1,14 @@
 import { FC } from 'react';
 import '@/styles/addForm.css';
 
+interface Option {
+  value: string;
+  label: string;
+}
+
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
-  options: string[];
+  options: Option[];
   error?: string;
 }
 
@@ -31,8 +36,8 @@ export const Select: FC<SelectProps> = ({
         {...restProps}
       >
         {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
+          <option key={option.value} value={option.value}>
+            {option.label}
           </option>
         ))}
       </select>
