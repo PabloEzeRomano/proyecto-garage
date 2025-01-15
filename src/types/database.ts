@@ -1,6 +1,7 @@
 export enum Role {
+  USER = 'user',
   ADMIN = 'admin',
-  USER = 'user'
+  ROOT = 'root'
 }
 
 export enum Permission {
