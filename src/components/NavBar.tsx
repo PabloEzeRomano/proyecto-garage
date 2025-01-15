@@ -22,6 +22,7 @@ import { CartButton } from './CartButton';
 import { ClientOnly } from './ClientOnly';
 import { SessionButton } from './SesionButton';
 import { Role } from '@/types/database';
+import { ThemeToggle } from './ThemeToggle';
 
 const variants = {
   open: { opacity: 1, y: 0, scale: 1 },
@@ -54,7 +55,7 @@ export const NavBar = () => {
       href: '/edit-user',
       icon: UsersIcon,
       text: 'Editar Usuario',
-      roles: [],
+      roles: [Role.ADMIN],
     },
     { href: '/createQR', icon: UsersIcon, text: 'Crear QR', roles: [] },
     {
@@ -83,6 +84,11 @@ export const NavBar = () => {
     },
     { href: '/items', icon: MenuIcon, text: 'Menu', roles: [Role.ADMIN] },
     { href: '/about-us', icon: AboutIcon, text: 'Sobre Nosotros', roles: [] },
+  ];
+
+  const rootLinks = [
+    { href: '/users', label: 'Usuarios', roles: [Role.ROOT] },
+    { href: '/edit-user', label: 'Editar Usuario', roles: [Role.ROOT] },
   ];
 
   const handleOutsideNotification = async () => {
@@ -175,8 +181,18 @@ export const NavBar = () => {
               )
           )}
           <div className="auth-buttons">
+            <ThemeToggle />
             <SessionButton />
           </div>
+          {user?.app_metadata?.roles?.includes(Role.ROOT) && (
+            <>
+              {rootLinks.map(({ href, label }) => (
+                <Link key={href} href={href} className={`navigation-item ${pathname?.includes(href) ? 'active-tab' : ''}`}>
+                  {label}
+                </Link>
+              ))}
+            </>
+          )}
         </motion.div>
       </nav>
     </header>
