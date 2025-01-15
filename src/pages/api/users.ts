@@ -1,63 +1,88 @@
-import { prisma } from '@/lib/prisma';
-import { getSession } from 'next-auth/react';
-import bcrypt from 'bcrypt';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { createClient } from '@/lib/supabase-server';
+
+type UserMetadata = {
+  name: string;
+  role: 'USER' | 'ADMIN';
+};
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession({ req });
-
-  if (!session) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  const { method, body } = req;
+  const { method } = req;
+  const supabase = createClient(req, res);
 
   try {
-    if (method === 'POST') {
-      const { name, email, password } = body;
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const { password: _, ...restUser } = await prisma.user.create({
-        data: { name, email, password: hashedPassword },
-      });
-      return res.status(201).json(restUser);
+    // Get the current session
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    // Check if user is authenticated for protected routes
+    if (method !== 'POST' && !session) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
     if (method === 'GET') {
-      const users = await prisma.user.findMany();
-      return res.status(200).json(users.map(({ password, ...restUser }) => restUser));
+      const { data: users, error } = await supabase
+        .from('users')
+        .select('id, email, raw_user_meta_data');
+
+      if (error) throw error;
+
+      return res.status(200).json(users.map(user => ({
+        id: user.id,
+        email: user.email,
+        name: user.raw_user_meta_data.name,
+        role: user.raw_user_meta_data.role,
+      })));
     }
 
     if (method === 'PATCH') {
-      const { id, ...updateData } = body;
+      const { id, name, role } = req.body;
+      const userMetadata = session?.user.user_metadata as UserMetadata;
 
-      // Check if the user is updating their own profile or if they're an admin
-      if (session.user.id !== id && session.user.role !== 'ADMIN') {
+      // Check if user is updating their own profile or is an admin
+      if (session?.user.id !== id && userMetadata.role !== 'ADMIN') {
         return res.status(403).json({ error: 'Forbidden' });
       }
 
-      // If the user is not an admin, remove the role from updateData
-      if (session.user.role !== 'ADMIN') {
-        delete updateData.role;
-      }
+      // If user is not an admin, they can only update their name
+      const updateData = userMetadata.role === 'ADMIN'
+        ? { name, role }
+        : { name };
 
-      const { password: _, ...updatedUser } = await prisma.user.update({
-        where: { id },
-        data: updateData,
-      });
-      return res.status(200).json(updatedUser);
+      const { data: user, error } = await supabase.auth.admin.updateUserById(
+        id,
+        {
+          user_metadata: updateData,
+        }
+      );
+
+      if (error) throw error;
+      return res.status(200).json(user);
     }
 
     if (method === 'DELETE') {
-      await prisma.user.delete({ where: { id: body.id } });
+      const { id } = req.body;
+      const userMetadata = session?.user.user_metadata as UserMetadata;
+
+      // Only admins can delete users
+      if (userMetadata.role !== 'ADMIN') {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+
+      const { error } = await supabase.auth.admin.deleteUser(id);
+
+      if (error) throw error;
       return res.status(200).json({ message: 'User deleted successfully' });
     }
 
-    res.setHeader('Allow', ['GET', 'POST', 'PATCH', 'DELETE']);
+    res.setHeader('Allow', ['GET', 'PATCH', 'DELETE']);
     return res.status(405).end(`Method ${method} Not Allowed`);
   } catch (error) {
+    console.error('API Error:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
