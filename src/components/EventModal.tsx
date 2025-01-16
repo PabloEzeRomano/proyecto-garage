@@ -1,4 +1,4 @@
-import { Event } from '@prisma/client';
+import { Event } from '@/types/database';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import { useEffect, useRef } from 'react';

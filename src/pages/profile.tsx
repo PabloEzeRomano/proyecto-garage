@@ -1,6 +1,7 @@
 import { Input } from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-server';
 import { Role, User } from '@/types/database';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
@@ -14,7 +15,7 @@ interface ProfileProps {
 
 export default function Profile({ user: initialUser }: ProfileProps) {
   const router = useRouter();
-  const [userData, setUserData] = useState<User & { confirmPassword: string }>({
+  const [userData, setUserData] = useState<User>({
     ...initialUser,
     password: '',
     confirmPassword: '',
@@ -35,14 +36,26 @@ export default function Profile({ user: initialUser }: ProfileProps) {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { id, roles, ...updateData } = userData;
 
-    await fetch('/api/users', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, ...updateData }),
+    if (userData.password !== userData.confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+
+    const { error } = await supabase.auth.updateUser({
+      email: userData.email,
+      password: userData.password || undefined,
+      data: {
+        name: userData.name,
+      }
     });
 
+    if (error) {
+      alert('Error al actualizar el perfil: ' + error.message);
+      return;
+    }
+
+    alert('Perfil actualizado correctamente');
     router.push('/profile');
   };
 
@@ -100,10 +113,11 @@ export default function Profile({ user: initialUser }: ProfileProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const { data: { session } } = await supabase.auth.getSession();
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const supabase = createClient(req as any, res as any);
+  const { data: { user }, error } = await supabase.auth.getUser();
 
-  if (!session?.user?.email) {
+  if (!user || error) {
     return {
       redirect: {
         destination: '/auth/sign-in',
@@ -112,21 +126,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     };
   }
 
-  const { data: user, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('email', session.user.email)
-    .single();
-
-  if (error) {
-    console.error('Error fetching user:', error);
-    return {
-      redirect: {
-        destination: '/auth/sign-in',
-        permanent: false,
-      },
-    };
-  }
-
-  return { props: { user } };
+  return {
+    props: {
+      user: {
+        ...user,
+        name: user.user_metadata?.name || '',
+        roles: user.app_metadata?.roles || [],
+      }
+    }
+  };
 };
