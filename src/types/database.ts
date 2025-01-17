@@ -42,16 +42,16 @@ export interface Item {
   title: string;
   description: string;
   price: number;
-  imageUrl?: string | null;
+  image_url?: string | null;
 }
 
 export interface Event {
   id: number;
   title: string;
   description: string;
-  shortDescription: string;
+  short_description: string;
   date: string;
-  imageUrl?: string | null;
+  image_url?: string | null;
   price: number;
 }
 

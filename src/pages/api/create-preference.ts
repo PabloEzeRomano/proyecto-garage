@@ -21,16 +21,16 @@ export default async function handler(
   }
 
   try {
-    const { items } = body;
+    const { cartItems } = body;
 
     const preference = new Preference(client);
     const result = await preference.create({
       body: {
-        items: items.map((item: any) => ({
+        items: cartItems.map((item: any) => ({
           title: item.name,
           quantity: item.quantity,
           unit_price: item.price,
-          currency_id: 'ARS'
+          currency_id: 'ARS',
         })),
         back_urls: {
           success: `${process.env.NEXT_PUBLIC_BASE_URL}/success`,
