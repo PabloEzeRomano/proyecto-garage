@@ -10,7 +10,7 @@ export const AnimatedLogo = () => {
       height="200"
       width="200"
       viewBox="0 0 797.000000 837.000000"
-      fill="white"
+      fill="currentColor"
     >
       <g transform="translate(0.000000,837.000000) scale(0.100000,-0.100000)">
         <path

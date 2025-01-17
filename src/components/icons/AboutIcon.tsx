@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const AboutIcon: React.FC<{ className?: string }> = ({ className = 'theme-icon ' }) => {
+export const AboutIcon = ({ className = '' }: { className?: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +8,7 @@ export const AboutIcon: React.FC<{ className?: string }> = ({ className = 'theme
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className={`${className}`}
+      className={`w-6 h-6 text-text-light dark:text-text-dark ${className}`}
     >
       <path
         strokeLinecap="round"
