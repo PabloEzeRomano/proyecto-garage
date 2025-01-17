@@ -4,7 +4,7 @@ import { Role, Stock } from '@/types/database';
 import { GetServerSideProps } from 'next';
 
 export default function Stocks({ stocks }: { stocks: Stock[] }) {
-  const { session, loading } = useAuth([Role.ADMIN]);
+  const { session, loading } = useAuth([Role.ADMIN, Role.ROOT]);
 
   if (loading || !session) {
     return <div>Loading...</div>;

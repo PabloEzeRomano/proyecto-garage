@@ -21,10 +21,10 @@ const defaultEvent: Event = {
   id: -1,
   title: '',
   description: '',
-  shortDescription: '',
+  short_description: '',
   price: 0,
   date: dayjs().format('YYYY-MM-DD'),
-  imageUrl: null,
+  image_url: null,
 };
 
 export default function AddEvent({ events }: AddEventProps) {
@@ -36,7 +36,7 @@ export default function AddEvent({ events }: AddEventProps) {
   );
   const [addMore, setAddMore] = useState(false);
 
-  const { session, loading } = useAuth([Role.ADMIN]);
+  const { session, loading } = useAuth([Role.ADMIN, Role.ROOT]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -44,7 +44,7 @@ export default function AddEvent({ events }: AddEventProps) {
       const reader = new FileReader();
 
       reader.onload = () => {
-        setEventData({ ...eventData, imageUrl: reader.result as string });
+        setEventData({ ...eventData, image_url: reader.result as string });
       };
 
       reader.readAsDataURL(file);
@@ -70,19 +70,22 @@ export default function AddEvent({ events }: AddEventProps) {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { id: _, ...restEventData } = eventData;
+    const { id, ...restEventData } = eventData;
 
-    const url = '/api/events';
-    const method = eventId ? 'PATCH' : 'POST';
-    const body = eventId
-      ? JSON.stringify(eventData)
-      : JSON.stringify(restEventData);
+    const isUpdate = id !== -1;
 
-    await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body,
-    });
+    try {
+      if (isUpdate) {
+        await supabase
+          .from('events')
+          .update(restEventData)
+          .eq('id', id);
+      } else {
+        await supabase.from('events').insert(restEventData);
+      }
+    } catch (error) {
+      console.error('Error adding event:', error);
+    }
 
     if (addMore) {
       setEventData(defaultEvent);
@@ -111,8 +114,8 @@ export default function AddEvent({ events }: AddEventProps) {
       label: 'Descripción Corta',
       onChange: handleInputChange,
       type: 'text',
-      name: 'shortDescription',
-      value: eventData.shortDescription,
+      name: 'short_description',
+      value: eventData.short_description,
     },
     {
       label: 'Precio',
@@ -155,9 +158,9 @@ export default function AddEvent({ events }: AddEventProps) {
             </p>
           )}
         </div>
-        {eventData.imageUrl && (
+        {eventData.image_url && (
           <Image
-            src={eventData.imageUrl}
+            src={eventData.image_url}
             alt="Subida"
             width={200}
             height={200}

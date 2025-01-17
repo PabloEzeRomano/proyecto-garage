@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import '@/styles/addForm.css';
+import { supabase } from '@/lib/supabase';
 
 export default function AddStock() {
   const [name, setName] = useState('');
@@ -12,7 +13,7 @@ export default function AddStock() {
   const [quantity, setQuantity] = useState(0);
   const [cost, setCost] = useState(0);
   const router = useRouter();
-  const { session, loading } = useAuth([Role.ADMIN]);
+  const { session, loading } = useAuth([Role.ADMIN, Role.ROOT]);
 
   if (loading || !session) {
     return <div>Loading...</div>;
@@ -20,12 +21,11 @@ export default function AddStock() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    await fetch('/api/stocks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name }),
+    const { data, error } = await supabase.from('stocks').insert({
+      name,
+      item_id: itemId,
+      quantity,
+      cost,
     });
     router.push('/stocks');
   };

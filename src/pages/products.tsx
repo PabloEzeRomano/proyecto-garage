@@ -1,7 +1,7 @@
 'use client';
 
 import { Product } from '@/components/Product';
-import { useCart } from '@/context/CartContext';
+import { useCart } from '@/contexts/CartContext';
 import { ClientOnly } from '@/components/ClientOnly';
 
 // Example products data

@@ -1,17 +1,16 @@
 'use client';
 
-import { EventModal } from '@/components/EventModal';
+import { ClientOnly } from '@/components/ClientOnly';
+import { useCart } from '@/contexts/CartContext';
 import useAuth from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { Event, Role } from '@/types/database';
 import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { EditIcon, TrashIcon } from '../../public/icons';
-import { useCart } from '@/context/CartContext';
-import Image from 'next/image';
-import { ClientOnly } from '@/components/ClientOnly';
 
 interface EventProps {
   events: Event[];
@@ -33,9 +32,9 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
   }
 
   const handleQuantityChange = (eventId: number, quantity: number) => {
-    setQuantities(prev => ({
+    setQuantities((prev) => ({
       ...prev,
-      [eventId]: quantity
+      [eventId]: quantity,
     }));
   };
 
@@ -46,22 +45,18 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
       name: event.title,
       description: event.description,
       price: event.price || 0,
-      image: event.imageUrl || undefined,
+      image: event.image_url || undefined,
     };
 
     addToCart(eventProduct, quantity);
   };
 
   const deleteEvent = async (id: number) => {
-    const response = await fetch('/api/events', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id }),
-    });
+    const { data, error } = await supabase.from('events').delete().eq('id', id);
 
-    if (response.ok) {
+    if (error) {
+      console.error('Error deleting event:', error);
+    } else {
       setEvents(events.filter((event) => event.id !== id));
     }
   };
@@ -76,9 +71,9 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
               key={event.id}
               className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-gray-800"
             >
-              {event.imageUrl && (
+              {event.image_url && (
                 <Image
-                  src={event.imageUrl}
+                  src={event.image_url}
                   alt={event.title}
                   width={400}
                   height={300}
@@ -113,7 +108,9 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
                   )}
                   <select
                     value={quantities[event.id] || 1}
-                    onChange={(e) => handleQuantityChange(event.id, parseInt(e.target.value))}
+                    onChange={(e) =>
+                      handleQuantityChange(event.id, parseInt(e.target.value))
+                    }
                     className="text-black bg-white rounded-md p-1"
                   >
                     {Array.from({ length: 10 }, (_, i) => (
@@ -139,14 +136,12 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { data: events, error } = await supabase
-    .from('events')
-    .select('*');
+  const { data: events, error } = await supabase.from('events').select('*');
 
   if (error) {
     console.error('Error fetching events:', error);
     return {
-      props: { events: [] }
+      props: { events: [] },
     };
   }
 

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import '@/styles/addForm.css';
+import { supabase } from '@/lib/supabase';
 
 export default function AddItem() {
   const [title, setTitle] = useState('');
@@ -12,7 +13,7 @@ export default function AddItem() {
   const [price, setPrice] = useState(0);
   const [imageUrl, setImageUrl] = useState('');
   const router = useRouter();
-  const { session, loading } = useAuth([Role.ADMIN]);
+  const { session, loading } = useAuth([Role.ADMIN, Role.ROOT]);
 
   if (loading || !session) {
     return <div>Loading...</div>;
@@ -20,12 +21,11 @@ export default function AddItem() {
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    await fetch('/api/items', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title, description, price, imageUrl }),
+    const { data, error } = await supabase.from('items').insert({
+      title,
+      description,
+      price,
+      image_url: imageUrl,
     });
     router.push('/items');
   };

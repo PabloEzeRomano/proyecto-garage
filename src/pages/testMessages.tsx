@@ -34,7 +34,7 @@ export default function TestMessages() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-md mx-auto mt-10 p-6 border border-gray-300 rounded-lg shadow-md dark:shadow-gray-700">
       <h1 className="text-2xl font-bold mb-6">Test WhatsApp Messages</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">

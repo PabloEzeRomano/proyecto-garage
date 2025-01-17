@@ -5,7 +5,7 @@ import { Item, Role } from '@/types/database';
 import { GetServerSideProps } from 'next';
 import { supabase } from '@/lib/supabase';
 import { useState } from 'react';
-import { useCart } from '@/context/CartContext';
+import { useCart } from '@/contexts/CartContext';
 import { ClientOnly } from '@/components/ClientOnly';
 import Image from 'next/image';
 import { EditIcon, TrashIcon } from '../../public/icons';
@@ -40,22 +40,18 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
       name: item.title,
       description: item.description || '',
       price: item.price || 0,
-      image: item.imageUrl || undefined,
+      image: item.image_url || undefined,
     };
 
     addToCart(itemProduct, quantity);
   };
 
   const deleteItem = async (id: number) => {
-    const response = await fetch('/api/item', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id }),
-    });
+    const { data, error } = await supabase.from('items').delete().eq('id', id);
 
-    if (response.ok) {
+    if (error) {
+      console.error('Error deleting item:', error);
+    } else {
       setItems(items.filter((item) => item.id !== id));
     }
   };
@@ -70,9 +66,9 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
               key={item.id}
               className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-gray-800"
             >
-              {item.imageUrl && (
+              {item.image_url && (
                 <Image
-                  src={item.imageUrl}
+                  src={item.image_url}
                   alt={item.title}
                   width={400}
                   height={300}
