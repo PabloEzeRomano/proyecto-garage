@@ -2,7 +2,7 @@
 .secondary,
 .success {
   @apply p-2 rounded-md transition-colors flex items-center gap-2;
-  @apply text-white flex-1 justify-center;
+  @apply flex-1 justify-center text-text-light dark:text-text-dark;
 }
 
 .primary {
