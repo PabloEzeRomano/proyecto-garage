@@ -3,11 +3,11 @@
 }
 
 .add-title {
-  @apply text-4xl font-bold text-white mb-8;
+  @apply text-4xl font-bold mb-8 text-text-light dark:text-text-dark;
 }
 
 .form-container {
-  @apply bg-[#221811] p-8 rounded-lg shadow-lg border border-[#ee7c2b];
+  @apply p-8 rounded-lg shadow-lg border border-primary-light dark:border-primary-dark;
 }
 
 .input-container {
@@ -15,15 +15,19 @@
 }
 
 .input-label {
-  @apply block text-[#c9a992] text-lg font-semibold mb-2;
+  @apply block text-text-light dark:text-text-dark text-lg font-semibold mb-2;
 }
 
 .add-input {
-  @apply w-full p-3 rounded-md bg-[#483323] text-white focus:border-none focus:outline-none focus:ring-2 focus:ring-[#ee7c2b] mb-2;
+  @apply w-full p-3 rounded-md focus:border-none focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark mb-2 text-text-light dark:text-text-dark dark:bg-background-light bg-background-dark;
 }
 
 .submit {
-  @apply flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 sm:h-12 sm:px-5 bg-[#ee7c2b] text-[#221811] text-sm font-bold leading-normal tracking-[0.015em] sm:text-base sm:font-bold sm:leading-normal sm:tracking-[0.015em] w-full;
+  @apply flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 sm:h-12 sm:px-5 bg-primary-light dark:bg-primary-dark text-text-dark text-sm font-bold leading-normal tracking-[0.015em] sm:text-base sm:font-bold sm:leading-normal sm:tracking-[0.015em] w-full;
+}
+
+.submit:hover {
+  @apply bg-[#67aace];
 }
 
 .error {
@@ -39,9 +43,9 @@
 }
 
 .dropzone {
-  @apply border-2 border-dashed border-[#674832] rounded-lg p-5 text-center cursor-pointer mb-5 text-[#c9a992];
+  @apply border-2 border-dashed border-primary-light dark:border-primary-dark rounded-lg p-5 text-center cursor-pointer mb-5 text-text-light dark:text-text-dark;
 }
 
 .dropzone:hover {
-  @apply border-[#ee7c2b];
+  @apply border-[#67aace];
 }

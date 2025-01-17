@@ -1,10 +1,10 @@
 .header-container {
-  @apply fixed top-0 left-0 right-0 z-50 text-white;
+  @apply fixed top-0 left-0 right-0 z-50 text-text-light dark:text-text-dark bg-surface-light dark:bg-surface-dark;
   @apply flex items-center justify-between px-4 py-2;
 }
 
 .home-link {
-  @apply flex items-center gap-2 text-xl font-semibold;
+  @apply flex items-center gap-2 text-xl font-semibold text-text-light dark:text-text-dark;
 }
 
 .navbar-container {
@@ -17,7 +17,7 @@
 
 .quick-action-button {
   @apply px-4 py-2 rounded-md transition-colors;
-  @apply flex items-center gap-2 text-white;
+  @apply flex items-center gap-2 text-text-light dark:text-text-dark;
 }
 
 .outside-button {
@@ -30,7 +30,7 @@
 }
 
 .hamburger-menu span {
-  @apply w-6 h-0.5 bg-white my-0.5 transition-all;
+  @apply w-6 h-0.5 bg-text-light dark:bg-text-dark my-0.5 transition-all;
 }
 
 .menu-items {
@@ -38,14 +38,15 @@
   @apply flex flex-col p-4 gap-2;
   @apply transform origin-top;
   @apply w-auto min-w-[180px] max-w-[250px];
+  @apply bg-surface-light dark:bg-surface-dark;
 }
 
 .menu-items.open {
-  @apply block;
+  @apply block text-text-light dark:text-text-dark;
 }
 
 .navigation-item {
-  @apply flex items-center gap-2 px-4 py-2 rounded-md;
+  @apply flex items-center gap-2 px-4 py-2 rounded-md text-text-light dark:text-text-dark;
   @apply hover:bg-gray-700 transition-colors;
 }
 
@@ -87,25 +88,25 @@
 /* Add responsive styles for quick actions */
 @media (max-width: 768px) {
   .quick-actions {
-    @apply fixed bottom-4 left-4 right-4;  /* Fixed at bottom */
-    @apply flex justify-center gap-1;       /* Smaller gap */
-    @apply  backdrop-blur-sm; /* Semi-transparent background */
-    @apply p-2 rounded-lg;                  /* Add padding and round corners */
-    @apply shadow-lg;                       /* Add shadow */
+    @apply fixed bottom-4 left-4 right-4; /* Fixed at bottom */
+    @apply flex justify-center gap-1; /* Smaller gap */
+    @apply backdrop-blur-sm; /* Semi-transparent background */
+    @apply p-2 rounded-lg; /* Add padding and round corners */
+    @apply shadow-lg; /* Add shadow */
   }
 
   .quick-action-button {
-    @apply text-sm px-2 py-1.5;            /* Smaller padding */
-    @apply flex-1;                         /* Equal width buttons */
+    @apply text-sm px-2 py-1.5; /* Smaller padding */
+    @apply flex-1; /* Equal width buttons */
   }
 
   .quick-action-button span {
-    @apply text-xs;                        /* Smaller text */
+    @apply text-xs; /* Smaller text */
   }
 
   /* Adjust header container for mobile */
   .header-container {
-    @apply px-2;                           /* Less horizontal padding */
+    @apply px-2; /* Less horizontal padding */
   }
 
   /* Make logo text smaller on mobile */

@@ -1,5 +1,5 @@
 .add-button {
-  @apply inline-block bg-orange-600 hover:bg-orange-500 text-white font-semibold py-2 px-4 rounded-md transition duration-300 tracking-wide;
+  @apply inline-block bg-orange-600 hover:bg-orange-500 theme-text font-semibold py-2 px-4 rounded-md transition duration-300 tracking-wide;
 }
 
 .date {
@@ -7,7 +7,7 @@
 }
 
 .item-title {
-  @apply text-white text-base font-medium leading-normal;
+  @apply theme-text text-base font-medium leading-normal;
 }
 
 .list-container {
@@ -23,7 +23,7 @@
 }
 
 .title {
-  @apply text-4xl font-bold text-white mb-6;
+  @apply text-4xl font-bold theme-text mb-6;
 }
 
 .event-button {

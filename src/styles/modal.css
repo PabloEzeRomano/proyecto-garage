@@ -3,7 +3,7 @@
 }
 
 .modal-container {
-  @apply bg-[#221811] text-white rounded-lg shadow-lg max-w-[960px];
+  @apply bg-[#221811] theme-text rounded-lg shadow-lg max-w-[960px];
 }
 
 .modal-image-wrapper {
@@ -23,7 +23,7 @@
 }
 
 .modal-title {
-  @apply text-white text-[32px] font-bold leading-tight;
+  @apply theme-t text-[32px] font-bold leading-tight;
 }
 
 .modal-date {
@@ -35,11 +35,11 @@
 }
 
 .modal-section-title {
-  @apply text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4;
+  @apply theme-t text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4;
 }
 
 .modal-description {
-  @apply text-white text-base font-normal leading-normal pb-3 pt-1 px-4;
+  @apply theme-t text-base font-normal leading-normal pb-3 pt-1 px-4;
 }
 
 .modal-info-grid {
@@ -55,7 +55,7 @@
 }
 
 .modal-info-value {
-  @apply text-white text-sm font-normal leading-normal;
+  @apply theme-t text-sm font-normal leading-normal;
 }
 
 .modal-ticket-button-container {

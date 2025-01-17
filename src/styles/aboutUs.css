@@ -12,19 +12,19 @@
 }
 
 .about-title {
-  @apply text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5;
+  @apply text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5 text-text-light dark:text-text-dark;
 }
 
 .about-subtitle {
-  @apply text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5;
+  @apply text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5 text-text-light dark:text-text-dark;
 }
 
 .about-text {
-  @apply text-white text-base font-normal leading-normal pb-3 pt-1;
+  @apply text-base font-normal leading-normal pb-3 pt-1 text-text-light dark:text-text-dark;
 }
 
 .about-list {
-  @apply text-white text-base font-normal leading-normal pb-3 pt-1 list-disc pl-6;
+  @apply text-base font-normal leading-normal pb-3 pt-1 list-disc pl-6 text-text-light dark:text-text-dark;
 }
 
 .about-list li {
