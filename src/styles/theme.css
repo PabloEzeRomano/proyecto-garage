@@ -1,0 +1,42 @@
+/* Theme-related utility classes */
+.theme-bg {
+  @apply bg-background-light dark:bg-background-dark;
+}
+
+.theme-text {
+  @apply text-text-light dark:text-text-dark;
+}
+
+.theme-surface {
+  @apply bg-surface-light dark:bg-surface-dark;
+}
+
+.theme-primary {
+  @apply bg-primary-light dark:bg-primary-dark text-white;
+}
+
+.theme-icon {
+  @apply w-6 h-6 theme-text;
+}
+
+/* Common interactive elements */
+.theme-button {
+  @apply p-2 rounded-full bg-surface-light dark:bg-surface-dark theme-text;
+}
+
+.theme-badge {
+  @apply absolute -top-1 -right-1 bg-primary-light dark:bg-primary-dark text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center;
+}
+
+/* Common layout classes */
+.theme-container {
+  @apply container mx-auto px-4 py-8;
+}
+
+.theme-main {
+  @apply container mx-auto px-4 py-8 mt-10 theme-text;
+}
+
+.theme-footer {
+  @apply theme-text;
+}
