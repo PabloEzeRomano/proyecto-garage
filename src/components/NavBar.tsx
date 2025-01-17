@@ -2,27 +2,27 @@
 
 import useAuth from '@/hooks/useAuth';
 import { sendTextMessage } from '@/lib/whatsapp';
-import '@/styles/navbar.css';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
 import {
   AboutIcon,
   AddEventIcon,
   AddItemIcon,
   AddStockIcon,
-  EventsIcons,
   LogoIcon,
   MenuIcon,
   StockIcon,
   UsersIcon
 } from '../../public/icons';
+import { Role } from '@/types/database';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { CartButton } from './CartButton';
 import { ClientOnly } from './ClientOnly';
 import { SessionButton } from './SesionButton';
-import { Role } from '@/types/database';
 import { ThemeToggle } from './ThemeToggle';
+
+import '@/styles/navbar.css';
 
 const variants = {
   open: { opacity: 1, y: 0, scale: 1 },
@@ -45,17 +45,16 @@ export const NavBar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   const navItems = [
-    { href: '/users', icon: UsersIcon, text: 'Usuarios', roles: [Role.ADMIN] },
-    { href: '/stocks', icon: StockIcon, text: 'Stock', roles: [Role.ADMIN] },
+    { href: '/users', icon: UsersIcon, text: 'Usuarios', roles: [Role.ROOT] },
+    { href: '/stocks', icon: StockIcon, text: 'Stock', roles: [Role.ADMIN, Role.ROOT] },
     { href: '/profile', icon: UsersIcon, text: 'Perfil', roles: [] },
     {
       href: '/edit-user',
       icon: UsersIcon,
       text: 'Editar Usuario',
-      roles: [Role.ADMIN],
+      roles: [Role.ROOT],
     },
     { href: '/createQR', icon: UsersIcon, text: 'Crear QR', roles: [] },
     {
@@ -68,21 +67,21 @@ export const NavBar = () => {
       href: '/add-stock',
       icon: AddStockIcon,
       text: 'Agregar Stock',
-      roles: [Role.ADMIN],
+      roles: [Role.ADMIN, Role.ROOT],
     },
     {
       href: '/add-item',
       icon: AddItemIcon,
       text: 'Agregar Item',
-        roles: [Role.ADMIN],
+      roles: [Role.ADMIN, Role.ROOT],
     },
     {
       href: '/add-event',
       icon: AddEventIcon,
       text: 'Agregar Evento',
-      roles: [Role.ADMIN],
+      roles: [Role.ADMIN, Role.ROOT],
     },
-    { href: '/items', icon: MenuIcon, text: 'Menu', roles: [Role.ADMIN] },
+    { href: '/items', icon: MenuIcon, text: 'Menu', roles: [] },
     { href: '/about-us', icon: AboutIcon, text: 'Sobre Nosotros', roles: [] },
   ];
 
@@ -122,8 +121,8 @@ export const NavBar = () => {
   }, []);
 
   return (
-    <header className="header-container">
-      <Link className="home-link" href={'/'}>
+    <header className="header-container theme-surface">
+      <Link className="home-link theme-text" href={'/'}>
         <LogoIcon />
         <span className="leading-none">Proyecto Garage</span>
       </Link>
@@ -132,68 +131,63 @@ export const NavBar = () => {
           <ClientOnly>
             <CartButton />
           </ClientOnly>
-          <button
-            onClick={handleOutsideNotification}
-            className="quick-action-button outside-button"
-          >
-            ¡Estoy afuera!
-          </button>
-          <Link
-            href="/events"
-            className="quick-action-button text-white flex items-center gap-2 bg-blue-500 hover:bg-blue-600"
-          >
-            <EventsIcons className="w-5 h-5" />
-            <span>Eventos</span>
-          </Link>
         </div>
         <button
-          className="hamburger-menu"
+          className="hamburger-menu theme-text"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <span></span>
           <span></span>
           <span></span>
         </button>
-        <motion.div
-          animate={isMenuOpen ? 'open' : 'closed'}
-          variants={variants}
-          className={`menu-items ${isMenuOpen ? 'open' : ''}`}
-        >
-          {navItems.map(
-            ({ href, icon: Icon, text, roles }) =>
-              (roles.length === 0 || hasRole(roles)) && (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <motion.div
-                    whileHover="hover"
-                    variants={linkVariants}
-                    className={`navigation-item ${
+        {isMenuOpen && (
+          <motion.div
+            animate={isMenuOpen ? 'open' : 'closed'}
+            variants={variants}
+            className={`menu-items theme-surface ${isMenuOpen ? 'open' : ''}`}
+          >
+            {navItems.map(
+              ({ href, icon: Icon, text, roles }) =>
+                (roles.length === 0 || hasRole(roles)) && (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <motion.div
+                      whileHover="hover"
+                      variants={linkVariants}
+                      className={`navigation-item theme-text ${
+                        pathname?.includes(href) ? 'active-tab' : ''
+                      }`}
+                    >
+                      <Icon />
+                      {text}
+                    </motion.div>
+                  </Link>
+                )
+            )}
+            <div className="auth-buttons">
+              <ThemeToggle />
+              <SessionButton />
+            </div>
+            {user?.app_metadata?.roles?.includes(Role.ROOT) && (
+              <>
+                {rootLinks.map(({ href, label }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`navigation-item theme-text ${
                       pathname?.includes(href) ? 'active-tab' : ''
                     }`}
                   >
-                    <Icon />
-                    {text}
-                  </motion.div>
-                </Link>
-              )
-          )}
-          <div className="auth-buttons">
-            <ThemeToggle />
-            <SessionButton />
-          </div>
-          {user?.app_metadata?.roles?.includes(Role.ROOT) && (
-            <>
-              {rootLinks.map(({ href, label }) => (
-                <Link key={href} href={href} className={`navigation-item ${pathname?.includes(href) ? 'active-tab' : ''}`}>
-                  {label}
-                </Link>
-              ))}
-            </>
-          )}
-        </motion.div>
+                    {label}
+                  </Link>
+                ))}
+              </>
+            )}
+          </motion.div>
+        )}
       </nav>
     </header>
   );

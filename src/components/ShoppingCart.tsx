@@ -2,14 +2,14 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useCart } from '../context/CartContext';
+import { useCart } from '../contexts/CartContext';
 import Image from 'next/image';
 import { Wallet } from '@mercadopago/sdk-react';
 import { useState } from 'react';
 import { Spinner } from './Spinner';
 
 export const ShoppingCart: React.FC = () => {
-  const { items, removeFromCart, updateQuantity, totalPrice } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, totalPrice } = useCart();
   const [preferenceId, setPreferenceId] = useState<string>("");
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export const ShoppingCart: React.FC = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ items }),
+          body: JSON.stringify({ cartItems }),
         });
 
         const data = await response.json();
@@ -30,18 +30,18 @@ export const ShoppingCart: React.FC = () => {
       }
     };
       loadMP();
-  }, [items]);
+  }, [cartItems]);
 
   return (
     <div className="max-w-4xl mx-auto p-6 text-white">
       <h2 className="text-2xl font-bold mb-6">Shopping Cart</h2>
 
-      {items.length === 0 ? (
+      {cartItems.length === 0 ? (
         <p className="text-gray-300 text-center py-8">Your cart is empty</p>
       ) : (
         <>
           <div className="space-y-4">
-            {items.map((item) => (
+            {cartItems.map((item) => (
               <div
                 key={item.id}
                 className="flex gap-4 border border-gray-200 rounded-lg p-4 bg-gray-800"
@@ -80,7 +80,7 @@ export const ShoppingCart: React.FC = () => {
                     className="ml-4 text-red-400 hover:text-red-300"
                     onClick={() => removeFromCart(item.id)}
                   >
-                    Remove
+                    Borrar
                   </button>
                 </div>
               </div>
