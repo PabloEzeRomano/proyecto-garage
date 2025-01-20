@@ -1,31 +1,102 @@
-.add-button {
-  @apply inline-block bg-orange-600 hover:bg-orange-500 theme-text font-semibold py-2 px-4 rounded-md transition duration-300 tracking-wide;
-}
-
-.date {
-  @apply text-[#c9a992] text-sm font-normal leading-normal;
-}
-
-.item-title {
-  @apply theme-text text-base font-medium leading-normal;
-}
+@import './theme.css';
 
 .list-container {
-  @apply container mx-auto px-4 py-8;
+  @apply container mx-auto p-6;
 }
 
-.list {
-  @apply grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4;
+.list-title {
+  @apply text-3xl font-bold mb-6;
 }
 
-.list-item {
-  @apply flex flex-col gap-3 pb-3;
+.grid-layout {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
 }
 
-.title {
-  @apply text-4xl font-bold theme-text mb-6;
+.card {
+  @apply border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow;
 }
 
-.event-button {
-  @apply w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg;
+.card-header {
+  @apply flex justify-between items-center;
+}
+
+.card-image {
+  @apply w-full h-48 object-cover rounded-md mb-4;
+}
+
+.card-title {
+  @apply text-lg font-semibold mb-2;
+}
+
+.card-description {
+  @apply text-gray-600 dark:text-gray-300 text-sm mb-3;
+}
+
+.card-footer {
+  @apply flex justify-between items-center;
+}
+
+.card-price {
+  @apply text-lg font-bold text-primary-light dark:text-primary-dark;
+}
+
+
+.card-date {
+  @apply text-gray-500 dark:text-gray-300 text-sm mb-2;
+}
+
+
+.card-actions {
+  @apply flex gap-2;
+}
+
+.action-button {
+  @apply p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded;
+}
+
+.delete-button {
+  @apply text-error-light dark:text-error-dark;
+}
+
+.edit-button {
+  @apply text-primary-light dark:text-primary-dark;
+}
+
+.quantity-select {
+  @apply rounded-md p-1 border border-gray-200 dark:border-gray-700 text-gray-800;
+}
+
+.add-button,
+.reserve-button {
+  @apply bg-primary-light hover:bg-primary-dark text-white px-4 py-2 rounded-md transition-colors;
+}
+
+/* Table styles */
+.table-container {
+  @apply overflow-x-auto;
+}
+
+.table {
+  @apply min-w-full divide-y divide-gray-200 dark:divide-gray-700;
+}
+
+.table-header {
+  @extend .theme-surface;
+}
+
+.header-cell {
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider;
+}
+
+.table-body {
+  @extend .theme-surface;
+  @apply divide-y divide-gray-200 dark:divide-gray-700;
+}
+
+.table-row {
+  @apply hover:bg-gray-50 dark:hover:bg-gray-700;
+}
+
+.table-cell {
+  @apply px-6 py-4 whitespace-nowrap text-sm;
 }

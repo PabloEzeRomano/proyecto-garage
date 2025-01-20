@@ -3,11 +3,11 @@
 }
 
 .qr-title {
-  @apply text-4xl font-bold mb-8 text-text-light dark:text-text-dark;
+  @apply text-4xl font-bold mb-8;
 }
 
 .qr-form-container {
-  @apply bg-[#221811] p-8 rounded-lg shadow-lg border border-[#ee7c2b];
+  @apply p-8 rounded-lg shadow-lg border border-primary-light dark:border-primary-dark;
 }
 
 .qr-input-container {
@@ -15,15 +15,15 @@
 }
 
 .qr-input-label {
-  @apply block text-[#c9a992] text-lg font-semibold mb-2;
+  @apply block text-lg font-semibold mb-2;
 }
 
 .qr-input {
-  @apply w-full p-3 rounded-md bg-[#483323] text-text-light dark:text-text-dark focus:border-none focus:outline-none focus:ring-2 focus:ring-[#ee7c2b] mb-2;
+  @apply w-full p-3 rounded-md focus:border-none focus:outline-none focus:ring-2 focus:ring-[#67aace] mb-2;
 }
 
 .qr-submit {
-  @apply flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 sm:h-12 sm:px-5 bg-[#ee7c2b] text-[#221811] text-sm font-bold leading-normal tracking-[0.015em] sm:text-base sm:font-bold sm:leading-normal sm:tracking-[0.015em] w-full mb-6;
+  @apply flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 sm:h-12 sm:px-5 border-primary-light dark:border-primary-dark text-sm font-bold leading-normal tracking-[0.015em] sm:text-base sm:font-bold sm:leading-normal sm:tracking-[0.015em] w-full mb-6;
 }
 
 .qr-code-container {

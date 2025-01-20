@@ -7,25 +7,29 @@
   @apply text-text-light dark:text-text-dark;
 }
 
+.inverse-text {
+  @apply text-text-dark dark:text-text-light;
+}
+
 .theme-surface {
   @apply bg-surface-light dark:bg-surface-dark;
 }
 
 .theme-primary {
-  @apply bg-primary-light dark:bg-primary-dark text-white;
+  @apply bg-primary-light dark:bg-primary-dark;
 }
 
 .theme-icon {
-  @apply w-6 h-6 theme-text;
+  @apply w-6 h-6 text-current;
 }
 
 /* Common interactive elements */
 .theme-button {
-  @apply p-2 rounded-full bg-surface-light dark:bg-surface-dark theme-text;
+  @apply p-2 rounded-full theme-surface;
 }
 
 .theme-badge {
-  @apply absolute -top-1 -right-1 bg-primary-light dark:bg-primary-dark text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center;
+  @apply absolute -top-1 -right-1 theme-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center;
 }
 
 /* Common layout classes */
@@ -34,7 +38,7 @@
 }
 
 .theme-main {
-  @apply container mx-auto px-4 py-8 mt-10 theme-text;
+  @apply theme-container mt-10;
 }
 
 .theme-footer {

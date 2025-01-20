@@ -3,7 +3,7 @@
 }
 
 .modal-container {
-  @apply bg-[#221811] theme-text rounded-lg shadow-lg max-w-[960px];
+  @apply bg-[#221811] rounded-lg shadow-lg max-w-[960px];
 }
 
 .modal-image-wrapper {

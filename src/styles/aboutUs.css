@@ -1,5 +1,6 @@
 .about-container {
-  @apply relative flex min-h-screen flex-col bg-[#221811] overflow-x-hidden font-['Space_Grotesk','Noto_Sans',sans-serif];
+  @extend .theme-bg;
+  @apply relative flex min-h-screen flex-col overflow-x-hidden font-['Space_Grotesk','Noto_Sans',sans-serif];
 }
 
 .layout-content-container {
@@ -7,24 +8,25 @@
 }
 
 .hero-image {
-  @apply w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden bg-[#221811] rounded-lg min-h-[218px];
+  @extend .theme-bg;
+  @apply w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden rounded-lg min-h-[218px];
   background-image: url("../../public/motor.jpg");
 }
 
 .about-title {
-  @apply text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5 text-text-light dark:text-text-dark;
+  @apply text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5;
 }
 
 .about-subtitle {
-  @apply text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5 text-text-light dark:text-text-dark;
+  @apply text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5;
 }
 
 .about-text {
-  @apply text-base font-normal leading-normal pb-3 pt-1 text-text-light dark:text-text-dark;
+  @apply text-base font-normal leading-normal pb-3 pt-1;
 }
 
 .about-list {
-  @apply text-base font-normal leading-normal pb-3 pt-1 list-disc pl-6 text-text-light dark:text-text-dark;
+  @apply text-base font-normal leading-normal pb-3 pt-1 list-disc pl-6;
 }
 
 .about-list li {
@@ -32,7 +34,8 @@
 }
 
 .image-container {
-  @apply flex w-full grow bg-[#221811] py-3;
+  @extend .theme-bg;
+  @apply flex w-full grow py-3;
 }
 
 .full-width-image {
@@ -45,7 +48,8 @@
 }
 
 .team-member {
-  @apply flex items-center gap-4 bg-[#221811] min-h-[72px] py-2;
+  @extend .theme-bg;
+  @apply flex items-center gap-4 min-h-[72px] py-2;
 }
 
 .member-image {

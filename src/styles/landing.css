@@ -3,7 +3,7 @@
 }
 
 .landing-content {
-  @apply z-10 text-center px-6 w-full text-text-light dark:text-text-dark;
+  @apply z-10 text-center px-6 w-full;
 }
 
 .title {

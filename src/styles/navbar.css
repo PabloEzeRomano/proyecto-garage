@@ -1,10 +1,11 @@
 .header-container {
-  @apply fixed top-0 left-0 right-0 z-50 text-text-light dark:text-text-dark bg-surface-light dark:bg-surface-dark;
+  @extend .theme-surface;
+  @apply fixed top-0 left-0 right-0 z-50;
   @apply flex items-center justify-between px-4 py-2;
 }
 
 .home-link {
-  @apply flex items-center gap-2 text-xl font-semibold text-text-light dark:text-text-dark;
+  @apply flex items-center gap-2 text-xl font-semibold;
 }
 
 .navbar-container {
@@ -17,7 +18,7 @@
 
 .quick-action-button {
   @apply px-4 py-2 rounded-md transition-colors;
-  @apply flex items-center gap-2 text-text-light dark:text-text-dark;
+  @apply flex items-center gap-2;
 }
 
 .outside-button {
@@ -34,20 +35,16 @@
 }
 
 .menu-items {
+  @extend .theme-surface;
   @apply fixed top-16 right-4 bg-gray-800 rounded-lg shadow-lg;
   @apply flex flex-col p-4 gap-2;
   @apply transform origin-top;
   @apply w-auto min-w-[180px] max-w-[250px];
-  @apply bg-surface-light dark:bg-surface-dark;
-}
-
-.menu-items.open {
-  @apply block text-text-light dark:text-text-dark;
 }
 
 .navigation-item {
-  @apply flex items-center gap-2 px-4 py-2 rounded-md text-text-light dark:text-text-dark;
-  @apply hover:bg-gray-700 transition-colors;
+  @apply flex items-center gap-2 px-4 py-2 rounded-md;
+  @apply hover:bg-primary-light dark:hover:bg-primary-dark transition-colors;
 }
 
 .active-tab {

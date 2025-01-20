@@ -1,0 +1,13 @@
+@import './components.css';
+
+.user-name {
+  @apply font-medium;
+}
+
+.user-email {
+  @apply text-gray-500 dark:text-gray-300;
+}
+
+.user-role {
+  @apply px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100;
+}
