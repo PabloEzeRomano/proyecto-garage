@@ -122,7 +122,7 @@ export const NavBar = () => {
 
   return (
     <header className="header-container theme-surface">
-      <Link className="home-link theme-text" href={'/'}>
+      <Link className="home-link" href={'/'}>
         <LogoIcon />
         <span className="leading-none">Proyecto Garage</span>
       </Link>
@@ -133,7 +133,7 @@ export const NavBar = () => {
           </ClientOnly>
         </div>
         <button
-          className="hamburger-menu theme-text"
+          className="hamburger-menu"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <span></span>
@@ -157,7 +157,7 @@ export const NavBar = () => {
                     <motion.div
                       whileHover="hover"
                       variants={linkVariants}
-                      className={`navigation-item theme-text ${
+                      className={`navigation-item ${
                         pathname?.includes(href) ? 'active-tab' : ''
                       }`}
                     >
@@ -177,7 +177,7 @@ export const NavBar = () => {
                   <Link
                     key={href}
                     href={href}
-                    className={`navigation-item theme-text ${
+                    className={`navigation-item ${
                       pathname?.includes(href) ? 'active-tab' : ''
                     }`}
                   >

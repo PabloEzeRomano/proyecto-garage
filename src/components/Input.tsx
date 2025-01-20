@@ -60,7 +60,7 @@ export const Input: FC<InputProps> = ({
       <input
         type={type}
         id={id}
-        className={`add-input ${error ? 'error' : ''} ${className || ''}`}
+        className={`add-input${error ? ' error' : ''}${className ? ` ${className}` : ''}`}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
