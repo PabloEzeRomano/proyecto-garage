@@ -1,15 +1,18 @@
 'use client';
 
+import { ClientOnly } from '@/components/ClientOnly';
+import { useCart } from '@/contexts/CartContext';
 import useAuth from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabase';
+import { CartItem } from '@/types/cart';
 import { Item, Role } from '@/types/database';
 import { GetServerSideProps } from 'next';
-import { supabase } from '@/lib/supabase';
-import { useState } from 'react';
-import { useCart } from '@/contexts/CartContext';
-import { ClientOnly } from '@/components/ClientOnly';
 import Image from 'next/image';
-import { EditIcon, TrashIcon } from '../../public/icons';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { EditIcon, TrashIcon } from '../../public/icons';
+
+import '@/styles/list.css';
 
 interface ItemQuantity {
   [key: string]: number;
@@ -35,15 +38,16 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
 
   const handleAddToCart = (item: Item) => {
     const quantity = quantities[item.id] || 1;
-    const itemProduct = {
-      id: item.id.toString(),
+    const itemProduct: CartItem = {
+      id: item.id,
       name: item.title,
-      description: item.description || '',
-      price: item.price || 0,
-      image: item.image_url || undefined,
+      description: item.description,
+      price: item.price,
+      image: item.image_url || '',
+      quantity: quantity
     };
 
-    addToCart(itemProduct, quantity);
+    addToCart(itemProduct);
   };
 
   const deleteItem = async (id: number) => {
@@ -56,52 +60,55 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
     }
   };
 
+  const handleEditItem = (id: number) => {
+    router.push(`/add-item?id=${id}`);
+  };
+
   return (
     <ClientOnly>
-      <div className="container mx-auto p-6 text-white">
-        <h1 className="text-3xl font-bold mb-6">Menú</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="list-container">
+        <h1 className="list-title">Menú</h1>
+        <div className="grid-layout">
           {items.map((item) => (
-            <div
-              key={item.id}
-              className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow bg-gray-800"
-            >
+            <div key={item.id} className="card">
               {item.image_url && (
                 <Image
                   src={item.image_url}
                   alt={item.title}
                   width={400}
                   height={300}
-                  className="w-full h-48 object-cover rounded-md mb-4"
+                  className="card-image"
                 />
               )}
-              <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
-              <p className="text-gray-300 text-sm mb-3">{item.description}</p>
-              <div className="flex justify-between items-center">
-                <p className="text-lg font-bold text-blue-400">
+              <div className="card-header">
+                <h3 className="card-title">{item.title}</h3>
+                {user?.app_metadata?.roles?.includes(Role.ADMIN) && (
+                  <div>
+                    <button
+                      className="action-button delete-button"
+                      onClick={() => deleteItem(item.id)}
+                    >
+                      <TrashIcon />
+                    </button>
+                    <button
+                      className="action-button edit-button"
+                      onClick={() => handleEditItem(item.id)}
+                    >
+                      <EditIcon />
+                    </button>
+                  </div>
+                )}
+              </div>
+              <p className="card-description">{item.description}</p>
+              <div className="card-footer">
+                <p className="card-price">
                   ${item.price?.toFixed(2) || 'Gratis'}
                 </p>
-                <div className="flex gap-2">
-                  {user?.user_metadata.role === Role.ADMIN && (
-                    <>
-                      <button
-                        className="p-2 hover:bg-gray-700 rounded text-red-400"
-                        onClick={() => deleteItem(item.id)}
-                      >
-                        <TrashIcon />
-                      </button>
-                      <button
-                        className="p-2 hover:bg-gray-700 rounded text-blue-400"
-                        onClick={() => router.push(`/add-item?id=${item.id}`)}
-                      >
-                        <EditIcon />
-                      </button>
-                    </>
-                  )}
+                <div className="card-actions">
                   <select
                     value={quantities[item.id] || 1}
                     onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
-                    className="text-black bg-white rounded-md p-1"
+                    className="quantity-select"
                   >
                     {Array.from({ length: 10 }, (_, i) => (
                       <option key={i + 1} value={i + 1}>
@@ -110,7 +117,7 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
                     ))}
                   </select>
                   <button
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors"
+                    className="add-button"
                     onClick={() => handleAddToCart(item)}
                   >
                     Agregar

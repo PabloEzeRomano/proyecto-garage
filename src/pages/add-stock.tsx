@@ -1,11 +1,11 @@
 import { Input } from '@/components/Input';
 import useAuth from '@/hooks/useAuth';
+import { supabase } from '@/lib/supabase';
 import { Role } from '@/types/database';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import '@/styles/addForm.css';
-import { supabase } from '@/lib/supabase';
 
 export default function AddStock() {
   const [name, setName] = useState('');

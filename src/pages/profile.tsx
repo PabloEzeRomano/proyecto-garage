@@ -13,10 +13,10 @@ interface ProfileProps {
   user: User;
 }
 
-export default function Profile({ user: initialUser }: ProfileProps) {
+export default function Profile({ user }: ProfileProps) {
   const router = useRouter();
   const [userData, setUserData] = useState<User>({
-    ...initialUser,
+    ...user,
     password: '',
     confirmPassword: '',
   });

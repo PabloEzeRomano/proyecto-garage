@@ -1,63 +1,101 @@
+import { ClientOnly } from '@/components/ClientOnly';
 import useAuth from '@/hooks/useAuth';
-import { createClient } from '@/lib/supabase-server';
-import { supabaseAdmin } from '@/lib/supabase';
-import { Role } from '@/types/database';
+import { supabase, supabaseAdmin } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
+import { Role } from '@/types/database';
 import { GetServerSideProps } from 'next';
-import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { EditIcon, TrashIcon } from '../../public/icons';
 
-export default function Users() {
-  const { user, loading } = useAuth([Role.ROOT]);
-  const [users, setUsers] = useState<User[]>([]);
+import '@/styles/users.css';
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await supabaseAdmin?.auth.admin.listUsers();
-      if (response?.data) {
-        setUsers(response.data.users as User[]);
-      }
-      if (response?.error) {
-        console.error('Error fetching users:', response.error);
-        return;
-      }
-    };
-    fetchUsers();
-  }, []);
+interface UsersProps {
+  users: User[];
+}
 
-  if (loading || !user) {
+export const UsersPage: React.FC<UsersProps> = ({ users: initialUsers }) => {
+  const { user, loading } = useAuth([Role.ADMIN, Role.ROOT]);
+  const router = useRouter();
+  const [users, setUsers] = useState<User[]>(initialUsers);
+
+  if (loading) {
     return <div>Loading...</div>;
   }
 
+  const deleteUser = async (id: string) => {
+    const { data, error } = await supabase.auth.admin.deleteUser(id);
+
+    if (error) {
+      console.error('Error deleting user:', error);
+    } else {
+      setUsers(users.filter((user) => user.id !== id));
+    }
+  };
+
   return (
-    <div>
-      <h1>Users</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Name</th>
-            <th>Role</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.email}</td>
-              <td>{user.user_metadata?.name}</td>
-              <td>{user.app_metadata?.roles?.join(', ')}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ClientOnly>
+      <div className="list-container">
+        <h1 className="list-title">Usuarios</h1>
+        <div className="table-container">
+          <table className="table">
+            <thead className="table-header">
+              <tr>
+                <th className="header-cell">Nombre</th>
+                <th className="header-cell">Email</th>
+                <th className="header-cell">Rol</th>
+                <th className="header-cell">Acciones</th>
+              </tr>
+            </thead>
+            <tbody className="table-body">
+              {users.map((user) => (
+                <tr key={user.id} className="table-row">
+                  <td className="table-cell">
+                    <div className="user-name">{user.user_metadata.name}</div>
+                  </td>
+                  <td className="table-cell">
+                    <div className="user-email">{user.email}</div>
+                  </td>
+                  <td className="table-cell">
+                    <span className="user-role">
+                      {user.app_metadata?.roles?.join(', ')}
+                    </span>
+                  </td>
+                  <td className="table-cell">
+                    <div className="action-buttons">
+                      <button
+                        className="action-button edit-button"
+                        onClick={() => router.push(`/edit-user?id=${user.id}`)}
+                      >
+                        <EditIcon />
+                      </button>
+                      <button
+                        className="action-button delete-button"
+                        onClick={() => deleteUser(user.id)}
+                      >
+                        <TrashIcon />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ClientOnly>
   );
-}
+};
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const supabase = createClient(req as any, res as any);
-  const { data: { user }, error } = await supabase.auth.getUser();
+export default UsersPage;
 
-  if (!user || error || !user.app_metadata?.roles?.includes(Role.ROOT)) {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (!user || userError || !user.app_metadata?.roles?.includes(Role.ROOT)) {
     return {
       redirect: {
         destination: '/',
@@ -65,8 +103,21 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       },
     };
   }
+  if (!supabaseAdmin) {
+    return {
+      props: { users: [] },
+    };
+  }
+  const {
+    data: { users },
+    error,
+  } = await supabaseAdmin.auth.admin.listUsers();
+
+  if (error) {
+    console.error('Error fetching users:', error);
+  }
 
   return {
-    props: {}
+    props: { users: users || [] },
   };
 };

@@ -1,28 +1,20 @@
 import { NavBar } from '@/components/NavBar';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { initMercadoPago } from '@mercadopago/sdk-react';
 import type { AppProps } from 'next/app';
-import { Oswald } from 'next/font/google';
 import Head from 'next/head';
 import { CartProvider } from '../contexts/CartContext';
-import { initMercadoPago } from '@mercadopago/sdk-react';
 
+import '@/styles/button.css';
 import '@/styles/globals.css';
 import '@/styles/theme.css';
-import '@/styles/button.css';
-// import '@/styles/components.css';
-
-const osvaldito = Oswald({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-inter',
-});
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY!);
   return (
     <ThemeProvider>
       <CartProvider>
-        <div className={`${osvaldito.variable} min-h-screen theme-bg theme-text`}>
+        <div className={`min-h-screen theme-bg theme-text`}>
           <Head>
             <title>Proyecto Garage</title>
             <meta name="description" content="Proyecto Garage - Tu lugar de encuentro" />

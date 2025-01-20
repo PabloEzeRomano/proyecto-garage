@@ -1,20 +1,19 @@
 import { Input } from '@/components/Input';
-import { Select } from '@/components/Select';
 import useAuth from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { Event, Role } from '@/types/database';
 import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { TrashIcon } from '../../public/icons/TrashIcon';
 
 import '@/styles/addForm.css';
 
 interface AddEventProps {
-  events: Event[];
+  event?: Event;
 }
 
 const defaultEvent: Event = {
@@ -27,13 +26,9 @@ const defaultEvent: Event = {
   image_url: null,
 };
 
-export default function AddEvent({ events }: AddEventProps) {
-  const searchParams = useSearchParams();
-  const eventId = searchParams?.get('id');
+export default function AddEvent({ event }: AddEventProps) {
   const router = useRouter();
-  const [eventData, setEventData] = useState<Event>(
-    events.find((event) => eventId && event.id === Number(eventId)) || defaultEvent
-  );
+  const [eventData, setEventData] = useState<Event>(event || defaultEvent);
   const [addMore, setAddMore] = useState(false);
 
   const { session, loading } = useAuth([Role.ADMIN, Role.ROOT]);
@@ -76,10 +71,7 @@ export default function AddEvent({ events }: AddEventProps) {
 
     try {
       if (isUpdate) {
-        await supabase
-          .from('events')
-          .update(restEventData)
-          .eq('id', id);
+        await supabase.from('events').update(restEventData).eq('id', id);
       } else {
         await supabase.from('events').insert(restEventData);
       }
@@ -159,31 +151,44 @@ export default function AddEvent({ events }: AddEventProps) {
           )}
         </div>
         {eventData.image_url && (
-          <Image
-            src={eventData.image_url}
-            alt="Subida"
-            width={200}
-            height={200}
-            style={{ marginTop: '10px', borderRadius: '10px' }}
-          />
+          <div className="flex items-center p-2 border border-stroke rounded-lg mb-4">
+            <Image
+              src={eventData.image_url}
+              alt="Subida"
+              width={200}
+              height={200}
+              style={{ marginTop: '10px', borderRadius: '10px' }}
+            />
+             <button
+              className=" text-red-500"
+              onClick={() => setEventData({ ...eventData, image_url: null })}
+            >
+              <TrashIcon />
+            </button>
+          </div>
         )}
         <button type="submit" className="submit">
-          {eventId ? 'Actualizar Evento' : 'Agregar Evento'}
+          {event?.id !== -1 ? 'Actualizar Evento' : 'Agregar Evento'}
         </button>
       </form>
     </div>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const { data: events, error } = await supabase
-    .from('events')
-    .select('*');
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  if (context.query.id) {
+    const { data: event, error } = await supabase
+      .from('events')
+      .select('*')
+      .eq('id', context.query.id);
 
-  if (error) {
-    console.error('Error fetching events:', error);
-    return { props: { events: [] } };
+    if (error) {
+      console.error('Error fetching event:', error);
+      return { props: { event: null } };
+    }
+
+    return { props: { event: event[0] } };
   }
 
-  return { props: { events: JSON.parse(JSON.stringify(events)) } };
+  return { props: { event: null } };
 };
