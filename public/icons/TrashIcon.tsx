@@ -3,13 +3,14 @@ interface TrashIconProps {
 }
 
 export const TrashIcon: React.FC<TrashIconProps> = ({
-  className = "w-6 h-6 text-current"
+  className = "w-6 h-6"
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     stroke="currentColor"
-    className={className}
+    className={`text-current ${className}`}
+    fill="none"
   >
     <path d="M5 7.5H19L18 21H6L5 7.5Z" />
     <path d="M15.5 9.5L15 19" />

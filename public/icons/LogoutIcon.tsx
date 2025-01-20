@@ -3,7 +3,7 @@ interface LogoutIconProps {
 }
 
 export const LogoutIcon: React.FC<LogoutIconProps> = ({
-  className = "w-6 h-6 text-current"
+  className = "theme-icon"
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

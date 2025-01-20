@@ -3,7 +3,7 @@ interface DashboardIconProps {
 }
 
 export const DashboardIcon: React.FC<DashboardIconProps> = ({
-  className = "w-6 h-6 text-current"
+  className = "theme-icon"
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

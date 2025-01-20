@@ -3,7 +3,7 @@ interface UserPlusIconProps {
 }
 
 export const UserPlusIcon: React.FC<UserPlusIconProps> = ({
-  className = 'w-6 h-6 text-current',
+  className = 'theme-icon',
 }) => (
   <svg
     version="1.1"

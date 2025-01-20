@@ -3,13 +3,13 @@ interface EditIconProps {
 }
 
 export const EditIcon: React.FC<EditIconProps> = ({
-  className = "w-6 h-6 text-current"
+  className = "w-6 h-6"
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="currentColor"
-    className={className}
+    className={`text-current ${className}`}
   >
     <path
       fillRule="evenodd"

@@ -3,7 +3,7 @@ interface StockIconProps {
 }
 
 export const StockIcon: React.FC<StockIconProps> = ({
-  className = "w-6 h-6 text-current"
+  className = "theme-icon"
 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
