@@ -4,6 +4,10 @@
   @apply container mx-auto p-6;
 }
 
+.list-header {
+  @apply flex justify-between items-center;
+}
+
 .list-title {
   @apply text-3xl font-bold mb-6;
 }

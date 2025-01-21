@@ -1,15 +1,33 @@
 .header-container {
-  @extend .theme-surface;
-  @apply fixed top-0 left-0 right-0 z-50;
-  @apply flex items-center justify-between px-4 py-2;
-}
-
-.home-link {
-  @apply flex items-center gap-2 text-xl font-semibold;
+  @apply fixed top-0 left-0 right-0 z-50 px-4 py-2;
+  @apply border-b border-gray-200 dark:border-gray-700;
 }
 
 .navbar-container {
-  @apply flex items-center gap-4;
+  @apply flex items-center gap-2 justify-between;
+}
+
+.home-link {
+  @apply flex items-center gap-2 text-xl font-bold;
+}
+
+.nav-links {
+  @apply flex items-center gap-2;
+}
+
+.nav-link {
+  @apply px-3 py-2 rounded-md transition-colors;
+  @apply hover:bg-gray-100 dark:hover:bg-gray-700;
+  @apply text-gray-700 dark:text-gray-300;
+}
+
+.nav-actions {
+  @apply flex items-center gap-2;
+}
+
+.active-tab {
+  @apply bg-gray-100 dark:bg-gray-700;
+  @apply text-primary-light dark:text-primary-dark;
 }
 
 .quick-actions {
@@ -47,10 +65,6 @@
   @apply hover:bg-primary-light dark:hover:bg-primary-dark transition-colors;
 }
 
-.active-tab {
-  @apply bg-gray-700;
-}
-
 @media (max-width: 768px) {
   .menu-items {
     @apply w-auto min-w-[200px] right-2;
@@ -58,6 +72,22 @@
 
   .auth-buttons {
     @apply w-full;
+  }
+
+  .header-container {
+    @apply px-2;
+  }
+
+  .home-link span {
+    @apply text-sm;
+  }
+
+  .nav-links {
+    @apply gap-1;
+  }
+
+  .nav-link {
+    @apply px-2 py-1.5 text-sm;
   }
 }
 
@@ -99,15 +129,5 @@
 
   .quick-action-button span {
     @apply text-xs; /* Smaller text */
-  }
-
-  /* Adjust header container for mobile */
-  .header-container {
-    @apply px-2; /* Less horizontal padding */
-  }
-
-  /* Make logo text smaller on mobile */
-  .home-link span {
-    @apply text-sm;
   }
 }
