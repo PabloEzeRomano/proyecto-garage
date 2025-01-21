@@ -6,12 +6,22 @@ export enum Role {
 
 export enum Permission {
   ITEMS_CREATE = 'items.create',
+  ITEMS_READ = 'items.read',
+  ITEMS_UPDATE = 'items.update',
   ITEMS_DELETE = 'items.delete',
   EVENTS_CREATE = 'events.create',
+  EVENTS_READ = 'events.read',
+  EVENTS_UPDATE = 'events.update',
   EVENTS_DELETE = 'events.delete',
   STOCKS_CREATE = 'stocks.create',
+  STOCKS_READ = 'stocks.read',
+  STOCKS_UPDATE = 'stocks.update',
   STOCKS_DELETE = 'stocks.delete',
-  USERS_MANAGE = 'users.manage'
+  USERS_MANAGE = 'users.manage',
+  USERS_CREATE = 'users.create',
+  USERS_READ = 'users.read',
+  USERS_UPDATE = 'users.update',
+  USERS_DELETE = 'users.delete',
 }
 
 export interface UserRole {
