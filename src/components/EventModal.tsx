@@ -56,7 +56,7 @@ export const EventModal = ({
           <div className="modal-image-wrapper">
             <div
               className="modal-image"
-              style={{ backgroundImage: `url(${selectedEvent.imageUrl})` }}
+              style={{ backgroundImage: `url(${selectedEvent.image_url})` }}
             ></div>
           </div>
         </div>

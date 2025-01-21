@@ -13,11 +13,11 @@
 }
 
 .session-title {
-  @apply text-4xl font-bold text-center mb-6 theme-text uppercase tracking-widest;
+  @apply text-4xl font-bold text-center mb-6 uppercase tracking-widest;
 }
 
 .session-input {
-  @apply w-full mb-4 bg-transparent border border-[#c9a992] theme-text rounded-md px-3 py-2;
+  @apply w-full mb-4 bg-transparent border border-[#c9a992] rounded-md px-3 py-2;
 }
 
 .session-button {
