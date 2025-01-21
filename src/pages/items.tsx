@@ -5,7 +5,7 @@ import { useCart } from '@/contexts/CartContext';
 import useAuth from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { CartItem } from '@/types/cart';
-import { Item, Role } from '@/types/database';
+import { Item, Permission } from '@/types/database';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -18,7 +18,9 @@ interface ItemQuantity {
   [key: string]: number;
 }
 
-export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) => {
+export const ItemsPage: React.FC<{ items: Item[] }> = ({
+  items: initialItems,
+}) => {
   const { user, loading } = useAuth([], [], false);
   const router = useRouter();
   const [items, setItems] = useState<Item[]>(initialItems);
@@ -30,9 +32,9 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
   }
 
   const handleQuantityChange = (itemId: number, quantity: number) => {
-    setQuantities(prev => ({
+    setQuantities((prev) => ({
       ...prev,
-      [itemId]: quantity
+      [itemId]: quantity,
     }));
   };
 
@@ -44,7 +46,7 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
       description: item.description,
       price: item.price,
       image: item.image_url || '',
-      quantity: quantity
+      quantity: quantity,
     };
 
     addToCart(itemProduct);
@@ -64,10 +66,23 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
     router.push(`/add-item?id=${id}`);
   };
 
+  const handleAddItem = () => {
+    router.push('/add-item');
+  };
+
   return (
     <ClientOnly>
       <div className="list-container">
-        <h1 className="list-title">Menú</h1>
+        <div className="list-header">
+          <h1 className="list-title">Menú</h1>
+          {user?.app_metadata?.permissions?.includes(
+            Permission.ITEMS_CREATE
+          ) && (
+            <button className="add-button" onClick={handleAddItem}>
+              Agregar un nuevo producto
+            </button>
+          )}
+        </div>
         <div className="grid-layout">
           {items.map((item) => (
             <div key={item.id} className="card">
@@ -82,22 +97,28 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
               )}
               <div className="card-header">
                 <h3 className="card-title">{item.title}</h3>
-                {user?.app_metadata?.roles?.includes(Role.ADMIN) && (
-                  <div>
+                <div>
+                  {user?.app_metadata?.permissions?.includes(
+                    Permission.ITEMS_DELETE
+                  ) && (
                     <button
                       className="action-button delete-button"
                       onClick={() => deleteItem(item.id)}
                     >
                       <TrashIcon />
                     </button>
+                  )}
+                  {user?.app_metadata?.permissions?.includes(
+                    Permission.ITEMS_UPDATE
+                  ) && (
                     <button
                       className="action-button edit-button"
                       onClick={() => handleEditItem(item.id)}
                     >
                       <EditIcon />
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
               <p className="card-description">{item.description}</p>
               <div className="card-footer">
@@ -107,7 +128,9 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
                 <div className="card-actions">
                   <select
                     value={quantities[item.id] || 1}
-                    onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                    onChange={(e) =>
+                      handleQuantityChange(item.id, parseInt(e.target.value))
+                    }
                     className="quantity-select"
                   >
                     {Array.from({ length: 10 }, (_, i) => (
@@ -133,14 +156,12 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({ items: initialItems }) 
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const { data: items, error } = await supabase
-    .from('items')
-    .select('*');
+  const { data: items, error } = await supabase.from('items').select('*');
 
   if (error) {
     console.error('Error fetching items:', error);
     return {
-      props: { items: [] }
+      props: { items: [] },
     };
   }
 

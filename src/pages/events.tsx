@@ -5,7 +5,7 @@ import { useCart } from '@/contexts/CartContext';
 import useAuth from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
 import { CartItem } from '@/types/cart';
-import { Event, Role } from '@/types/database';
+import { Event, Permission, Role } from '@/types/database';
 import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import Image from 'next/image';
@@ -65,10 +65,25 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
     }
   };
 
+  const handleAddEvent = () => {
+    router.push('/add-event');
+  };
+
+  console.log(user?.app_metadata?.permissions);
+
   return (
     <ClientOnly>
       <div className="list-container">
-        <h1 className="list-title">Próximos Eventos</h1>
+        <div className="list-header">
+          <h1 className="list-title">Próximos Eventos</h1>
+          {user?.app_metadata?.permissions?.includes(
+            Permission.EVENTS_CREATE
+          ) && (
+            <button className="add-button" onClick={handleAddEvent}>
+              Agregar un nuevo evento
+            </button>
+          )}
+        </div>
         <div className="grid-layout">
           {events.map((event) => (
             <div key={event.id} className="card">
@@ -83,22 +98,28 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
               )}
               <div className="card-header">
                 <h3 className="card-title">{event.title}</h3>
-                {user?.app_metadata?.roles?.includes(Role.ADMIN) && (
-                    <div>
-                      <button
-                        className="action-button delete-button"
-                        onClick={() => deleteEvent(event.id)}
-                      >
-                        <TrashIcon />
-                      </button>
-                      <button
-                        className="action-button edit-button"
-                        onClick={() => router.push(`/add-event?id=${event.id}`)}
-                      >
-                        <EditIcon />
-                      </button>
-                    </div>
+                <div>
+                  {user?.app_metadata?.permissions?.includes(
+                    Permission.EVENTS_DELETE
+                  ) && (
+                    <button
+                      className="action-button delete-button"
+                      onClick={() => deleteEvent(event.id)}
+                    >
+                      <TrashIcon />
+                    </button>
                   )}
+                  {user?.app_metadata?.permissions?.includes(
+                    Permission.EVENTS_UPDATE
+                  ) && (
+                    <button
+                      className="action-button edit-button"
+                      onClick={() => router.push(`/add-event?id=${event.id}`)}
+                    >
+                      <EditIcon />
+                    </button>
+                  )}
+                </div>
               </div>
               <p className="card-date">
                 {dayjs(event.date).format('DD/MM/YYYY HH:mm')}
