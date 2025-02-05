@@ -1,71 +1,76 @@
 .modal-overlay {
-  @apply fixed inset-0 z-10 bg-black bg-opacity-80 backdrop-blur-sm flex items-center justify-center;
+  @apply fixed inset-0 bg-black bg-opacity-50 z-50;
+  @apply flex items-center justify-center p-4;
+  @apply backdrop-blur-sm;
 }
 
 .modal-container {
-  @apply bg-[#221811] rounded-lg shadow-lg max-w-[960px];
+  @apply bg-white dark:bg-gray-800 rounded-2xl;
+  @apply w-full max-w-2xl max-h-[90vh] overflow-y-auto;
+  @apply relative shadow-xl;
 }
 
-.modal-image-wrapper {
-  @apply md:px-4 md:py-3;
+.modal-image-container {
+  @apply relative w-full h-[300px];
 }
 
 .modal-image {
-  @apply bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden md:rounded-lg;
+  @apply absolute inset-0 bg-center bg-cover;
+}
+
+.modal-image::after {
+  content: '';
+  @apply absolute inset-0 bg-gradient-to-t from-black/70 to-transparent;
 }
 
 .modal-title-container {
-  @apply flex flex-wrap justify-between gap-3 p-4;
-}
-
-.modal-title-wrapper {
-  @apply flex min-w-72 flex-col gap-3;
+  @apply absolute bottom-0 left-0 right-0 p-6 text-white;
 }
 
 .modal-title {
-  @apply theme-t text-[32px] font-bold leading-tight;
+  @apply text-3xl font-bold mb-2;
 }
 
 .modal-date {
-  @apply text-[#c9a992] text-sm font-normal leading-normal;
+  @apply text-lg opacity-90;
 }
 
-.modal-reminder-button-container {
-  @apply flex px-4 py-3 justify-end;
+.modal-content {
+  @apply p-6;
 }
 
 .modal-section-title {
-  @apply theme-t text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4;
+  @apply text-xl font-bold mb-4;
 }
 
 .modal-description {
-  @apply theme-t text-base font-normal leading-normal pb-3 pt-1 px-4;
+  @apply text-gray-600 dark:text-gray-300 mb-6;
+  @apply text-sm leading-relaxed;
 }
 
 .modal-info-grid {
-  @apply p-4 grid grid-cols-[20%_1fr] gap-x-6;
+  @apply grid grid-cols-2 gap-4 mb-6;
 }
 
 .modal-info-item {
-  @apply col-span-2 grid grid-cols-subgrid border-t border-t-[#674832] py-5;
+  @apply bg-gray-50 dark:bg-gray-700 rounded-lg p-4;
 }
 
 .modal-info-label {
-  @apply text-[#c9a992] text-sm font-normal leading-normal;
+  @apply text-sm text-gray-500 dark:text-gray-400 mb-1;
 }
 
 .modal-info-value {
-  @apply theme-t text-sm font-normal leading-normal;
+  @apply text-lg font-bold;
 }
 
 .modal-ticket-button-container {
-  @apply flex px-4 py-3 justify-start;
+  @apply p-6 border-t border-gray-200 dark:border-gray-700;
 }
 
 .modal-ticket-button {
-  @apply modal-button bg-[#ee7c2b] text-[#221811] flex-1;
-}
-
-.modal-button {
-  @apply flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 text-sm font-bold leading-normal tracking-[0.015em];
+  @apply w-full py-3 px-6 rounded-xl;
+  @apply bg-primary-light hover:bg-primary-dark text-white;
+  @apply font-bold text-center transition-colors;
+  @apply flex items-center justify-center gap-2;
 }
