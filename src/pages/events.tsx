@@ -85,8 +85,8 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
           )}
         </div>
         <div className="grid-layout">
-          {events.map((event) => (
-            <div key={event.id} className="card">
+          {[...events, ...events, ...events, ...events].map((event, index) => (
+            <div key={`${event.id}-${index}`} className="card">
               {event.image_url && (
                 <Image
                   src={event.image_url}
@@ -124,7 +124,7 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
               <p className="card-date">
                 {dayjs(event.date).format('DD/MM/YYYY HH:mm')}
               </p>
-              <p className="card-description">{event.description}</p>
+              {/* <p className="card-description">{event.description}</p> */}
               <div className="card-footer">
                 <p className="card-price">
                   ${event.price?.toFixed(2) || 'Gratis'}

@@ -84,8 +84,8 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({
           )}
         </div>
         <div className="grid-layout">
-          {items.map((item) => (
-            <div key={item.id} className="card">
+          {[...items, ...items, ...items, ...items].map((item, index) => (
+            <div key={`${item.id}-${index}`} className="card">
               {item.image_url && (
                 <Image
                   src={item.image_url}
@@ -120,7 +120,7 @@ export const ItemsPage: React.FC<{ items: Item[] }> = ({
                   )}
                 </div>
               </div>
-              <p className="card-description">{item.description}</p>
+              {/* <p className="card-description">{item.description}</p> */}
               <div className="card-footer">
                 <p className="card-price">
                   ${item.price?.toFixed(2) || 'Gratis'}
