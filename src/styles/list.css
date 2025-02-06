@@ -57,7 +57,3 @@
 .card-time {
   @apply text-gray-500 dark:text-gray-400 text-sm pl-2;
 }
-
-.logos {
-  @apply h-[170px] mb-2 flex justify-start items-center;
-}
