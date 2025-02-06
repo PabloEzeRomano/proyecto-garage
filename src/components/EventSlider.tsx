@@ -4,42 +4,50 @@ import {
   AnimatePresence,
   AnimationPlaybackControls,
   motion,
-  useInView,
-  useMotionValue,
+  useMotionValue
 } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useMemo, useRef, useState } from 'react';
+
+import '@/styles/eventSlider.css';
 
 interface EventSliderProps {
   events: Event[];
   onEventClick: (event: Event) => void;
 }
 
-const EventImage = ({ event }: { event: Event }) => {
+const EventImage = ({
+  event,
+  onClick,
+}: {
+  event: Event;
+  onClick: (event: Event) => void;
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
-      className="relative cursor-pointer overflow-hidden h-[150px] min-w-[150px] rounded-lg flex items-center justify-center"
+      className="event-image-container"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      onClick={() => onClick(event)}
     >
       <AnimatePresence>
         {isHovered && (
           <motion.div
-            className="absolute inset-0 bg-black/60 z-10 flex items-center justify-center"
+            className="event-image-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="absolute bg-black/60 w-full h-full pointer-events-none" />
+            <div className="event-image-overlay-background" />
             <motion.h1
-              className="absolute rounded-full text-black bg-white z-20  px-2 py-1 flex items-center gap-[0.5]"
+              className="event-image-overlay-text"
               initial={{ y: 10 }}
               animate={{ y: 0 }}
               exit={{ y: 10 }}
             >
-              <span>{event.title}</span>
+              <span>Ir a evento</span>
             </motion.h1>
           </motion.div>
         )}
@@ -49,52 +57,29 @@ const EventImage = ({ event }: { event: Event }) => {
         alt={event.title}
         width={150}
         height={150}
-        className="mx-4 object-cover"
+        className="object-cover h-[150px] w-[150px]"
       />
     </motion.div>
   );
 };
+
 export const EventSlider = ({ events, onEventClick }: EventSliderProps) => {
   const [controls, setControls] = useState<AnimationPlaybackControls | null>(
     null
   );
 
   // Double the events array to ensure smooth infinite scroll
-  const displayEvents = useMemo(
-    () => [
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-      ...events,
-    ],
-    [events]
-  );
+  const displayEvents = useMemo(() => [...events, ...events], [events]);
 
-  const ref = useRef(null);
-  const inView = useInView(ref, {
-    once: true,
-  });
-
-  console.log(inView);
-
-  const x = useMotionValue(-190);
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
 
   useEffect(() => {
-    if (x.get() !== -1184 && inView) {
-      x.set(-1184);
-    }
+    const width = ref.current?.clientWidth || 0;
+    const maxWidth = -width / 2;
 
-    const motionControls = animate(x, [-190, -1184], {
-      duration: 5,
+    const motionControls = animate(x, [0, maxWidth], {
+      duration: 25,
       ease: 'linear',
       repeat: Infinity,
       repeatType: 'loop',
@@ -103,19 +88,23 @@ export const EventSlider = ({ events, onEventClick }: EventSliderProps) => {
     setControls(motionControls);
 
     return () => motionControls.stop();
-  }, [x, displayEvents, inView]);
+  }, [x, displayEvents]);
 
   return (
-    <div className="logos">
+    <div className="event-slider-container">
       <motion.div
-        className="flex gap-4"
+        className="event-slider"
         ref={ref}
         style={{ x }}
         onHoverStart={() => controls?.pause()}
         onHoverEnd={() => controls?.play()}
       >
         {displayEvents.map((event, index) => (
-          <EventImage key={`${event.id}-${index}`} event={event} />
+          <EventImage
+            key={`${event.id}-${index}`}
+            event={event}
+            onClick={onEventClick}
+          />
         ))}
       </motion.div>
     </div>
