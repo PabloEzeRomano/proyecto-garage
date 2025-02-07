@@ -2,27 +2,34 @@ import { createServerClient } from '@supabase/ssr';
 import type { GetServerSidePropsContext } from 'next';
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/database';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabaseServiceKey = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY;
 
-// Regular server-side client (for API routes and getServerSideProps)
-export const createServerSupabaseClient = (context: GetServerSidePropsContext) => {
+type ContextType =
+  | { req: NextApiRequest; res: NextApiResponse }
+  | GetServerSidePropsContext;
+
+// Unified server-side client for both API routes and getServerSideProps
+export const createServerSupabaseClient = (context: ContextType) => {
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get: (key) => {
-          return context.req.cookies[key];
+        getAll: () => {
+          return Object.entries(context.req.cookies).map(([name, value]) => ({
+            name,
+            value: value ?? '',
+          }));
         },
-        set: (key, value, options) => {
-          context.res.setHeader('Set-Cookie', `${key}=${value}; Path=/; HttpOnly; SameSite=Lax`);
-        },
-        remove: (key, _options) => {
-          context.res.setHeader('Set-Cookie', `${key}=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax`);
-        },
+        setAll: (cookies) => {
+          cookies.forEach(({ name, value }) => {
+            context.res.setHeader('Set-Cookie', `${name}=${value}; Path=/; HttpOnly; SameSite=Lax`);
+          });
+        }
       }
     }
   );
