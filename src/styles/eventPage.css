@@ -1,80 +1,3 @@
-.modal-overlay {
-  @apply fixed inset-0 bg-black bg-opacity-50 z-50;
-  @apply flex items-center justify-center p-4;
-  @apply backdrop-blur-sm;
-}
-
-.modal-container {
-  @apply bg-white dark:bg-gray-800 rounded-2xl;
-  @apply w-full max-w-2xl max-h-[90vh] overflow-y-auto;
-  @apply relative shadow-xl;
-}
-
-.modal-image-container {
-  @apply relative w-full h-[300px];
-}
-
-.modal-image {
-  @apply absolute inset-0 bg-center bg-cover;
-}
-
-.modal-image::after {
-  content: '';
-  @apply absolute inset-0 bg-gradient-to-t from-black/70 to-transparent;
-}
-
-.modal-title-container {
-  @apply absolute bottom-0 left-0 right-0 p-6 text-white;
-}
-
-.modal-title {
-  @apply text-3xl font-bold mb-2;
-}
-
-.modal-date {
-  @apply text-lg opacity-90;
-}
-
-.modal-content {
-  @apply p-6;
-}
-
-.modal-section-title {
-  @apply text-xl font-bold mb-4;
-}
-
-.modal-description {
-  @apply text-gray-600 dark:text-gray-300 mb-6;
-  @apply text-sm leading-relaxed;
-}
-
-.modal-info-grid {
-  @apply grid grid-cols-2 gap-4 mb-6;
-}
-
-.modal-info-item {
-  @apply bg-gray-50 dark:bg-gray-700 rounded-lg p-4;
-}
-
-.modal-info-label {
-  @apply text-sm text-gray-500 dark:text-gray-400 mb-1;
-}
-
-.modal-info-value {
-  @apply text-lg font-bold;
-}
-
-.modal-ticket-button-container {
-  @apply p-6 border-t border-gray-200 dark:border-gray-700;
-}
-
-.modal-ticket-button {
-  @apply w-full py-3 px-6 rounded-xl;
-  @apply bg-primary-light hover:bg-primary-dark text-white;
-  @apply font-bold text-center transition-colors;
-  @apply flex items-center justify-center gap-2;
-}
-
 /* Event Page Styles */
 .event-page-container {
   @apply min-h-screen bg-white dark:bg-gray-900;
@@ -84,7 +7,7 @@
   @apply relative h-[50vh] min-h-[400px];
 }
 
-.event-image-container {
+.image-container {
   @apply absolute inset-0 w-full h-full;
 }
 
@@ -92,7 +15,7 @@
   @apply object-cover;
 }
 
-.event-image-overlay {
+.image-overlay {
   @apply absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent;
 }
 
@@ -192,9 +115,9 @@
   @apply text-2xl;
 }
 
-/* .reserve-button {
+.reserve-event-button {
   @apply w-full py-3 px-4 rounded-lg;
   @apply bg-blue-600 hover:bg-blue-700 text-white;
   @apply font-medium text-lg transition-colors;
   @apply flex items-center justify-center gap-2;
-} */
+}

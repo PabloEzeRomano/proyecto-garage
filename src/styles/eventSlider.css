@@ -1,5 +1,5 @@
 .event-slider-container {
-  @apply h-[170px] z-50 contain-paint relative flex justify-start items-center;
+  @apply h-[170px] contain-paint relative flex justify-start items-center;
 }
 
 .event-slider {
