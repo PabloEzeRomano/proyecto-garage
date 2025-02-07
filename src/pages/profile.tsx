@@ -1,27 +1,27 @@
+'use client';
+
 import { Input } from '@/components/Input';
-import useAuth from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabase';
-import { createClient } from '@/lib/supabase-server';
+import { useAuth } from '@/contexts/AuthContext';
 import { Role, User } from '@/types/database';
+import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import '@/styles/addForm.css';
 
 interface ProfileProps {
-  user: User;
+  initialProfile: User;
 }
 
-export default function Profile({ user }: ProfileProps) {
+export default function ProfilePage({ initialProfile }: ProfileProps) {
+  const { session, loading } = useAuth();
   const router = useRouter();
   const [userData, setUserData] = useState<User>({
-    ...user,
+    ...initialProfile,
     password: '',
     confirmPassword: '',
   });
-
-  const { session, loading } = useAuth();
 
   if (loading || !session) {
     return <div>Cargando...</div>;
@@ -47,7 +47,7 @@ export default function Profile({ user }: ProfileProps) {
       password: userData.password || undefined,
       data: {
         name: userData.name,
-      }
+      },
     });
 
     if (error) {
@@ -58,6 +58,10 @@ export default function Profile({ user }: ProfileProps) {
     alert('Perfil actualizado correctamente');
     router.push('/profile');
   };
+
+  if (loading || !session) {
+    return <div>Cargando...</div>;
+  }
 
   const inputs = [
     {
@@ -113,26 +117,42 @@ export default function Profile({ user }: ProfileProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const supabase = createClient(req as any, res as any);
-  const { data: { user }, error } = await supabase.auth.getUser();
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const supabase = createServerSupabaseClient(context);
 
-  if (!user || error) {
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      return {
+        redirect: {
+          destination: '/auth/sign-in',
+          permanent: false,
+        },
+      };
+    }
+
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', session.user.id)
+      .single();
+
+    if (error) throw error;
+
     return {
-      redirect: {
-        destination: '/auth/sign-in',
-        permanent: false,
+      props: {
+        initialProfile: profile,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    return {
+      props: {
+        initialProfile: null,
       },
     };
   }
-
-  return {
-    props: {
-      user: {
-        ...user,
-        name: user.user_metadata?.name || '',
-        roles: user.app_metadata?.roles || [],
-      }
-    }
-  };
 };

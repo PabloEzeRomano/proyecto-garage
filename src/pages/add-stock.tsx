@@ -1,71 +1,94 @@
-import { Input } from '@/components/Input';
+import { CrudForm } from '@/components/CrudForm';
 import useAuth from '@/hooks/useAuth';
 import { supabase } from '@/lib/supabase';
-import { Role } from '@/types/database';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { Role, Stock, Item } from '@/types/database';
+import { GetServerSideProps } from 'next';
 
-import '@/styles/addForm.css';
+interface AddStockProps {
+  stock?: Stock;
+  items?: Item[];
+}
 
-export default function AddStock() {
-  const [name, setName] = useState('');
-  const [itemId, setItemId] = useState('');
-  const [quantity, setQuantity] = useState(0);
-  const [cost, setCost] = useState(0);
-  const router = useRouter();
-  const { session, loading } = useAuth([Role.ADMIN, Role.ROOT]);
+const defaultStock: Stock = {
+  id: -1,
+  itemId: -1,
+  quantity: 0,
+  name: '',
+  cost: 0,
+};
 
-  if (loading || !session) {
-    return <div>Loading...</div>;
+export default function AddStock({ stock, items = [] }: AddStockProps) {
+  const { loading } = useAuth([Role.ADMIN, Role.ROOT]);
+
+  if (loading) {
+    return <div>Cargando...</div>;
   }
 
-  const handleSubmit = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    const { data, error } = await supabase.from('stocks').insert({
-      name,
-      item_id: itemId,
-      quantity,
-      cost,
-    });
-    router.push('/stocks');
-  };
+  const inputs = [
+    {
+      label: 'Nombre',
+      type: 'text',
+      name: 'name',
+      value: stock?.name || defaultStock.name,
+    },
+    {
+      label: 'Item',
+      type: 'select',
+      name: 'itemId',
+      value: String(stock?.itemId || defaultStock.itemId),
+      options: items.map(item => ({
+        value: item.id.toString(),
+        label: item.title
+      })),
+    },
+    {
+      label: 'Cantidad',
+      type: 'number',
+      name: 'quantity',
+      value: String(stock?.quantity || defaultStock.quantity),
+    },
+    {
+      label: 'Costo',
+      type: 'number',
+      name: 'cost',
+      value: String(stock?.cost || defaultStock.cost),
+    },
+  ];
 
   return (
-    <div className="add-container">
-      <h1 className="add-title">Añadir Stock</h1>
-      <form onSubmit={handleSubmit} className="form-container">
-        <Input
-          placeholder="A title"
-          label="Name:"
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          value={name}
-        />
-        <Input
-          placeholder="23"
-          label="Item id:"
-          onChange={(e) => setItemId(e.target.value)}
-          type="text"
-          value={itemId}
-        />
-        <Input
-          placeholder="1"
-          label="Quantity:"
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          type="number"
-          value={quantity}
-        />
-        <Input
-          placeholder="1"
-          label="Cost:"
-          onChange={(e) => setCost(Number(e.target.value))}
-          type="number"
-          value={cost}
-        />
-        <button type="submit" className="submit">
-          Add Item
-        </button>
-      </form>
-    </div>
+    <CrudForm<Stock>
+      data={stock}
+      defaultData={defaultStock}
+      table="stocks"
+      title="Stock"
+      inputs={inputs}
+      redirectPath="/stocks"
+    />
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const [stockResponse, itemsResponse] = await Promise.all([
+    context.query.id
+      ? supabase.from('stocks').select('*').eq('id', context.query.id)
+      : Promise.resolve({ data: null, error: null }),
+    supabase.from('items').select('id, title')
+  ]);
+
+  if (stockResponse.error) {
+    console.error('Error fetching stock:', stockResponse.error);
+    return { props: { stock: null, items: [] } };
+  }
+
+  if (itemsResponse.error) {
+    console.error('Error fetching items:', itemsResponse.error);
+    return { props: { stock: stockResponse.data?.[0] || null, items: [] } };
+  }
+
+  return {
+    props: {
+      stock: stockResponse.data?.[0] || null,
+      items: itemsResponse.data || []
+    }
+  };
+};
