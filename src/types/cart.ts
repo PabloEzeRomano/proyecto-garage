@@ -1,17 +1,13 @@
-export interface CartItem {
+export interface MinimalCartItem {
   id: number;
-  name: string;
-  price: number;
   quantity: number;
-  image: string;
-  description: string;
+  table: 'events' | 'items';
 }
 
 export interface CartContextType {
-  cartItems: CartItem[];
-  addToCart: (item: CartItem) => void;
+  cartItems: MinimalCartItem[];
+  addToCart: (item: MinimalCartItem) => void;
   removeFromCart: (itemId: number) => void;
-  updateQuantity: (productId: number, quantity: number) => void;
+  updateQuantity: (itemId: number, quantity: number) => void;
   totalItems: number;
-  totalPrice: number;
 }
