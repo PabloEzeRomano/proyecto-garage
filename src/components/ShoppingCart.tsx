@@ -1,16 +1,64 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import Image from 'next/image';
 import { Wallet } from '@mercadopago/sdk-react';
-import { useState } from 'react';
 import { Spinner } from './Spinner';
+import { supabase } from '@/lib/supabase';
+import { Event, Item } from '@/types/database';
+import { getOptimizedImageUrl } from '@/utils/imageUtils';
 
-export const ShoppingCart: React.FC = () => {
-  const { cartItems, removeFromCart, updateQuantity, totalPrice } = useCart();
+interface CartItemDetails extends Item {
+  quantity: number;
+}
+
+interface CartEventDetails extends Event {
+  quantity: number;
+}
+
+type CartItemWithDetails = CartItemDetails | CartEventDetails;
+
+interface ShoppingCartProps {
+  initialItems: CartItemWithDetails[];
+}
+
+export const ShoppingCart: React.FC<ShoppingCartProps> = ({ initialItems }) => {
+  const { cartItems, removeFromCart, updateQuantity } = useCart();
   const [preferenceId, setPreferenceId] = useState<string>("");
+  const [itemsWithDetails, setItemsWithDetails] = useState<CartItemWithDetails[]>(initialItems);
+
+  // Update items when cart changes
+  useEffect(() => {
+    const updateItemDetails = async () => {
+      try {
+        const itemPromises = cartItems.map(async (cartItem) => {
+          // First try to find the item in our existing items
+          const existingItem = itemsWithDetails.find(item => item.id === cartItem.id);
+          if (existingItem) {
+            return { ...existingItem, quantity: cartItem.quantity };
+          }
+
+          // If not found (new item), fetch from database
+          const { data, error } = await supabase
+            .from(cartItem.table)
+            .select('id, title, description, price, image_url')
+            .eq('id', cartItem.id)
+            .single();
+
+          if (error) throw error;
+          return { ...data, quantity: cartItem.quantity };
+        });
+
+        const items = await Promise.all(itemPromises);
+        setItemsWithDetails(items);
+      } catch (error) {
+        console.error('Error updating item details:', error);
+      }
+    };
+
+    updateItemDetails();
+  }, [cartItems]);
 
   useEffect(() => {
     const loadMP = async () => {
@@ -20,7 +68,7 @@ export const ShoppingCart: React.FC = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ cartItems }),
+          body: JSON.stringify({ cartItems: itemsWithDetails }),
         });
 
         const data = await response.json();
@@ -29,8 +77,16 @@ export const ShoppingCart: React.FC = () => {
         console.error('Error creating preference:', error);
       }
     };
+
+    if (itemsWithDetails.length > 0) {
       loadMP();
-  }, [cartItems]);
+    }
+  }, [itemsWithDetails]);
+
+  const totalPrice = itemsWithDetails.reduce(
+    (sum, item) => sum + (item.price || 0) * item.quantity,
+    0
+  );
 
   return (
     <div className="max-w-4xl mx-auto p-6 text-white">
@@ -41,25 +97,25 @@ export const ShoppingCart: React.FC = () => {
       ) : (
         <>
           <div className="space-y-4">
-            {cartItems.map((item) => (
+            {itemsWithDetails.map((item) => (
               <div
                 key={item.id}
                 className="flex gap-4 border border-gray-200 rounded-lg p-4 bg-gray-800"
               >
-                {item.image && (
+                {item.image_url && (
                   <Image
-                    src={item.image}
-                    alt={item.name}
+                    src={getOptimizedImageUrl(item.image_url, 'thumbnail')}
+                    alt={item.title}
                     width={96}
                     height={96}
                     className="w-24 h-24 object-cover rounded-md"
                   />
                 )}
                 <div className="flex-1">
-                  <h3 className="font-semibold text-lg">{item.name}</h3>
+                  <h3 className="font-semibold text-lg">{item.title}</h3>
                   <p className="text-gray-300 text-sm">{item.description}</p>
                   <p className="text-blue-400 font-bold mt-2">
-                    ${item.price.toFixed(2)}
+                    ${(item.price || 0).toFixed(2)}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

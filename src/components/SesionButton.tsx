@@ -2,30 +2,14 @@ import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { UserPlusIcon } from '../../public/icons';
-import { supabase } from '@/lib/supabase';
-import { useEffect, useState } from 'react';
-import { Session } from '@supabase/supabase-js';
+import { useSupabase } from '@/contexts/SupabaseContext';
+import { useAuth } from '@/contexts/AuthContext';
 import '@/styles/button.css';
 
 export const SessionButton = () => {
   const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const { session, loading } = useAuth();
+  const supabase = useSupabase();
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
