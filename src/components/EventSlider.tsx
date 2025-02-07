@@ -27,6 +27,7 @@ const EventImage = ({
   const [isHovered, setIsHovered] = useState(false);
   const [imageSrc, setImageSrc] = useState('/placeholder.jpg');
   const [isLoading, setIsLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const loadImage = async () => {
@@ -72,25 +73,32 @@ const EventImage = ({
           </motion.div>
         )}
       </AnimatePresence>
-      {isLoading ? (
-        <div className="flex items-center justify-center w-full h-full bg-gray-100 dark:bg-gray-800">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-light" />
-        </div>
-      ) : (
+      {!imageError ? (
         <Image
           src={imageSrc}
           alt={event.title}
           width={150}
           height={150}
           className="object-cover h-[150px] w-[150px]"
+          onError={() => setImageError(true)}
+          onLoad={() => setIsLoading(false)}
+          priority
         />
+      ) : (
+        <div className="event-image-overlay">
+          <span className="event-image-overlay-text">No image</span>
+        </div>
+      )}
+      {isLoading && (
+        <div className="event-image-overlay">
+          <span className="event-image-overlay-text">Loading...</span>
+        </div>
       )}
     </motion.div>
   );
 };
 
 export const EventSlider = ({ events, onEventClick }: EventSliderProps) => {
-  console.log('eventsslider', events);
   const [controls, setControls] = useState<AnimationPlaybackControls | null>(
     null
   );

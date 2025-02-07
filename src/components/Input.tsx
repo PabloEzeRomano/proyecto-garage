@@ -23,6 +23,20 @@ export const Input: FC<InputProps> = ({
   options,
   ...restProps
 }) => {
+  const handleCheckboxClick = useCallback(() => {
+    if (restProps.disabled) {
+      return;
+    }
+    if (onChange) {
+      onChange({
+        target: {
+          checked: !restProps.checked,
+          type: 'checkbox',
+        },
+      } as unknown as React.ChangeEvent<HTMLInputElement>);
+    }
+  }, [onChange, restProps.checked, restProps.disabled]);
+
   useEffect(() => {
     if (error) {
       console.error(`Input error for ${name || id}: ${error}`);
@@ -42,7 +56,7 @@ export const Input: FC<InputProps> = ({
           name={name}
           value={value}
           onChange={onChange}
-          className={`select-input ${error ? 'error' : ''} ${className || ''}`}
+          className={`${className || ''} select-input ${error ? 'error' : ''}`}
           {...restProps}
         >
           <option value="">Seleccionar {label}</option>
@@ -66,19 +80,6 @@ export const Input: FC<InputProps> = ({
     );
   }
 
-  const handleCheckboxClick = useCallback(() => {
-    if (restProps.disabled) {
-      return;
-    }
-    if (onChange) {
-      onChange({
-        target: {
-          checked: !restProps.checked,
-          type: 'checkbox',
-        },
-      } as unknown as React.ChangeEvent<HTMLInputElement>);
-    }
-  }, [onChange, restProps.checked]);
 
   return (
     <div
