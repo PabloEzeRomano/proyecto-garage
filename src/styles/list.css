@@ -20,10 +20,15 @@
   @apply bg-white dark:bg-gray-800 rounded-2xl overflow-hidden min-w-[300px];
   @apply transform transition-all duration-300;
   @apply hover:-translate-y-1 hover:shadow-xl;
+  @apply flex flex-col;
 }
 
 .card-header {
-  @apply relative;
+  @apply flex justify-between;
+}
+
+.card-image-container {
+  @apply cursor-pointer;
 }
 
 .card-image {
@@ -31,7 +36,11 @@
 }
 
 .card-content {
-  @apply p-4;
+  @apply p-4 flex flex-col flex-1;
+}
+
+.card-price {
+  @apply text-lg font-bold;
 }
 
 .card-title {
@@ -43,7 +52,7 @@
 }
 
 .card-footer {
-  @apply flex justify-between items-center mt-auto;
+  @apply flex justify-between items-end mt-auto;
 }
 
 .card-date-time {
@@ -56,4 +65,20 @@
 
 .card-time {
   @apply text-gray-500 dark:text-gray-400 text-sm pl-2;
+}
+
+.card-actions {
+  @apply flex items-center gap-2;
+}
+
+.event-actions {
+  @apply flex items-start gap-2;
+}
+
+.card-actions .select-input {
+  @apply w-12 text-sm p-2;
+}
+
+.reserve-button {
+  @apply px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors text-lg;
 }

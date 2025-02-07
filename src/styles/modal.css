@@ -74,3 +74,127 @@
   @apply font-bold text-center transition-colors;
   @apply flex items-center justify-center gap-2;
 }
+
+/* Event Page Styles */
+.event-page-container {
+  @apply min-h-screen bg-white dark:bg-gray-900;
+}
+
+.event-hero {
+  @apply relative h-[50vh] min-h-[400px];
+}
+
+.event-image-container {
+  @apply absolute inset-0 w-full h-full;
+}
+
+.event-image {
+  @apply object-cover;
+}
+
+.event-image-overlay {
+  @apply absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent;
+}
+
+.event-hero-content {
+  @apply absolute inset-0 flex flex-col justify-end p-8 text-white z-10;
+  @apply max-w-7xl mx-auto w-full;
+}
+
+.back-button {
+  @apply absolute top-8 left-8 text-white hover:text-gray-200 transition-colors;
+  @apply text-lg font-medium;
+}
+
+.event-title {
+  @apply text-4xl md:text-5xl font-bold mb-4;
+}
+
+.event-date {
+  @apply text-xl text-gray-200;
+}
+
+.event-content {
+  @apply max-w-7xl mx-auto px-4 py-8;
+  @apply grid grid-cols-1 lg:grid-cols-3 gap-8;
+}
+
+.event-main {
+  @apply lg:col-span-2 space-y-8;
+}
+
+.event-section {
+  @apply space-y-4;
+}
+
+.section-title {
+  @apply text-2xl font-bold text-gray-900 dark:text-white;
+}
+
+.event-description {
+  @apply text-gray-600 dark:text-gray-300 text-lg leading-relaxed;
+}
+
+.event-details {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+.detail-item {
+  @apply bg-gray-50 dark:bg-gray-800 rounded-lg p-4;
+  @apply flex flex-col;
+}
+
+.detail-label {
+  @apply text-sm text-gray-500 dark:text-gray-400;
+}
+
+.detail-value {
+  @apply text-lg font-semibold text-gray-900 dark:text-white mt-1;
+}
+
+.event-sidebar {
+  @apply lg:col-span-1;
+}
+
+.reservation-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6;
+  @apply sticky top-24;
+}
+
+.reservation-title {
+  @apply text-xl font-bold text-gray-900 dark:text-white mb-4;
+}
+
+.reservation-content {
+  @apply space-y-4;
+}
+
+.quantity-selector {
+  @apply space-y-2;
+}
+
+.quantity-label {
+  @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
+}
+
+.quantity-select {
+  @apply w-full rounded-lg border-gray-300 dark:border-gray-700;
+  @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-white;
+  @apply focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+}
+
+.price-summary {
+  @apply flex justify-between items-center;
+  @apply text-lg font-semibold text-gray-900 dark:text-white;
+}
+
+.total-price {
+  @apply text-2xl;
+}
+
+/* .reserve-button {
+  @apply w-full py-3 px-4 rounded-lg;
+  @apply bg-blue-600 hover:bg-blue-700 text-white;
+  @apply font-medium text-lg transition-colors;
+  @apply flex items-center justify-center gap-2;
+} */
