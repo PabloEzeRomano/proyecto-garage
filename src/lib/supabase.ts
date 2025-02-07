@@ -14,12 +14,39 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseServiceRoleKey = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY;
 
-// Browser client
-export const supabase = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+// Types for our global singleton
+declare global {
+  var supabaseInstance: ReturnType<typeof createBrowserClient<Database>> | undefined;
+  var supabaseAdminInstance: ReturnType<typeof createClient<Database>> | undefined;
+}
 
-// Admin client for server-side operations (optional)
-export const supabaseAdmin = supabaseServiceRoleKey
-  ? createClient<Database>(
+// Debug function to get the current component stack
+const getDebugStack = () => {
+  const stack = new Error().stack;
+  console.log('Supabase client initialization stack:', stack);
+};
+
+// Browser client singleton
+export const supabase = global.supabaseInstance || (() => {
+  if (typeof window === 'undefined') {
+    // Server-side: create a new instance every time
+    return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+  }
+
+  // Client-side: create once and reuse
+  if (!global.supabaseInstance) {
+    global.supabaseInstance = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+  }
+  return global.supabaseInstance;
+})();
+
+// Admin client singleton for server-side operations
+export const supabaseAdmin = global.supabaseAdminInstance || (() => {
+  if (!supabaseServiceRoleKey) return null;
+
+  if (typeof window === 'undefined') {
+    // Server-side: create a new instance every time
+    return createClient<Database>(
       supabaseUrl,
       supabaseServiceRoleKey,
       {
@@ -28,5 +55,21 @@ export const supabaseAdmin = supabaseServiceRoleKey
           persistSession: false,
         },
       }
-    )
-  : null;
+    );
+  }
+
+  // Client-side: create once and reuse
+  if (!global.supabaseAdminInstance) {
+    global.supabaseAdminInstance = createClient<Database>(
+      supabaseUrl,
+      supabaseServiceRoleKey,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
+  }
+  return global.supabaseAdminInstance;
+})();
