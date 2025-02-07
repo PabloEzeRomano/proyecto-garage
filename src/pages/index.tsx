@@ -11,8 +11,8 @@ import dayjs from 'dayjs';
 import { useSupabase } from '@/contexts/SupabaseContext';
 import Image from 'next/image';
 import { getOptimizedImageUrl } from '@/utils/imageUtils';
+
 import '@/styles/list.css';
-import '@/styles/modal.css';
 import '@/styles/landing.css';
 
 interface HomeProps {
@@ -101,6 +101,7 @@ export default function Home({ events: initialEvents }: HomeProps) {
                   className="card-image"
                   width={400}
                   height={300}
+                  priority
                 />
               </div>
               <div className="card-content">

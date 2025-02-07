@@ -1,32 +1,20 @@
-import useAuth from '@/hooks/useAuth';
-import { createClient } from '@/lib/supabase-server';
-import { supabaseAdmin } from '@/lib/supabase';
-import { Role } from '@/types/database';
-import { GetServerSideProps } from 'next';
-import { User } from '@supabase/supabase-js';
-import { useState, useEffect } from 'react';
 import { Input } from '@/components/Input';
+import useAuth from '@/hooks/useAuth';
+import { supabaseAdmin } from '@/lib/supabase';
+import {
+  createServerSupabaseAdmin
+} from '@/lib/supabase-server';
+import { Role } from '@/types/database';
+import { User } from '@supabase/supabase-js';
+import { GetServerSideProps } from 'next';
+import { useState } from 'react';
 
-export default function EditUser() {
+export default function EditUser({ users }: { users: User[] }) {
   const { user, loading } = useAuth([Role.ROOT]);
-  const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (!supabaseAdmin) return;
-      const { data: { users }, error } = await supabaseAdmin.auth.admin.listUsers();
-      if (error) {
-        console.error('Error fetching users:', error);
-        return;
-      }
-      setUsers(users);
-    };
-    fetchUsers();
-  }, []);
-
   const handleUserSelect = (userId: string) => {
-    const user = users.find(u => u.id === userId);
+    const user = users.find((u) => u.id === userId);
     setSelectedUser(user || null);
   };
 
@@ -39,7 +27,7 @@ export default function EditUser() {
       {
         email: selectedUser.email,
         user_metadata: { name: selectedUser.user_metadata?.name },
-        app_metadata: { roles: selectedUser.app_metadata?.roles }
+        app_metadata: { roles: selectedUser.app_metadata?.roles },
       }
     );
 
@@ -73,20 +61,38 @@ export default function EditUser() {
             label="Email"
             type="email"
             value={selectedUser.email}
-            onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
+            onChange={(e) =>
+              setSelectedUser({ ...selectedUser, email: e.target.value })
+            }
           />
           <Input
             label="Name"
             type="text"
             value={selectedUser.user_metadata?.name}
-            onChange={(e) => setSelectedUser({ ...selectedUser, user_metadata: { ...selectedUser.user_metadata, name: e.target.value } })}
+            onChange={(e) =>
+              setSelectedUser({
+                ...selectedUser,
+                user_metadata: {
+                  ...selectedUser.user_metadata,
+                  name: e.target.value,
+                },
+              })
+            }
           />
           <Input
             label="Role"
             type="select"
             value={selectedUser.app_metadata?.roles[0] || ''}
             options={[Role.USER, Role.ADMIN, Role.ROOT]}
-            onChange={(e) => setSelectedUser({ ...selectedUser, app_metadata: { ...selectedUser.app_metadata, roles: [e.target.value as Role] } })}
+            onChange={(e) =>
+              setSelectedUser({
+                ...selectedUser,
+                app_metadata: {
+                  ...selectedUser.app_metadata,
+                  roles: [e.target.value as Role],
+                },
+              })
+            }
           />
           <button type="submit">Update User</button>
         </form>
@@ -95,10 +101,12 @@ export default function EditUser() {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const supabase = createClient(req as any, res as any);
-  const { data: { user }, error } = await supabase.auth.getUser();
-
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const supabase = createServerSupabaseAdmin();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
   if (!user || error || !user.app_metadata?.roles?.includes(Role.ROOT)) {
     return {
       redirect: {
@@ -107,8 +115,20 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       },
     };
   }
+  if (!supabase) return { props: { users: [] } };
+  const {
+    data: { users },
+    error: usersError,
+  } = await supabase.auth.admin.listUsers();
+  if (usersError) {
+    console.error('Error fetching users:', usersError);
+    return { props: { users: [] } };
+  }
 
   return {
-    props: {}
+    props: {
+      users,
+    },
   };
 };
+

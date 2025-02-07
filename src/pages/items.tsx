@@ -16,6 +16,7 @@ import { getOptimizedImageUrl } from '@/utils/imageUtils';
 
 import '@/styles/list.css';
 import { Input } from '@/components/Input';
+import { createServerSideProps } from '@/utils/serverProps';
 
 interface ItemsProps {
   items: Item[];
@@ -90,13 +91,10 @@ export const ItemsPage: React.FC<ItemsProps> = ({ items: initialItems }) => {
               </div>
             )}
             <div className="card-content">
-              <h2 className="card-title">{item.title}</h2>
-              <p className="card-description">{item.description}</p>
-              <div className="card-footer">
-                <span className="card-price">${item.price}</span>
-                <div className="card-actions">
-                  {hasRole([Role.ADMIN, Role.ROOT]) && (
-                    <>
+              <div className="card-header">
+                <h2 className="card-title">{item.title}</h2>
+                {hasRole([Role.ADMIN, Role.ROOT]) && (
+                    <div className="event-actions">
                       <button
                         onClick={() => router.push(`/add-item?id=${item.id}`)}
                         className="action-button edit-button"
@@ -109,8 +107,12 @@ export const ItemsPage: React.FC<ItemsProps> = ({ items: initialItems }) => {
                       >
                         <TrashIcon />
                       </button>
-                    </>
+                    </div>
                   )}
+              </div>
+              <div className="card-footer">
+                <span className="card-price">${item.price}</span>
+                <div className="card-actions">
                   <Input
                     removeMargin
                     type="select"
@@ -138,28 +140,12 @@ export const ItemsPage: React.FC<ItemsProps> = ({ items: initialItems }) => {
 
 export default ItemsPage;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const supabase = createServerSupabaseClient(context);
-
-  try {
-    const { data: items, error } = await supabase
-      .from('items')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    return {
-      props: {
-        items: JSON.parse(JSON.stringify(items || [])),
-      },
-    };
-  } catch (error) {
-    console.error('Error fetching items:', error);
-    return {
-      props: {
-        items: [],
-      },
-    };
-  }
-};
+export const getServerSideProps = createServerSideProps<Item>({
+  table: 'items',
+  columns: '*',
+  requireAuth: false,
+  order: {
+    column: 'created_at',
+    ascending: false,
+  },
+});

@@ -9,7 +9,7 @@ import { Input } from '@/components/Input';
 import { useRouter } from 'next/router';
 import { getOptimizedImageUrl } from '@/utils/imageUtils';
 
-import '@/styles/modal.css';
+import '@/styles/eventPage.css';
 
 interface EventPageProps {
   event: Event;
@@ -36,7 +36,7 @@ export default function EventPage({ event }: EventPageProps) {
     <div className="event-page-container">
       <div className="event-hero">
         {event.image_url && (
-          <div className="event-image-container">
+          <div className="image-container">
             <Image
               src={getOptimizedImageUrl(event.image_url, 'large')}
               alt={event.title}
@@ -44,7 +44,7 @@ export default function EventPage({ event }: EventPageProps) {
               className="event-image"
               priority
             />
-            <div className="event-image-overlay" />
+            <div className="image-overlay" />
           </div>
         )}
         <div className="event-hero-content">
@@ -116,7 +116,7 @@ export default function EventPage({ event }: EventPageProps) {
               )}
               <button
                 onClick={handleAddToCart}
-                className="reserve-button"
+                className="reserve-event-button"
               >
                 Agregar al Carrito
               </button>

@@ -15,6 +15,7 @@ interface ProfileProps {
 }
 
 export default function ProfilePage({ initialProfile }: ProfileProps) {
+  console.log('initialProfile', initialProfile);
   const { session, loading } = useAuth();
   const router = useRouter();
   const [userData, setUserData] = useState<User>({
@@ -85,6 +86,7 @@ export default function ProfilePage({ initialProfile }: ProfileProps) {
       name: 'role',
       value: userData.roles[0] || '',
       options: [Role.USER, Role.ADMIN],
+      className: 'w-full p-4',
     },
     {
       label: 'Contraseña',
@@ -123,7 +125,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const {
       data: { session },
+      error,
     } = await supabase.auth.getSession();
+
+    console.log('session', session);
 
     if (!session) {
       return {
@@ -134,17 +139,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
-    const { data: profile, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', session.user.id)
-      .single();
-
     if (error) throw error;
 
     return {
       props: {
-        initialProfile: profile,
+        initialProfile: {
+          ...session.user,
+          roles: session.user.app_metadata.roles,
+          permissions: session.user.app_metadata.permissions,
+        },
       },
     };
   } catch (error) {

@@ -2,18 +2,19 @@
 
 import { ClientOnly } from '@/components/ClientOnly';
 import { Input } from '@/components/Input';
+import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
-import useAuth from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabase';
-import '@/styles/list.css';
-import { Event, Permission } from '@/types/database';
+import { useMutations } from '@/hooks/useMutations';
+import { Event, Permission, Role } from '@/types/database';
+import { getOptimizedImageUrl } from '@/utils/imageUtils';
+import { createServerSideProps } from '@/utils/serverProps';
 import dayjs from 'dayjs';
-import { GetServerSideProps } from 'next';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { EditIcon, TrashIcon } from '../../../public/icons';
-import { getOptimizedImageUrl } from '@/utils/imageUtils';
+
+import '@/styles/list.css';
 
 interface EventProps {
   events: Event[];
@@ -24,11 +25,12 @@ interface EventQuantity {
 }
 
 export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
-  const { user, loading } = useAuth([], [], false);
+  const { user, loading, hasRole } = useAuth();
   const router = useRouter();
   const [events, setEvents] = useState<Event[]>(initialEvents);
   const [quantities, setQuantities] = useState<EventQuantity>({});
   const { addToCart } = useCart();
+  const { delete: deleteEvent, loading: loadingMutation } = useMutations('events');
 
   if (loading) {
     return <div>Loading...</div>;
@@ -50,13 +52,19 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
     });
   };
 
-  const deleteEvent = async (id: number) => {
-    const { error } = await supabase.from('events').delete().eq('id', id);
-
-    if (error) {
-      console.error('Error deleting event:', error);
-    } else {
-      setEvents(events.filter((event) => event.id !== id));
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteEvent(id.toString(), {
+        onSuccess: () => {
+          setEvents(events.filter((event) => event.id !== id));
+        },
+        onError: (error) => {
+          console.error('Error deleting event:', error);
+          alert('Error deleting event');
+        },
+      });
+    } catch (error) {
+      // Error is already handled by onError callback
     }
   };
 
@@ -97,34 +105,23 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
               <div className="card-content">
                 <div className="card-header">
                   <h3 className="card-title">{event.title}</h3>
-                  <div className="event-actions">
-                    {user?.app_metadata?.permissions?.includes(
-                      Permission.EVENTS_DELETE
-                    ) && (
+                  {hasRole([Role.ADMIN, Role.ROOT]) && (
+                    <div className="event-actions">
                       <button
-                        className="action-button delete-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteEvent(event.id);
-                        }}
-                      >
-                        <TrashIcon />
-                      </button>
-                    )}
-                    {user?.app_metadata?.permissions?.includes(
-                      Permission.EVENTS_UPDATE
-                    ) && (
-                      <button
+                        onClick={() => router.push(`/add-event?id=${event.id}`)}
                         className="action-button edit-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/add-event?id=${event.id}`);
-                        }}
                       >
                         <EditIcon />
                       </button>
-                    )}
-                  </div>
+                      <button
+                        onClick={() => handleDelete(event.id)}
+                        className="action-button delete-button"
+                        disabled={loadingMutation}
+                      >
+                        <TrashIcon />
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div className="card-footer">
                   <div>
@@ -175,22 +172,14 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const { data: events, error } = await supabase
-    .from('events')
-    .select('id, title, description, short_description, date, price, image_url')
-    .order('date', { ascending: true });
-
-  if (error) {
-    console.error('Error fetching events:', error);
-    return {
-      props: { events: [] },
-    };
+export const getServerSideProps = createServerSideProps<Event>({
+  table: 'events',
+  columns: 'id, title, description, short_description, date, price, image_url',
+  requireAuth: false,
+  order: {
+    column: 'date',
+    ascending: true,
   }
-
-  return {
-    props: { events: JSON.parse(JSON.stringify(events)) },
-  };
-};
+});
 
 export default EventsPage;
