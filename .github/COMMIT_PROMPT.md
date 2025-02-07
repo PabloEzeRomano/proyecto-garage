@@ -3,7 +3,7 @@
 ## 1. Check Current Changes
 Run:
 ```bash
-git status
+gst
 ```
 
 ## 2. Analyze Changed Files
