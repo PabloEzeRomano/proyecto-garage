@@ -20,3 +20,5 @@ export * from './TrashIcon';
 export * from './UsersIcon';
 export * from './LoginIcon';
 export * from './UserPlusIcon';
+export * from './FacebookIcon';
+export * from './InstagramIcon';
