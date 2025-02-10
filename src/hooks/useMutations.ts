@@ -89,9 +89,9 @@ export const useMutations = (table: string) => {
       mutate('create', { data }, options),
     update: (id: string, data: any, options?: MutationOptions) =>
       mutate('update', { id, data }, options),
-    delete: (id: string, options?: MutationOptions) =>
+    remove: (id: string, options?: MutationOptions) =>
       mutate('delete', { id }, options),
     loading,
     error,
   };
-}
+};

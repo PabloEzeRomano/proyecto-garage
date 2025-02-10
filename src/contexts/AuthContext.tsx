@@ -4,18 +4,16 @@
  * @module AuthContext
  */
 
+import { Permission, Role } from '@/types/database';
+import { User } from '@supabase/supabase-js';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { Session, User } from '@supabase/supabase-js';
 import { useSupabase } from './SupabaseContext';
-import { Role, Permission } from '@/types/database';
 
 /**
  * Authentication context type definition
  * @interface AuthContextType
  */
 interface AuthContextType {
-  /** Current session object from Supabase */
-  session: Session | null;
   /** Current user object from Supabase */
   user: User | null;
   /** Loading state for auth operations */
@@ -66,7 +64,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
  */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const supabase = useSupabase();
-  const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -76,10 +73,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Get initial session
     const initializeAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (mounted) {
-          setSession(session);
-          setUser(session?.user ?? null);
+          setUser(user ?? null);
           setLoading(false);
         }
       } catch (error) {
@@ -93,20 +91,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initializeAuth();
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (mounted) {
-          setSession(session);
-          setUser(session?.user ?? null);
-        }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (mounted) {
+        setUser(session?.user ?? null);
       }
-    );
+    });
 
     return () => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase]);
+  }, [supabase]); // Only depend on supabase client
 
   /**
    * Check if the current user has a specific permission
@@ -115,7 +112,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    */
   const hasPermission = (permission: Permission): boolean => {
     if (!user) return false;
-    const userPermissions = (user.app_metadata.permissions as Permission[]) || [];
+    const userPermissions =
+      (user.app_metadata.permissions as Permission[]) || [];
     return userPermissions.includes(permission);
   };
 
@@ -133,7 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, loading, hasPermission, hasRole }}>
+    <AuthContext.Provider value={{ user, loading, hasPermission, hasRole }}>
       {children}
     </AuthContext.Provider>
   );
