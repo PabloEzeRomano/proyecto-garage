@@ -1,4 +1,5 @@
 import { Input } from '@/components/Input';
+import { useMutations } from '@/hooks/useMutations';
 import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -7,7 +8,6 @@ import { useDropzone } from 'react-dropzone';
 import { TrashIcon } from '../../public/icons/TrashIcon';
 
 import '@/styles/addForm.css';
-
 interface InputConfig {
   label: string;
   name: string;
@@ -38,6 +38,7 @@ export function CrudForm<T extends { id: number; image_url?: string | null }>({
   const router = useRouter();
   const [formData, setFormData] = useState<T>(data || defaultData);
   const [addMore, setAddMore] = useState(false);
+  const { update, create, loading } = useMutations(table);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -76,7 +77,6 @@ export function CrudForm<T extends { id: number; image_url?: string | null }>({
     }
 
     setFormData((prev) => {
-      console.log({ ...prev, [name]: parsedValue });
       return { ...prev, [name]: parsedValue };
     });
   };
@@ -87,11 +87,13 @@ export function CrudForm<T extends { id: number; image_url?: string | null }>({
 
     const isUpdate = id !== -1;
 
+    console.log({ restData, isUpdate });
+
     try {
       if (isUpdate) {
-        await supabase.from(table).update(restData).eq('id', id);
+        await update(id.toString(), restData);
       } else {
-        await supabase.from(table).insert(restData);
+        await create(restData);
       }
     } catch (error) {
       console.error(
@@ -101,6 +103,9 @@ export function CrudForm<T extends { id: number; image_url?: string | null }>({
     }
 
     if (addMore) {
+      if (isUpdate) {
+        router.push(`/add-${table.slice(0, -1)}/new`);
+      }
       setFormData(defaultData);
     } else {
       router.push(redirectPath);
@@ -169,7 +174,7 @@ export function CrudForm<T extends { id: number; image_url?: string | null }>({
         )}
 
         <div className="flex justify-between">
-          <button type="submit" className="submit">
+          <button type="submit" className="submit" disabled={loading}>
             {formData.id !== -1 ? `Actualizar ${title}` : `Agregar ${title}`}
           </button>
           <Input

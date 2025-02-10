@@ -8,7 +8,7 @@ import '@/styles/button.css';
 
 export const SessionButton = () => {
   const router = useRouter();
-  const { session, loading } = useAuth();
+  const { user, loading } = useAuth();
   const supabase = useSupabase();
 
   const handleSignOut = async () => {
@@ -22,7 +22,7 @@ export const SessionButton = () => {
     return null;
   }
 
-  if (session) {
+  if (!!user) {
     return (
       <motion.button
         className="secondary"

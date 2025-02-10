@@ -1,11 +1,12 @@
 'use client';
 
-import useAuth from '@/hooks/useAuth';
-import { LogoIcon } from '../../public/icons';
+
+import { useAuth } from '@/contexts/AuthContext';
 import { Role } from '@/types/database';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { LogoIcon } from '../../public/icons';
 import { CartButton } from './CartButton';
 import { ClientOnly } from './ClientOnly';
 import { SessionButton } from './SesionButton';
@@ -25,7 +26,7 @@ interface NavItem {
 }
 
 export const NavBar = () => {
-  const { user, hasRole } = useAuth([], [], false);
+  const { user, hasRole } = useAuth();
   const pathname = usePathname();
 
   const navItems: NavItem[] = [

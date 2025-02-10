@@ -58,7 +58,7 @@ export const ShoppingCart: React.FC<ShoppingCartProps> = ({ initialItems }) => {
     };
 
     updateItemDetails();
-  }, [cartItems]);
+  }, [cartItems, itemsWithDetails]);
 
   useEffect(() => {
     const loadMP = async () => {
