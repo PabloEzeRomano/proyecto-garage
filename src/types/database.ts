@@ -67,7 +67,7 @@ export interface Event {
 
 export interface Stock {
   id: number;
-  itemId: number;
+  item_id: number;
   quantity: number;
   name: string;
   cost: number;
