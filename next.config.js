@@ -6,6 +6,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseDomain = supabaseUrl ? new URL(supabaseUrl).hostname : '';
 
 const nextConfig = {
+  output: 'standalone',
   images: {
     domains: [supabaseDomain],
     formats: ['image/avif', 'image/webp'],
