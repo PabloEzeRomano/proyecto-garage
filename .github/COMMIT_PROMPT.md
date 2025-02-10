@@ -1,5 +1,12 @@
 # Commit Organization Prompt
 
+Before running the script, make sure you're using the aliases as follows:
+```bash
+alias gst="git status"
+alias ga="git add"
+alias gcsm="git commit -m"
+```
+
 ## 1. Check Current Changes
 Run:
 ```bash
@@ -27,10 +34,6 @@ ga path/to/files
 # Create commit with conventional commit message
 gcsm "<type>(<scope>): <short summary>
 
-- Change 1
-- Change 2
-- Change 3
-
 Breaking: (if applicable)
 Refs: #issue (if applicable)"
 ```
@@ -52,26 +55,13 @@ Where:
 ```bash
 # 1. Style System
 ga src/styles/*.css
-gcsm "refactor(styles): implement shared component system
-
-- Create base component styles
-- Remove duplicate classes
-- Implement style inheritance
-- Add theme compatibility"
+gcsm "Refactor(styles): implement shared component system"
 
 # 2. Components
 ga src/components/*.tsx
-gcsm "refactor(components): update style implementation
-
-- Update class names
-- Implement new style system
-- Improve component consistency"
+gcsm "Refactor(components): update style implementation"
 
 # 3. Pages
 ga src/pages/*.tsx
-gcsm "refactor(pages): adapt to new style system
-
-- Update style imports
-- Implement shared components
-- Fix class naming"
+gcsm "Refactor(pages): adapt to new style system"
 ```
