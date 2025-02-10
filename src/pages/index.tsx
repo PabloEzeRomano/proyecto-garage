@@ -12,7 +12,7 @@ import { useSupabase } from '@/contexts/SupabaseContext';
 import Image from 'next/image';
 import { getOptimizedImageUrl } from '@/utils/imageUtils';
 
-import '@/styles/list.css';
+import '@/styles/card.css';
 import '@/styles/landing.css';
 
 interface HomeProps {
@@ -83,7 +83,7 @@ export default function Home({ events: initialEvents }: HomeProps) {
       <SearchBar handleSearch={handleSearch} isLoading={isLoading} />
 
       {/* Event Grid */}
-      <div className="list-container">
+      <div className="cards-container">
         <div className="grid-layout">
           {events.map((event, index) => (
             <div
