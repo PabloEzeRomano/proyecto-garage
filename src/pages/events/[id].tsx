@@ -1,13 +1,12 @@
+import { Input } from '@/components/Input';
 import { useCart } from '@/contexts/CartContext';
-import { supabase } from '@/lib/supabase';
 import { Event } from '@/types/database';
-import { GetServerSideProps } from 'next';
+import { getOptimizedImageUrl } from '@/utils/imageUtils';
+import { createServerSideProps } from '@/utils/serverProps';
 import dayjs from 'dayjs';
 import Image from 'next/image';
-import { useState } from 'react';
-import { Input } from '@/components/Input';
 import { useRouter } from 'next/router';
-import { getOptimizedImageUrl } from '@/utils/imageUtils';
+import { useState } from 'react';
 
 import '@/styles/eventPage.css';
 
@@ -128,30 +127,15 @@ export default function EventPage({ event }: EventPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.params || {};
-
-  if (!id) {
-    return {
-      notFound: true,
-    };
-  }
-
-  const { data: event, error } = await supabase
-    .from('events')
-    .select('id, title, description, short_description, date, price, image_url')
-    .eq('id', id)
-    .single();
-
-  if (error || !event) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: {
-      event: JSON.parse(JSON.stringify(event)),
-    },
-  };
-};
+export const getServerSideProps = createServerSideProps<Event>({
+  table: 'events',
+  key: 'event',
+  columns: 'id, title, description, short_description, date, price, image_url',
+  query: {
+    eq: {
+      id: 'id'
+    }
+  },
+  single: true,
+  requireAuth: false,
+});

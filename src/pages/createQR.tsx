@@ -1,12 +1,11 @@
-import useAuth from '@/hooks/useAuth';
-import { Role } from '@/types/database';
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import '../styles/createQR.css';
+import { useAuth } from '@/contexts/AuthContext';
 
 const CreateQR = () => {
   const [url, setUrl] = useState('');
-  const { loading } = useAuth([], [], false);
+  const { loading } = useAuth();
   // const router = useRouter();
 
   if (loading) {
@@ -40,7 +39,12 @@ const CreateQR = () => {
         </form>
         {url && (
           <div className="qr-code-container">
-            <QRCode value={url} size={256} bgColor="#FFFFFF" fgColor="#000000" />
+            <QRCode
+              value={url}
+              size={256}
+              bgColor="#FFFFFF"
+              fgColor="#000000"
+            />
           </div>
         )}
       </div>

@@ -46,15 +46,15 @@ export default async function handler(
   try {
     // Check authentication
     const {
-      data: { session },
+      data: { user },
       error: authError,
-    } = await supabase.auth.getSession();
-    if (authError || !session) {
+    } = await supabase.auth.getUser();
+    if (authError || !user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
     // Check if user has admin role
-    const userRoles = session.user.app_metadata.roles as Role[];
+    const userRoles = user.app_metadata.roles as Role[];
     if (!userRoles?.includes(Role.ADMIN) && !userRoles?.includes(Role.ROOT)) {
       return res.status(403).json({ error: 'Forbidden' });
     }

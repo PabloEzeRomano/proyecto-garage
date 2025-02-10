@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { EditIcon, TrashIcon } from '../../../public/icons';
 
-import '@/styles/list.css';
+import '@/styles/card.css';
 
 interface EventProps {
   events: Event[];
@@ -30,7 +30,7 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
   const [events, setEvents] = useState<Event[]>(initialEvents);
   const [quantities, setQuantities] = useState<EventQuantity>({});
   const { addToCart } = useCart();
-  const { delete: deleteEvent, loading: loadingMutation } = useMutations('events');
+  const { remove, loading: loadingMutation } = useMutations('events');
 
   if (loading) {
     return <div>Loading...</div>;
@@ -54,11 +54,11 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
 
   const handleDelete = async (id: number) => {
     try {
-      await deleteEvent(id.toString(), {
+      await remove(id.toString(), {
         onSuccess: () => {
           setEvents(events.filter((event) => event.id !== id));
         },
-        onError: (error) => {
+        onError: (error: Error) => {
           console.error('Error deleting event:', error);
           alert('Error deleting event');
         },
@@ -69,7 +69,7 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
   };
 
   const handleAddEvent = () => {
-    router.push('/add-event');
+    router.push('/events/new');
   };
 
   const handleEventClick = (eventId: number) => {
@@ -78,9 +78,9 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
 
   return (
     <ClientOnly>
-      <div className="list-container">
-        <div className="list-header">
-          <h1 className="list-title">Próximos Eventos</h1>
+      <div className="cards-container">
+        <div className="cards-header">
+          <h1 className="cards-title">Próximos Eventos</h1>
           {user?.app_metadata?.permissions?.includes(
             Permission.EVENTS_CREATE
           ) && (
@@ -106,9 +106,9 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
                 <div className="card-header">
                   <h3 className="card-title">{event.title}</h3>
                   {hasRole([Role.ADMIN, Role.ROOT]) && (
-                    <div className="event-actions">
+                    <div className="actions">
                       <button
-                        onClick={() => router.push(`/add-event?id=${event.id}`)}
+                        onClick={() => router.push(`/events/update/${event.id}`)}
                         className="action-button edit-button"
                       >
                         <EditIcon />
@@ -174,6 +174,7 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
 
 export const getServerSideProps = createServerSideProps<Event>({
   table: 'events',
+  key: 'events',
   columns: 'id, title, description, short_description, date, price, image_url',
   requireAuth: false,
   order: {

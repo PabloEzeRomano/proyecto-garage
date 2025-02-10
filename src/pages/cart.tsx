@@ -5,7 +5,6 @@ import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { GetServerSideProps } from 'next';
 import { Event, Item } from '@/types/database';
 import { MinimalCartItem } from '@/types/cart';
-import { cookies } from 'next/headers';
 
 interface CartItemDetails extends Item {
   quantity: number;
@@ -30,12 +29,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   try {
     // Get cart items from cookies
-    const cartCookie = cookies().get('cartItems');
-    if (!cartCookie?.value) {
-      return { props: { initialItems: [] } };
-    }
-
-    const cartItems = JSON.parse(cartCookie.value) as MinimalCartItem[];
+    const cartItems = context.req.cookies.cartItems ?
+      JSON.parse(context.req.cookies.cartItems) as MinimalCartItem[] :
+      [];
 
     // Group items by table for efficient querying
     const itemsByTable = cartItems.reduce((acc, item) => {
