@@ -1,0 +1,61 @@
+@import './theme.css';
+
+.footer-container {
+  @apply mt-auto py-12 px-6 border-t border-gray-200 dark:border-gray-700;
+}
+
+.footer-content {
+  @apply container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8;
+}
+
+.footer-section {
+  @apply flex flex-col gap-4;
+}
+
+.footer-logo {
+  @apply flex items-center gap-2 text-xl font-bold;
+}
+
+.footer-description {
+  @apply text-sm text-gray-600 dark:text-gray-300;
+}
+
+.footer-title {
+  @apply text-lg font-semibold mb-2;
+}
+
+.footer-links {
+  @apply flex flex-col gap-2;
+}
+
+.footer-links a {
+  @apply text-gray-600 dark:text-gray-300 hover:text-primary-light dark:hover:text-primary-dark transition-colors;
+}
+
+.social-links {
+  @apply flex flex-col gap-3;
+}
+
+.social-link {
+  @apply flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-primary-light dark:hover:text-primary-dark transition-colors;
+}
+
+.social-icon {
+  @apply w-6 h-6;
+}
+
+.contact-info {
+  @apply text-sm text-gray-600 dark:text-gray-300 not-italic;
+}
+
+.contact-info p {
+  @apply mb-1;
+}
+
+.contact-info a {
+  @apply hover:text-primary-light dark:hover:text-primary-dark transition-colors;
+}
+
+.footer-bottom {
+  @apply container mx-auto mt-8 pt-8 text-center text-sm text-gray-600 dark:text-gray-300 border-t border-gray-200 dark:border-gray-700;
+}

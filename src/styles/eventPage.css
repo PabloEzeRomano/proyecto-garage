@@ -115,7 +115,7 @@
   @apply text-2xl;
 }
 
-.reserve-event-button {
+-button {
   @apply w-full py-3 px-4 rounded-lg;
   @apply bg-blue-600 hover:bg-blue-700 text-white;
   @apply font-medium text-lg transition-colors;

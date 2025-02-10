@@ -1,14 +1,14 @@
 @import './theme.css';
 
-.list-container {
+.cards-container {
   @apply container mx-auto p-6;
 }
 
-.list-header {
+.cards-header {
   @apply flex justify-between items-center mb-8;
 }
 
-.list-title {
+.cards-title {
   @apply text-3xl font-bold;
 }
 
@@ -71,7 +71,7 @@
   @apply flex items-center gap-2;
 }
 
-.event-actions {
+.actions {
   @apply flex items-start gap-2;
 }
 
