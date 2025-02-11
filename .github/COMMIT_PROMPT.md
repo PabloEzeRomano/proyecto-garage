@@ -1,19 +1,22 @@
 # Commit Organization Prompt
 
-Before running the script, make sure you're using the aliases as follows:
+## Required Aliases
+The following aliases MUST be used - DO NOT use the full git commands:
 ```bash
-alias gst="git status"
-alias ga="git add"
-alias gcsm="git commit -m"
+alias gst="git status"        # DO NOT use 'git status'
+alias ga="git add"           # DO NOT use 'git add'
+alias gcsm="git commit -m"   # DO NOT use 'git commit -m'
 ```
 
-## 1. Check Current Changes
+## Steps
+
+### 1. Check Current Changes
 Run:
 ```bash
 gst
 ```
 
-## 2. Analyze Changed Files
+### 2. Analyze Changed Files
 Group the changed files into these categories:
 - Styles/CSS changes
 - Component changes
@@ -24,8 +27,8 @@ Group the changed files into these categories:
 - Test changes
 - Documentation changes
 
-## 3. Organize Commits
-For each group of related changes, create a commit using this format:
+### 3. Organize Commits
+For each group of related changes:
 
 ```bash
 # Add files for this group
