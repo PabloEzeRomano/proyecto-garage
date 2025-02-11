@@ -1,6 +1,5 @@
 import { Input } from '@/components/Input';
 import { useMutations } from '@/hooks/useMutations';
-import { supabase } from '@/lib/supabase';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
