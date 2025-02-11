@@ -9,10 +9,8 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import { useSupabase } from '@/contexts/SupabaseContext';
-import Image from 'next/image';
-import { getOptimizedImageUrl } from '@/utils/imageUtils';
+import { EventGrid } from '@/components/EventGrid';
 
-import '@/styles/card.css';
 import '@/styles/landing.css';
 
 interface HomeProps {
@@ -68,11 +66,10 @@ export default function Home({ events: initialEvents }: HomeProps) {
       <section className="hero-section">
         <div className="landing-content">
           <h1 className="title">Bienvenido a Proyecto Garage</h1>
-          <p className="subtitle">Tu lugar para estar</p>
+          <p className="subtitle">Tu lugar para estar, ser y disfrutar</p>
         </div>
       </section>
-      <section className="py-12">
-        <h2 className="text-3xl font-bold mb-8">Upcoming Events</h2>
+      <section>
         {events.length > 0 ? (
           <EventSlider events={events} onEventClick={handleEventClick} />
         ) : (
@@ -82,51 +79,10 @@ export default function Home({ events: initialEvents }: HomeProps) {
 
       <SearchBar handleSearch={handleSearch} isLoading={isLoading} />
 
-      {/* Event Grid */}
-      <div className="cards-container">
-        <div className="grid-layout">
-          {events.map((event, index) => (
-            <div
-              key={`${event.id}-${index}`}
-              className="card cursor-pointer"
-              onClick={() => handleEventClick(event.id)}
-            >
-              <div
-                className="card-header"
-                onClick={() => handleEventClick(event.id)}
-              >
-                <Image
-                  src={getOptimizedImageUrl(event.image_url, 'medium')}
-                  alt={event.title}
-                  className="card-image"
-                  width={400}
-                  height={300}
-                  priority
-                />
-              </div>
-              <div className="card-content">
-                <h3 className="card-title">{event.title}</h3>
-                <div className="card-footer">
-                  <div className="card-date-time">
-                    <div className="card-date">
-                      <p>{dayjs(event.date).format('DD')}</p>
-                      <span className="text-sm ml-1">
-                        {dayjs(event.date).format('MMM')}
-                      </span>
-                    </div>
-                    <div className="card-time">
-                      <p>{dayjs(event.date).format('HH')}</p>
-                      <p>{dayjs(event.date).format('mm')}</p>
-                    </div>
-                  </div>
-
-                  {event.price && <p className="card-price">${event.price}</p>}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <EventGrid
+        events={events}
+        onEventClick={handleEventClick}
+      />
     </div>
   );
 }
