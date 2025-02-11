@@ -1,6 +1,6 @@
 .search-container {
   @apply sticky top-12 z-50;
-  @apply py-4 px-6 w-full;
+  @apply py-4 px-6 pb-0 w-full;
   @apply transition-all duration-200;
 }
 

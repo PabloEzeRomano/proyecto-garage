@@ -1,7 +1,7 @@
 @import './theme.css';
 
 .cards-container {
-  @apply container mx-auto p-6;
+  @apply container mx-auto p-6 pb-0;
 }
 
 .cards-header {
@@ -52,7 +52,7 @@
 }
 
 .card-footer {
-  @apply flex justify-between items-end mt-auto;
+  @apply flex justify-between mt-auto;
 }
 
 .card-date-time {
@@ -68,7 +68,7 @@
 }
 
 .card-actions {
-  @apply flex items-center gap-2;
+  @apply flex items-center gap-2 mt-1;
 }
 
 .actions {

@@ -1,6 +1,6 @@
-.event-slider-container {
+/* .event-slider-container {
   @apply h-[170px] contain-paint relative flex justify-start items-center;
-}
+} */
 
 .event-slider {
   @apply flex gap-4 w-max will-change-transform fixed left-0;
@@ -22,7 +22,7 @@
   @apply absolute rounded-full text-black bg-white z-20  px-2 py-1 flex items-center gap-[0.5];
 }
 .event-slider-container {
-  @apply h-[170px] z-50 contain-paint relative overflow-hidden;
+  @apply h-[170px] contain-paint relative overflow-hidden;
 }
 
 .event-slider {
@@ -31,9 +31,8 @@
 
 .event-slider-container::before,
 .event-slider-container::after {
-  @apply absolute top-0 h-full w-16 pointer-events-none;
+  @apply absolute top-0 h-full w-16 pointer-events-none z-50 content-none;
   content: '';
-  z-index: 50;
 }
 
 .event-slider-container::before {
