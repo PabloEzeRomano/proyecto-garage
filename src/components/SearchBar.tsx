@@ -33,7 +33,7 @@ export const SearchBar = ({ handleSearch, isLoading }: SearchBarProps) => {
 
   return (
     <div className="search-container">
-      <form ref={formRef} onSubmit={onSubmit} className="search-form">
+      <form ref={formRef} onSubmit={onSubmit} className="search-form theme-surface">
         <div className="search-input-group">
           <input
             type="text"

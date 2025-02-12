@@ -31,7 +31,7 @@ export const EventCard = ({
   loadingDelete = false,
 }: EventCardProps) => {
   return (
-    <div className="card">
+    <div className="card theme-surface">
       <div className="card-image-container">
         <Image
           src={getOptimizedImageUrl(event.image_url || null, 'medium')}
