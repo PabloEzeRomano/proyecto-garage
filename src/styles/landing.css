@@ -1,17 +1,38 @@
 .hero-section {
-  @apply flex-col items-center justify-center bg-cover bg-center;
+  @apply flex-col items-center justify-center bg-cover bg-center relative;
 }
 
 .landing-content {
-  @apply z-10 text-center px-6 w-full;
+  @apply z-10 text-center px-6 w-full max-w-4xl mx-auto;
 }
 
 .title {
-  @apply text-5xl font-bold uppercase tracking-widest mb-6;
+  @apply text-5xl font-bold uppercase tracking-widest mb-6 text-text-light dark:text-text-dark;
 }
 
 .subtitle {
   @apply text-xl md:text-2xl mb-8 text-yellow-300;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .title {
+    @apply text-3xl tracking-wide mb-4;
+  }
+
+  .subtitle {
+    @apply text-lg mb-6;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    @apply text-2xl tracking-normal;
+  }
+
+  .subtitle {
+    @apply text-base;
+  }
 }
 
 .cta-button {

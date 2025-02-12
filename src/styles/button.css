@@ -1,7 +1,10 @@
 .primary,
 .secondary,
-.success {
-  @apply p-2 rounded-md transition-colors flex items-center gap-2;
+.success,
+.warning,
+.error,
+.tertiary {
+  @apply p-2 rounded-md transition-colors flex text-white;
   @apply flex-1 justify-center;
 }
 
@@ -15,4 +18,16 @@
 
 .success {
   @apply bg-green-500 hover:bg-green-600;
+}
+
+.tertiary {
+  @apply bg-gray-500 hover:bg-gray-600;
+}
+
+.warning {
+  @apply bg-yellow-500 hover:bg-yellow-600;
+}
+
+.error {
+  @apply bg-red-500 hover:bg-red-600;
 }

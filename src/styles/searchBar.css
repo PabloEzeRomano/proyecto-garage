@@ -1,11 +1,11 @@
 .search-container {
   @apply sticky top-12 z-50;
-  @apply py-4 px-6 pb-0 w-full;
+  @apply py-4 px-6 w-full;
   @apply transition-all duration-200;
 }
 
 .search-form {
-  @apply container mx-auto flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-gray-700 shadow-lg rounded-lg overflow-hidden p-4;
+  @apply container mx-auto flex flex-col sm:flex-row items-center gap-4 shadow-lg rounded-lg overflow-hidden p-4;
   @apply max-w-4xl;
 }
 
@@ -15,7 +15,6 @@
 
 .search-input {
   @apply w-full px-4 py-2 rounded-lg;
-  @apply bg-gray-100 dark:bg-gray-800;
   @apply border border-gray-300 dark:border-gray-700;
   @apply focus:ring-2 focus:ring-blue-500 focus:border-transparent;
   @apply outline-none;
@@ -43,14 +42,16 @@
 }
 
 .search-input[type="date"]::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  opacity: 1;
-  display: block;
+  @apply cursor-pointer opacity-100 block w-6 h-6;
   background: 'mdi mdi-24px mdi-clock-outline' no-repeat;
-  width: 24px;
-  height: 24px;
 }
 
 .dark .search-input[type="date"]::-webkit-calendar-picker-indicator {
   color-scheme: dark;
+}
+
+@media (min-width: 768px) {
+  .search-container {
+    @apply static;
+  }
 }

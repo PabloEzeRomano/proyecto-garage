@@ -1,9 +1,5 @@
-/* .event-slider-container {
-  @apply h-[170px] contain-paint relative flex justify-start items-center;
-} */
-
 .event-slider {
-  @apply flex gap-4 w-max will-change-transform fixed left-0;
+  @apply flex gap-4 w-max will-change-transform left-0;
 }
 
 .event-image-container {
@@ -22,16 +18,12 @@
   @apply absolute rounded-full text-black bg-white z-20  px-2 py-1 flex items-center gap-[0.5];
 }
 .event-slider-container {
-  @apply h-[170px] contain-paint relative overflow-hidden;
-}
-
-.event-slider {
-  @apply flex gap-4 w-max will-change-transform fixed left-0;
+  @apply contain-paint relative overflow-hidden;
 }
 
 .event-slider-container::before,
 .event-slider-container::after {
-  @apply absolute top-0 h-full w-16 pointer-events-none z-50 content-none;
+  @apply absolute top-0 h-[150px] w-16 pointer-events-none z-50 content-none;
   content: '';
 }
 
@@ -41,8 +33,4 @@
 
 .event-slider-container::after {
   @apply right-0 bg-gradient-to-l from-black/80 to-transparent;
-}
-
-.event-slider {
-  @apply flex gap-4 w-max will-change-transform fixed left-0;
 }
