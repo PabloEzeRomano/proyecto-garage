@@ -51,10 +51,22 @@ export const SessionButton = () => {
       >
         <span className="truncate">Iniciar sesión</span>
       </motion.button>
-      <Link href="/auth/sign-up" className="navigation-item flex-1">
+
+      <motion.button
+        className="tertiary"
+        onClick={() => router.push('/auth/sign-up')}
+        whileHover={{
+          scale: 1.1,
+          boxShadow: '0 0 8px #6366f1',
+          textShadow: '0 0 8px #6366f1',
+        }}
+      >
+        <span className="truncate">Registrarse</span>
+      </motion.button>
+      {/* <Link href="/auth/sign-up" className="navigation-item flex-1">
         <UserPlusIcon className="w-6 h-6" />
         <span>Registrarse</span>
-      </Link>
+      </Link> */}
     </>
   );
 };

@@ -1,133 +1,146 @@
+/* Base Header Styles */
 .header-container {
-  @apply fixed top-0 left-0 right-0 z-50 px-4 py-2;
+  @apply fixed top-0 left-0 right-0 z-50;
+  @apply px-2 sm:px-4 py-2;
   @apply border-b border-gray-200 dark:border-gray-700;
+  @apply backdrop-blur-sm bg-opacity-90;
 }
 
 .navbar-container {
-  @apply flex items-center gap-2 justify-between;
+  @apply container mx-auto;
+  @apply flex items-center justify-between;
+  @apply gap-2 sm:gap-4;
 }
 
+/* Logo and Brand */
 .home-link {
-  @apply flex items-center gap-2 text-xl font-bold;
+  @apply flex items-center gap-2;
+  @apply text-base sm:text-xl font-bold;
+  @apply min-w-0 flex-shrink-0;
 }
 
+/* Navigation Links */
 .nav-links {
-  @apply flex items-center gap-2;
+  @apply hidden lg:flex items-center gap-4;
 }
 
 .nav-link {
-  @apply px-3 py-2 rounded-md transition-colors;
-  @apply hover:bg-gray-100 dark:hover:bg-gray-700;
+  @apply px-3 py-2 rounded-md;
   @apply text-gray-700 dark:text-gray-300;
+  @apply hover:bg-gray-300 dark:hover:bg-gray-700;
+  @apply transition-colors duration-200;
 }
 
+.active-tab {
+  @apply bg-gray-300 dark:bg-gray-700;
+  @apply text-gray-900 dark:text-white;
+}
+
+/* Actions Section */
 .nav-actions {
   @apply flex items-center gap-2;
 }
 
-.active-tab {
-  @apply bg-gray-100 dark:bg-gray-700;
-  @apply text-primary-light dark:text-primary-dark;
-}
-
-.quick-actions {
-  @apply flex items-center gap-2;
-}
-
-.quick-action-button {
-  @apply px-4 py-2 rounded-md transition-colors;
-  @apply flex items-center gap-2;
-}
-
-.outside-button {
-  @apply bg-red-500 hover:bg-red-600;
-}
-
+/* Hamburger Menu Button */
 .hamburger-menu {
-  @apply flex flex-col justify-center items-center w-8 h-8;
-  @apply cursor-pointer z-50;
+  @apply lg:hidden flex flex-col justify-center items-center w-8 h-8;
+  @apply cursor-pointer;
 }
 
 .hamburger-menu span {
-  @apply w-6 h-0.5 bg-text-light dark:bg-text-dark my-0.5 transition-all;
+  @apply w-6 h-0.5 bg-current;
+  @apply transition-all duration-300;
+  @apply mb-1 last:mb-0;
 }
 
-.menu-items {
-  @extend .theme-surface;
-  @apply fixed top-16 right-4 bg-gray-800 rounded-lg shadow-lg;
-  @apply flex flex-col p-4 gap-2;
-  @apply transform origin-top;
-  @apply w-auto min-w-[180px] max-w-[250px];
+/* Mobile Menu */
+.mobile-menu {
+  @apply fixed top-[57px] left-0 right-0;
+  @apply bg-white dark:bg-gray-800;
+  @apply lg:hidden;
+  @apply z-40;
+  @apply transform transition-transform duration-300;
+  @apply translate-x-full;
+  @apply overflow-y-auto;
 }
 
-.navigation-item {
-  @apply flex items-center gap-2 px-4 py-2 rounded-md;
-  @apply hover:bg-primary-light dark:hover:bg-primary-dark transition-colors;
+.mobile-menu.open {
+  @apply translate-x-0;
+  @apply flex flex-col;
 }
 
-@media (max-width: 768px) {
-  .menu-items {
-    @apply w-auto min-w-[200px] right-2;
-  }
-
-  .auth-buttons {
-    @apply w-full;
-  }
-
-  .header-container {
-    @apply px-2;
-  }
-
-  .home-link span {
-    @apply text-sm;
-  }
-
-  .nav-links {
-    @apply gap-1;
-  }
-
-  .nav-link {
-    @apply px-2 py-1.5 text-sm;
-  }
+.mobile-nav-section {
+  @apply flex flex-col p-12;
+  @apply space-y-2;
 }
 
+.mobile-nav-section:not(:last-child) {
+  @apply border-b border-gray-200 dark:border-gray-700;
+  @apply pb-4;
+}
+
+.mobile-actions {
+  @apply flex sm:flex-row items-center justify-center p-4 gap-4;
+}
+
+/* Auth Buttons */
 .auth-buttons {
-  @apply border-t border-gray-700 pt-2 mt-2;
-  @apply flex gap-1 w-full;
+  @apply flex flex-col sm:flex-row items-center;
+  @apply gap-2;
+  @apply w-full sm:w-auto;
 }
 
 .auth-buttons .navigation-item {
-  @apply text-sm px-2 py-1.5;
-  @apply justify-center flex-1;
-  @apply whitespace-nowrap;
+  @apply flex items-center justify-center;
+  @apply px-4 py-2 rounded-md;
+  @apply text-gray-700 dark:text-gray-300;
+  @apply hover:bg-gray-100 dark:hover:bg-gray-700;
+  @apply w-full sm:w-auto;
+  @apply text-base;
 }
 
-.auth-buttons .navigation-item span {
-  @apply hidden sm:inline;
-}
+/* Desktop/Mobile Visibility */
+@media (min-width: 1024px) {
+  .nav-actions .session-buttons,
+  .nav-actions .theme-toggle {
+    @apply flex items-center justify-center gap-4;
+  }
 
-@media (max-width: 768px) {
-  .auth-buttons .navigation-item span {
-    @apply text-xs;
+  .mobile-menu {
+    @apply hidden;
   }
 }
 
-/* Add responsive styles for quick actions */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
+  .nav-actions .session-buttons,
+  .nav-actions .theme-toggle {
+    @apply hidden;
+  }
+
+  .nav-link {
+    @apply text-base sm:text-lg;
+    @apply py-3 px-4;
+    @apply w-full;
+    @apply flex items-center justify-center;
+  }
+
+  .home-link span {
+    @apply hidden;
+  }
+}
+
+@media (max-width: 1023px) {
   .quick-actions {
-    @apply fixed bottom-4 left-4 right-4; /* Fixed at bottom */
-    @apply flex justify-center gap-1; /* Smaller gap */
-    @apply backdrop-blur-sm; /* Semi-transparent background */
-    @apply p-2 rounded-lg; /* Add padding and round corners */
-    @apply shadow-lg; /* Add shadow */
+    @apply fixed bottom-0 left-0 right-0;
+    @apply flex justify-around items-center;
+    @apply bg-white dark:bg-gray-800;
+    @apply border-t border-gray-200 dark:border-gray-700;
+    @apply py-2 px-4;
+    @apply z-50;
   }
 
   .quick-action-button {
-    @apply text-sm px-2 py-1.5; /* Smaller padding */
-    @apply flex-1; /* Equal width buttons */
-  }
-
-  .quick-action-button span {
-    @apply text-xs; /* Smaller text */
+    @apply flex flex-col items-center;
+    @apply text-sm text-gray-600 dark:text-gray-400;
   }
 }

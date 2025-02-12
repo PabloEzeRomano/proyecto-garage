@@ -1,5 +1,5 @@
 .add-container {
-  @apply container mx-auto px-4 py-8;
+  @apply mx-auto;
 }
 
 .add-title {
