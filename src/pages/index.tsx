@@ -62,7 +62,7 @@ export default function Home({ events: initialEvents }: HomeProps) {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="mx-auto px-4">
       <section className="hero-section">
         <div className="landing-content">
           <h1 className="title">Bienvenido a Proyecto Garage</h1>

@@ -75,15 +75,15 @@ export const ItemsPage: React.FC<ItemsProps> = ({ items: initialItems }) => {
       </div>
       <div className="grid-layout">
         {items.map((item) => (
-          <div key={item.id} className="card">
+          <div key={item.id} className="card theme-surface">
             {item.image_url && (
-              <div className="card-image-container">
+              <div>
                 <Image
                   src={getOptimizedImageUrl(item.image_url)}
                   alt={item.title}
                   width={300}
                   height={280}
-                  className="card-image"
+                  className="card-image w-full"
                 />
               </div>
             )}
@@ -121,7 +121,7 @@ export const ItemsPage: React.FC<ItemsProps> = ({ items: initialItems }) => {
                   />
                   <button
                     onClick={() => handleAddToCart(item)}
-                    className="reserve-button"
+                    className="primary"
                   >
                     Agregar al carrito
                   </button>
