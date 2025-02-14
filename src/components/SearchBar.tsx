@@ -1,6 +1,7 @@
 import '@/styles/searchBar.css';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useRef } from 'react';
+import { Input } from './Input';
 
 interface SearchBarProps {
   handleSearch: (e: React.FormEvent) => void;
@@ -35,22 +36,24 @@ export const SearchBar = ({ handleSearch, isLoading }: SearchBarProps) => {
     <div className="search-container">
       <form ref={formRef} onSubmit={onSubmit} className="search-form theme-surface">
         <div className="search-input-group">
-          <input
+          <Input
             type="text"
             name="query"
             className="search-input"
             placeholder="Buscar eventos..."
             defaultValue={searchParams?.get('query') || ''}
+            removeMargin
           />
         </div>
         <div className="search-input-group">
-          <input
+          <Input
             type="date"
             name="date"
             placeholder="dd/mm/yyyy"
             min={new Date().toISOString().split('T')[0]}
             className="search-input"
             defaultValue={searchParams?.get('date') || ''}
+            removeMargin
           />
         </div>
         <button type="submit" className="search-button" disabled={isLoading}>

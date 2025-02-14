@@ -1,9 +1,8 @@
-import { useRouter } from 'next/router';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { UserPlusIcon } from '../../public/icons';
-import { useSupabase } from '@/contexts/SupabaseContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSupabase } from '@/contexts/SupabaseContext';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
+
 import '@/styles/button.css';
 
 export const SessionButton = () => {
@@ -63,10 +62,6 @@ export const SessionButton = () => {
       >
         <span className="truncate">Registrarse</span>
       </motion.button>
-      {/* <Link href="/auth/sign-up" className="navigation-item flex-1">
-        <UserPlusIcon className="w-6 h-6" />
-        <span>Registrarse</span>
-      </Link> */}
     </>
   );
 };
