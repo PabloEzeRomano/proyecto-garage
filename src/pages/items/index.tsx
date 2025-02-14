@@ -3,14 +3,15 @@
 import { Input } from '@/components/Input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
+import { useMutations } from '@/hooks/useMutations';
 import { Item, Role } from '@/types/database';
 import { getOptimizedImageUrl } from '@/utils/imageUtils';
 import { createServerSideProps } from '@/utils/serverProps';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { EditIcon, TrashIcon } from '../../../public/icons';
-import { useMutations } from '@/hooks/useMutations';
 
 import '@/styles/card.css';
 
@@ -68,9 +69,17 @@ export const ItemsPage: React.FC<ItemsProps> = ({ items: initialItems }) => {
       <div className="cards-header">
         <h1 className="cards-title">Menu</h1>
         {hasRole([Role.ADMIN, Role.ROOT]) && (
-          <button onClick={handleAddItem} className="add-button">
-            Agregar un nuevo producto
-          </button>
+          <motion.button
+          whileHover={{
+            scale: 1.1,
+            boxShadow: '0 0 8px #5ce08d',
+            textShadow: '0 0 8px #5ce08d',
+          }}
+          className="success"
+          onClick={handleAddItem}
+        >
+          Agregar un nuevo producto
+        </motion.button>
         )}
       </div>
       <div className="grid-layout">

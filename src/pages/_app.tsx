@@ -38,5 +38,3 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     </SupabaseProvider>
   );
 }
-
-// TODO: Add footer

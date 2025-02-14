@@ -1,14 +1,15 @@
 'use client';
 
 import { ClientOnly } from '@/components/ClientOnly';
+import { EventGrid } from '@/components/EventGrid';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import { useMutations } from '@/hooks/useMutations';
 import { Event, Permission, Role } from '@/types/database';
 import { createServerSideProps } from '@/utils/serverProps';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { EventGrid } from '@/components/EventGrid';
 
 interface EventProps {
   events: Event[];
@@ -41,7 +42,7 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
     addToCart({
       id: event.id,
       quantity,
-      table: 'events'
+      table: 'events',
     });
   };
 
@@ -76,9 +77,17 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
   const addButton = user?.app_metadata?.permissions?.includes(
     Permission.EVENTS_CREATE
   ) && (
-    <button className="add-button" onClick={handleAddEvent}>
+    <motion.button
+      whileHover={{
+        scale: 1.1,
+        boxShadow: '0 0 8px #5ce08d',
+        textShadow: '0 0 8px #5ce08d',
+      }}
+      className="success"
+      onClick={handleAddEvent}
+    >
       Agregar un nuevo evento
-    </button>
+    </motion.button>
   );
 
   return (
@@ -109,7 +118,7 @@ export const getServerSideProps = createServerSideProps<Event>({
   order: {
     column: 'date',
     ascending: true,
-  }
+  },
 });
 
 export default EventsPage;
