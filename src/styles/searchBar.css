@@ -14,11 +14,13 @@
 }
 
 .search-input {
-  @apply w-full px-4 py-2 rounded-lg;
+  /* @apply w-full px-4 py-2 rounded-lg;
+  @apply bg-gray-100 dark:bg-gray-800;
   @apply border border-gray-300 dark:border-gray-700;
   @apply focus:ring-2 focus:ring-blue-500 focus:border-transparent;
   @apply outline-none;
-  @apply transition-all duration-200;
+  @apply transition-all duration-200; */
+  @apply w-full p-3 rounded-md focus:border-none focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark dark:bg-gray-100 bg-gray-600 text-gray-200 dark:text-gray-800;
 }
 
 .search-input:disabled {
@@ -41,12 +43,12 @@
   @apply animate-spin;
 }
 
-.search-input[type="date"]::-webkit-calendar-picker-indicator {
+.search-input[type='date']::-webkit-calendar-picker-indicator {
   @apply cursor-pointer opacity-100 block w-6 h-6;
   background: 'mdi mdi-24px mdi-clock-outline' no-repeat;
 }
 
-.dark .search-input[type="date"]::-webkit-calendar-picker-indicator {
+.dark .search-input[type='date']::-webkit-calendar-picker-indicator {
   color-scheme: dark;
 }
 

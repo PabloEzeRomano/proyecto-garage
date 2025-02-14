@@ -5,7 +5,7 @@
 .error,
 .tertiary {
   @apply p-2 rounded-md transition-colors flex text-white;
-  @apply flex-1 justify-center;
+  @apply justify-center;
 }
 
 .primary {
