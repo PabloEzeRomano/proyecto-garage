@@ -30,12 +30,45 @@ const getDebugStack = () => {
 export const supabase = global.supabaseInstance || (() => {
   if (typeof window === 'undefined') {
     // Server-side: create a new instance every time
-    return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+    return createBrowserClient<Database>(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        auth: {
+          persistSession: true,
+          storageKey: 'supabase.auth.token',
+          storage: {
+            getItem: (key) => {
+              if (typeof window === 'undefined') return null;
+              return window.localStorage.getItem(key);
+            },
+            setItem: (key, value) => {
+              if (typeof window === 'undefined') return;
+              window.localStorage.setItem(key, value);
+            },
+            removeItem: (key) => {
+              if (typeof window === 'undefined') return;
+              window.localStorage.removeItem(key);
+            },
+          },
+        },
+      }
+    );
   }
 
   // Client-side: create once and reuse
   if (!global.supabaseInstance) {
-    global.supabaseInstance = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+    global.supabaseInstance = createBrowserClient<Database>(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        auth: {
+          persistSession: true,
+          storageKey: 'supabase.auth.token',
+          storage: window.localStorage,
+        },
+      }
+    );
   }
   return global.supabaseInstance;
 })();

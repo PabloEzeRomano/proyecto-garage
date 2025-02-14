@@ -73,16 +73,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Get initial session
     const initializeAuth = async () => {
       try {
+        // First try to get the session
         const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (mounted) {
-          setUser(user ?? null);
-          setLoading(false);
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+        if (sessionError) throw sessionError;
+
+        // Then get the user if we have a session
+        if (session) {
+          const {
+            data: { user },
+            error: userError,
+          } = await supabase.auth.getUser();
+          if (userError) throw userError;
+
+          if (mounted) {
+            setUser(user);
+            setLoading(false);
+          }
+        } else {
+          if (mounted) {
+            setUser(null);
+            setLoading(false);
+          }
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
         if (mounted) {
+          setUser(null);
           setLoading(false);
         }
       }
@@ -93,9 +112,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (mounted) {
-        setUser(session?.user ?? null);
+        if (session) {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          setUser(user);
+        } else {
+          setUser(null);
+        }
       }
     });
 
@@ -103,7 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase]); // Only depend on supabase client
+  }, [supabase]);
 
   /**
    * Check if the current user has a specific permission
