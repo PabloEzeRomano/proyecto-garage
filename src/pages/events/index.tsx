@@ -31,7 +31,7 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
     return <div>Loading...</div>;
   }
 
-  const handleQuantityChange = (eventId: number, quantity: number) => {
+  const handleQuantityChange = (eventId: string, quantity: number) => {
     setQuantities((prev) => ({
       ...prev,
       [eventId]: quantity,
@@ -46,9 +46,9 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
     });
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
-      await remove(id.toString(), {
+      await remove(id, {
         onSuccess: () => {
           setEvents(events.filter((event) => event.id !== id));
         },
@@ -66,11 +66,11 @@ export const EventsPage: React.FC<EventProps> = ({ events: initialEvents }) => {
     router.push('/events/new');
   };
 
-  const handleEventClick = (eventId: number) => {
+  const handleEventClick = (eventId: string) => {
     router.push(`/events/${eventId}`);
   };
 
-  const handleEdit = (eventId: number) => {
+  const handleEdit = (eventId: string) => {
     router.push(`/events/update/${eventId}`);
   };
 

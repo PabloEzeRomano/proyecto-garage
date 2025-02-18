@@ -5,14 +5,14 @@ import '@/styles/card.css';
 
 interface EventGridProps {
   events: Event[];
-  onEventClick: (id: number) => void;
-  onEdit?: (id: number) => void;
-  onDelete?: (id: number) => void;
+  onEventClick: (id: string) => void;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
   onAddToCart?: (event: Event, quantity: number) => void;
   showActions?: boolean;
   showReservation?: boolean;
-  quantities?: Record<number, number>;
-  onQuantityChange?: (eventId: number, quantity: number) => void;
+  quantities?: Record<string, number>;
+  onQuantityChange?: (eventId: string, quantity: number) => void;
   loadingDelete?: boolean;
   title?: string;
   actionButton?: React.ReactNode;

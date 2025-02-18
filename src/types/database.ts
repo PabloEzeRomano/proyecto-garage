@@ -48,7 +48,7 @@ export interface User {
 }
 
 export interface Item {
-  id: number;
+  id: string;
   title: string;
   description: string;
   price: number;
@@ -56,7 +56,7 @@ export interface Item {
 }
 
 export interface Event {
-  id: number;
+  id: string;
   title: string;
   description: string;
   short_description: string;
@@ -66,8 +66,8 @@ export interface Event {
 }
 
 export interface Stock {
-  id: number;
-  item_id: number;
+  id: string;
+  item_id: string;
   quantity: number;
   name: string;
   cost: number;

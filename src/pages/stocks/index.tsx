@@ -26,9 +26,9 @@ export default function Stocks({ stocks: initialStocks }: StocksProps) {
     router.push('/');
   }
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
-      await remove(id.toString(), {
+      await remove(id, {
         onSuccess: () => {
           setStocks(stocks.filter((stock) => stock.id !== id));
         },

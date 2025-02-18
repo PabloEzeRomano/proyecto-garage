@@ -7,9 +7,9 @@ import { Input } from './Input';
 
 interface EventCardProps {
   event: Event;
-  onEventClick: (id: number) => void;
-  onEdit?: (id: number) => void;
-  onDelete?: (id: number) => void;
+  onEventClick: (id: string) => void;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
   onAddToCart?: (event: Event, quantity: number) => void;
   showActions?: boolean;
   showReservation?: boolean;

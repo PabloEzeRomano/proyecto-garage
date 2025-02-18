@@ -31,7 +31,7 @@ export const ItemsPage: React.FC<ItemsProps> = ({ items: initialItems }) => {
   const router = useRouter();
   const { remove } = useMutations('items');
 
-  const handleQuantityChange = (itemId: number, quantity: number) => {
+  const handleQuantityChange = (itemId: string, quantity: number) => {
     setQuantities({
       ...quantities,
       [itemId]: quantity,
@@ -48,8 +48,8 @@ export const ItemsPage: React.FC<ItemsProps> = ({ items: initialItems }) => {
     setQuantities({ ...quantities, [item.id]: 0 });
   };
 
-  const deleteItem = async (id: number) => {
-    await remove(id.toString(), {
+  const deleteItem = async (id: string) => {
+    await remove(id, {
       onSuccess: () => {
         setItems(items.filter((item) => item.id !== id));
       },
