@@ -14,7 +14,9 @@ import '@/styles/theme.css';
 import '@/styles/footer.css';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
-  initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY!);
+  initMercadoPago(process.env.NEXT_PUBLIC_MP_KEY!, {
+    locale: 'es-AR',
+  });
   return (
     <SupabaseProvider>
       <AuthProvider>
