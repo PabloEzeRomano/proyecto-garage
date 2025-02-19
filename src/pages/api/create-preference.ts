@@ -1,5 +1,5 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
-import { NextApiRequest, NextApiResponse } from 'next';
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.NEXT_PUBLIC_MP_ACCESS_TOKEN!,
@@ -8,28 +8,27 @@ const client = new MercadoPagoConfig({
   }
 });
 
+const preference = new Preference(client);
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { method, body } = req;
-  console.log(body);
-
-  if (method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).end(`Method ${method} Not Allowed`);
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
   }
 
   try {
-    const { cartItems } = body;
+    const { items } = req.body;
 
-    const preference = new Preference(client);
     const result = await preference.create({
       body: {
-        items: cartItems.map((item: any) => ({
-          title: item.name,
+        purpose: 'wallet_purchase',
+        items: items.map((item: any) => ({
+          id: `item-${item.id}`,
+          title: item.title,
           quantity: item.quantity,
-          unit_price: item.price,
+          unit_price: Number(item.price),
           currency_id: 'ARS',
         })),
         back_urls: {
@@ -41,9 +40,12 @@ export default async function handler(
       }
     });
 
-    return res.status(201).json(result);
-  } catch (error) {
-    console.log('Error creating preference:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return res.status(200).json(result);
+  } catch (error: any) {
+    console.error('Preference creation error:', error);
+    return res.status(500).json({
+      error: true,
+      message: error.message
+    });
   }
 }
