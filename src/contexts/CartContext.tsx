@@ -7,6 +7,8 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { supabase } from '@/lib/supabase';
+import { Event, Item } from '@/types/database';
 
 interface MinimalCartItem {
   id: number;
@@ -14,12 +16,23 @@ interface MinimalCartItem {
   table: 'events' | 'items'; // The table where the item should be fetched from
 }
 
+interface CartItemDetails extends Item {
+  quantity: number;
+}
+
+interface CartEventDetails extends Event {
+  quantity: number;
+}
+
+type CartItemWithDetails = CartItemDetails | CartEventDetails;
+
 interface CartContextType {
   cartItems: MinimalCartItem[];
   addToCart: (item: { id: number; quantity: number; table: 'events' | 'items' }) => void;
   removeFromCart: (itemId: number) => void;
   updateQuantity: (itemId: number, quantity: number) => void;
   totalItems: number;
+  getItemsWithDetails: () => Promise<CartItemWithDetails[]>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -81,6 +94,26 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  const getItemsWithDetails = useCallback(async () => {
+    try {
+      const itemPromises = cartItems.map(async (cartItem) => {
+        const { data, error } = await supabase
+          .from(cartItem.table)
+          .select('id, title, description, price, image_url')
+          .eq('id', cartItem.id)
+          .single();
+
+        if (error) throw error;
+        return { ...data, quantity: cartItem.quantity };
+      });
+
+      return await Promise.all(itemPromises);
+    } catch (error) {
+      console.error('Error getting item details:', error);
+      return [];
+    }
+  }, [cartItems]);
+
   return (
     <CartContext.Provider
       value={{
@@ -89,6 +122,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         removeFromCart,
         updateQuantity,
         totalItems,
+        getItemsWithDetails,
       }}
     >
       {children}
