@@ -1,5 +1,8 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { createServerSupabaseAdmin, createServerSupabaseClient } from '@/lib/supabase-server';
+import {
+  createServerSupabaseAdmin,
+  createServerSupabaseClient,
+} from '@/lib/supabase-server';
 import { Role } from '@/types/database';
 import { SupabaseClient } from '@supabase/supabase-js';
 
@@ -66,7 +69,10 @@ interface FetchDataOptions<T> {
     ascending: boolean;
   };
   /** Custom fetch function that returns Promise<{ data: T | T[], error: any }> */
-  customFetch?: (supabase: SupabaseClient, context: GetServerSidePropsContext) => Promise<{ data: any; error: any }>;
+  customFetch?: (
+    supabase: SupabaseClient,
+    context: GetServerSidePropsContext
+  ) => Promise<{ data: any; error: any }>;
   /** Whether to use the admin client */
   useAdminClient?: boolean;
   /** The key for the fetched data */
@@ -148,7 +154,10 @@ async function checkAuth(
 }
 
 // Add this after the imports
-type AdminFetchFunction<T> = (adminClient: SupabaseClient, context: GetServerSidePropsContext) => Promise<{ data: T | T[]; error: any }>;
+type AdminFetchFunction<T> = (
+  adminClient: SupabaseClient,
+  context: GetServerSidePropsContext
+) => Promise<{ data: T | T[]; error: any }>;
 
 /**
  * Creates a GetServerSideProps function specifically for admin operations
@@ -162,7 +171,6 @@ export function createAdminServerSideProps<T>({
   fetchFn,
   key,
   requiredRoles = [Role.ADMIN],
-
 }: {
   fetchFn: AdminFetchFunction<T>;
   key: string;
@@ -172,14 +180,13 @@ export function createAdminServerSideProps<T>({
     const supabase = createServerSupabaseClient(context);
     const adminClient = createServerSupabaseAdmin();
 
-
     try {
       // Check authentication and authorization
       const authCheck = await checkAuth(supabase, {
         requireAuth: true,
         requiredRoles,
         key,
-        table: 'admin'
+        table: 'admin',
       });
       if (authCheck) return authCheck;
 
@@ -192,8 +199,8 @@ export function createAdminServerSideProps<T>({
 
       return {
         props: {
-          [key]: JSON.parse(JSON.stringify(data))
-        }
+          [key]: JSON.parse(JSON.stringify(data)),
+        },
       };
     } catch (error) {
       console.error(`Error in admin operation for ${key}:`, error);
@@ -245,7 +252,9 @@ async function fetchSingleTable<T>(
 
     return {
       props: {
-        [options.key]: JSON.parse(JSON.stringify(data || (options.single ? null : [])))
+        [options.key]: JSON.parse(
+          JSON.stringify(data || (options.single ? null : []))
+        ),
       },
     };
   } catch (error) {
@@ -258,8 +267,13 @@ async function fetchSingleTable<T>(
 }
 
 // Add this helper function after the imports
-function getSupabaseClient(context: GetServerSidePropsContext, useAdmin: boolean = false): SupabaseClient {
-  return useAdmin ? createServerSupabaseAdmin() : createServerSupabaseClient(context);
+function getSupabaseClient(
+  context: GetServerSidePropsContext,
+  useAdmin: boolean = false
+): SupabaseClient {
+  return useAdmin
+    ? createServerSupabaseAdmin()
+    : createServerSupabaseClient(context);
 }
 
 /**
@@ -314,10 +328,13 @@ export async function fetchDataFromSupabase<T>(
 
     // Return empty results for all requested tables
     if (Array.isArray(options)) {
-      const emptyResults = options.reduce((acc, opt) => ({
-        ...acc,
-        [opt.key]: opt.single ? null : []
-      }), {});
+      const emptyResults = options.reduce(
+        (acc, opt) => ({
+          ...acc,
+          [opt.key]: opt.single ? null : [],
+        }),
+        {}
+      );
       return { props: emptyResults };
     }
 

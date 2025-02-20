@@ -19,7 +19,9 @@ interface SupabaseContextType {
   supabase: SupabaseClient;
 }
 
-const SupabaseContext = createContext<SupabaseContextType | undefined>(undefined);
+const SupabaseContext = createContext<SupabaseContextType | undefined>(
+  undefined
+);
 
 export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   const supabaseRef = useRef<SupabaseClient>();

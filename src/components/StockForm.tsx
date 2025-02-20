@@ -9,14 +9,17 @@ interface AddStockProps {
 }
 
 const defaultStock: Stock = {
-  id: -1,
-  item_id: -1,
+  id: '-1',
+  item_id: '-1',
   quantity: 0,
   name: '',
   cost: 0,
 };
 
-export const StockForm = ({ stock = defaultStock, items = [] }: AddStockProps) => {
+export const StockForm = ({
+  stock = defaultStock,
+  items = [],
+}: AddStockProps) => {
   const { loading, hasRole } = useAuth();
   const router = useRouter();
   if (loading) {
@@ -39,9 +42,9 @@ export const StockForm = ({ stock = defaultStock, items = [] }: AddStockProps) =
       type: 'select',
       name: 'item_id',
       value: String(stock.item_id),
-      options: items.map(item => ({
+      options: items.map((item) => ({
         value: item.id.toString(),
-        label: item.title
+        label: item.title,
       })),
     },
     {
@@ -68,4 +71,4 @@ export const StockForm = ({ stock = defaultStock, items = [] }: AddStockProps) =
       redirectPath="/stocks"
     />
   );
-}
+};

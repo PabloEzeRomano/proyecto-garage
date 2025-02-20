@@ -105,5 +105,5 @@ export const getServerSideProps = createServerSideProps<Stock>({
   key: 'stocks',
   columns: 'id, item_id, quantity, name, cost',
   requiredRoles: [Role.ADMIN, Role.ROOT],
-  requireAuth: true
+  requireAuth: true,
 });

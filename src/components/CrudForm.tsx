@@ -25,7 +25,7 @@ interface CrudFormProps<T> {
   showImageUpload?: boolean;
 }
 
-export function CrudForm<T extends { id: number; image_url?: string | null }>({
+export function CrudForm<T extends { id: string; image_url?: string | null }>({
   data,
   defaultData,
   table,
@@ -84,7 +84,7 @@ export function CrudForm<T extends { id: number; image_url?: string | null }>({
     e.preventDefault();
     const { id, ...restData } = formData;
 
-    const isUpdate = id !== -1;
+    const isUpdate = id !== '-1';
 
     console.log({ restData, isUpdate });
 
@@ -114,7 +114,7 @@ export function CrudForm<T extends { id: number; image_url?: string | null }>({
   return (
     <div className="add-container">
       <h1 className="add-title">
-        {formData.id !== -1 ? `Actualizar ${title}` : `Agregar ${title}`}
+        {formData.id !== '-1' ? `Actualizar ${title}` : `Agregar ${title}`}
       </h1>
       <form onSubmit={handleFormSubmit} className="form-container">
         {inputs.map((input) => {
@@ -134,7 +134,11 @@ export function CrudForm<T extends { id: number; image_url?: string | null }>({
               key={input.name}
               {...input}
               value={inputValue}
-              checked={input.type === 'checkbox' ? (currentValue as boolean) : undefined}
+              checked={
+                input.type === 'checkbox'
+                  ? (currentValue as boolean)
+                  : undefined
+              }
               onChange={handleInputChange}
             />
           );
@@ -174,7 +178,7 @@ export function CrudForm<T extends { id: number; image_url?: string | null }>({
 
         <div className="flex justify-between">
           <button type="submit" className="submit" disabled={loading}>
-            {formData.id !== -1 ? `Actualizar ${title}` : `Agregar ${title}`}
+            {formData.id !== '-1' ? `Actualizar ${title}` : `Agregar ${title}`}
           </button>
           <Input
             label={`Agregar otro ${title.toLowerCase()} después de este`}

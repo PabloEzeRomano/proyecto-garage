@@ -11,7 +11,7 @@ import { supabase } from '@/lib/supabase';
 import { Event, Item } from '@/types/database';
 
 interface MinimalCartItem {
-  id: number;
+  id: string;
   quantity: number;
   table: 'events' | 'items'; // The table where the item should be fetched from
 }
@@ -28,9 +28,13 @@ type CartItemWithDetails = CartItemDetails | CartEventDetails;
 
 interface CartContextType {
   cartItems: MinimalCartItem[];
-  addToCart: (item: { id: number; quantity: number; table: 'events' | 'items' }) => void;
-  removeFromCart: (itemId: number) => void;
-  updateQuantity: (itemId: number, quantity: number) => void;
+  addToCart: (item: {
+    id: string;
+    quantity: number;
+    table: 'events' | 'items';
+  }) => void;
+  removeFromCart: (itemId: string) => void;
+  updateQuantity: (itemId: string, quantity: number) => void;
   totalItems: number;
   getItemsWithDetails: () => Promise<CartItemWithDetails[]>;
 }
@@ -76,11 +80,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   }, []);
 
-  const removeFromCart = useCallback((itemId: number) => {
+  const removeFromCart = useCallback((itemId: string) => {
     setCartItems((prev) => prev.filter((item) => item.id !== itemId));
   }, []);
 
-  const updateQuantity = useCallback((itemId: number, quantity: number) => {
+  const updateQuantity = useCallback((itemId: string, quantity: number) => {
     setCartItems((currentItems) =>
       currentItems
         .map((item) =>

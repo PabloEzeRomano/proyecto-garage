@@ -35,7 +35,10 @@ export default function SignUp() {
     if (PASSWORD_REQUIREMENTS.hasNumber && !/\d/.test(password)) {
       return 'La contraseña debe contener al menos un número';
     }
-    if (PASSWORD_REQUIREMENTS.hasSpecialChar && !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    if (
+      PASSWORD_REQUIREMENTS.hasSpecialChar &&
+      !/[!@#$%^&*(),.?":{}|<>]/.test(password)
+    ) {
       return 'La contraseña debe contener al menos un carácter especial';
     }
     return '';
@@ -132,7 +135,13 @@ export default function SignUp() {
           />
           {password && (
             <ul className="text-sm text-[#c9a992] list-disc list-inside">
-              <li className={password.length >= PASSWORD_REQUIREMENTS.minLength ? 'text-green-500' : ''}>
+              <li
+                className={
+                  password.length >= PASSWORD_REQUIREMENTS.minLength
+                    ? 'text-green-500'
+                    : ''
+                }
+              >
                 Mínimo {PASSWORD_REQUIREMENTS.minLength} caracteres
               </li>
               <li className={/[A-Z]/.test(password) ? 'text-green-500' : ''}>
@@ -144,7 +153,13 @@ export default function SignUp() {
               <li className={/\d/.test(password) ? 'text-green-500' : ''}>
                 Al menos un número
               </li>
-              <li className={/[!@#$%^&*(),.?":{}|<>]/.test(password) ? 'text-green-500' : ''}>
+              <li
+                className={
+                  /[!@#$%^&*(),.?":{}|<>]/.test(password)
+                    ? 'text-green-500'
+                    : ''
+                }
+              >
                 Al menos un carácter especial
               </li>
             </ul>

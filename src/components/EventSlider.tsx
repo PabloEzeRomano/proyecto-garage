@@ -14,7 +14,7 @@ import '@/styles/eventSlider.css';
 
 interface EventSliderProps {
   events: Event[];
-  onEventClick: (id: number) => void;
+  onEventClick: (id: string) => void;
 }
 
 const EventImage = ({
@@ -22,7 +22,7 @@ const EventImage = ({
   onClick,
 }: {
   event: Event;
-  onClick: (id: number) => void;
+  onClick: (id: string) => void;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageSrc, setImageSrc] = useState('/placeholder.jpg');

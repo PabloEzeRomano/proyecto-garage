@@ -1,4 +1,3 @@
-
 'use client';
 
 import { CrudForm } from '@/components/CrudForm';
@@ -10,7 +9,7 @@ interface AddItemProps {
 }
 
 const defaultItem: Item = {
-  id: -1,
+  id: '-1',
   title: '',
   description: '',
   price: 0,
@@ -60,4 +59,4 @@ export const ItemForm = ({ item = defaultItem }: AddItemProps) => {
       showImageUpload
     />
   );
-}
+};

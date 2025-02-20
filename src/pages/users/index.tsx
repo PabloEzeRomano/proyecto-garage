@@ -101,9 +101,9 @@ export const getServerSideProps = createAdminServerSideProps<User>({
     const response = await adminClient.auth.admin.listUsers();
     return {
       data: response.data.users,
-      error: response.error
+      error: response.error,
     };
   },
   key: 'users',
-  requiredRoles: [Role.ROOT]
+  requiredRoles: [Role.ROOT],
 });

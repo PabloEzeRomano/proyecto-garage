@@ -93,34 +93,41 @@ export function UserCrudForm({
 
     try {
       if (id) {
-        await updateUser(id, {
-          email: restData.email,
-          user_metadata: { name: restData.user_metadata.name },
-          app_metadata: { roles: restData.app_metadata.roles },
-        }, {
-          onSuccess: () => {
-            router.push(redirectPath);
+        await updateUser(
+          id,
+          {
+            email: restData.email,
+            user_metadata: { name: restData.user_metadata.name },
+            app_metadata: { roles: restData.app_metadata.roles },
           },
-          onError: (error) => {
-            console.error('Error updating user:', error);
-            alert('Error updating user: ' + error.message);
+          {
+            onSuccess: () => {
+              router.push(redirectPath);
+            },
+            onError: (error) => {
+              console.error('Error updating user:', error);
+              alert('Error updating user: ' + error.message);
+            },
           }
-        });
+        );
       } else {
-        await createUser({
-          email: restData.email,
-          password: 'temporary-password', // You might want to generate this or request it from the user
-          user_metadata: { name: restData.user_metadata.name },
-          app_metadata: { roles: restData.app_metadata.roles },
-        }, {
-          onSuccess: () => {
-            router.push(redirectPath);
+        await createUser(
+          {
+            email: restData.email,
+            password: 'temporary-password', // You might want to generate this or request it from the user
+            user_metadata: { name: restData.user_metadata.name },
+            app_metadata: { roles: restData.app_metadata.roles },
           },
-          onError: (error) => {
-            console.error('Error creating user:', error);
-            alert('Error creating user: ' + error.message);
+          {
+            onSuccess: () => {
+              router.push(redirectPath);
+            },
+            onError: (error) => {
+              console.error('Error creating user:', error);
+              alert('Error creating user: ' + error.message);
+            },
           }
-        });
+        );
       }
     } catch (error) {
       // Errors are handled by onError callbacks

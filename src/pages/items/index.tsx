@@ -70,16 +70,16 @@ export const ItemsPage: React.FC<ItemsProps> = ({ items: initialItems }) => {
         <h1 className="cards-title">Menu</h1>
         {hasRole([Role.ADMIN, Role.ROOT]) && (
           <motion.button
-          whileHover={{
-            scale: 1.1,
-            boxShadow: '0 0 8px #5ce08d',
-            textShadow: '0 0 8px #5ce08d',
-          }}
-          className="success"
-          onClick={handleAddItem}
-        >
-          Agregar un nuevo producto
-        </motion.button>
+            whileHover={{
+              scale: 1.1,
+              boxShadow: '0 0 8px #5ce08d',
+              textShadow: '0 0 8px #5ce08d',
+            }}
+            className="success"
+            onClick={handleAddItem}
+          >
+            Agregar un nuevo producto
+          </motion.button>
         )}
       </div>
       <div className="grid-layout">

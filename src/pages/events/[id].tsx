@@ -47,14 +47,13 @@ export default function EventPage({ event }: EventPageProps) {
           </div>
         )}
         <div className="event-hero-content">
-          <button
-            onClick={() => router.back()}
-            className="back-button"
-          >
+          <button onClick={() => router.back()} className="back-button">
             ← Volver
           </button>
           <h1 className="event-title">{event.title}</h1>
-          <p className="event-date">{dayjs(event.date).format('DD/MM/YYYY HH:mm')}</p>
+          <p className="event-date">
+            {dayjs(event.date).format('DD/MM/YYYY HH:mm')}
+          </p>
         </div>
       </div>
 
@@ -133,8 +132,8 @@ export const getServerSideProps = createServerSideProps<Event>({
   columns: 'id, title, description, short_description, date, price, image_url',
   query: {
     eq: {
-      id: 'id'
-    }
+      id: 'id',
+    },
   },
   single: true,
   requireAuth: false,

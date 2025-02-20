@@ -52,7 +52,9 @@ export const EventGrid = ({
             showActions={showActions}
             showReservation={showReservation}
             quantity={quantities[event.id] || 1}
-            onQuantityChange={(quantity) => onQuantityChange?.(event.id, quantity)}
+            onQuantityChange={(quantity) =>
+              onQuantityChange?.(event.id, quantity)
+            }
             loadingDelete={loadingDelete}
           />
         ))}

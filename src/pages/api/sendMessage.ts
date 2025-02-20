@@ -44,7 +44,7 @@ export default async function handler(
 
     if (!phoneNumber || !message) {
       return res.status(400).json({
-        error: 'Phone number and message are required'
+        error: 'Phone number and message are required',
       });
     }
 
@@ -62,14 +62,13 @@ export default async function handler(
     return res.status(200).json({
       success: true,
       message: 'Message sent successfully',
-      result
+      result,
     });
-
   } catch (error) {
     console.error('Error sending message:', error);
     return res.status(500).json({
       error: 'Error sending WhatsApp message',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
     });
   }
 }

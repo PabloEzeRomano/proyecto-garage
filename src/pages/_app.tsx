@@ -25,7 +25,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
             <div className="min-h-screen flex flex-col theme-bg theme-text">
               <Head>
                 <title>Proyecto Garage</title>
-                <meta name="description" content="Proyecto Garage - Tu lugar de encuentro" />
+                <meta
+                  name="description"
+                  content="Proyecto Garage - Tu lugar de encuentro"
+                />
                 <link rel="icon" href="/favicon.ico" />
               </Head>
               <NavBar />

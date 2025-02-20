@@ -1,9 +1,15 @@
-import { StockForm } from "@/components/StockForm";
-import { Item, Stock } from "@/types/database";
-import { createServerSideProps } from "@/utils/serverProps";
+import { StockForm } from '@/components/StockForm';
+import { Item, Stock } from '@/types/database';
+import { createServerSideProps } from '@/utils/serverProps';
 
-export default function UpdateStock({ stock, items }: { stock: Stock, items: Item[] }) {
-  return <StockForm stock={stock} items={items} />
+export default function UpdateStock({
+  stock,
+  items,
+}: {
+  stock: Stock;
+  items: Item[];
+}) {
+  return <StockForm stock={stock} items={items} />;
 }
 
 export const getServerSideProps = createServerSideProps<Stock | Item>([

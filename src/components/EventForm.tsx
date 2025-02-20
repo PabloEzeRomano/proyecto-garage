@@ -3,7 +3,6 @@
 import { CrudForm } from '@/components/CrudForm';
 import { useAuth } from '@/contexts/AuthContext';
 import { Event, Role } from '@/types/database';
-import { createServerSideProps } from '@/utils/serverProps';
 import dayjs from 'dayjs';
 
 interface EventFormProps {
@@ -11,7 +10,7 @@ interface EventFormProps {
 }
 
 const defaultEvent: Event = {
-  id: -1,
+  id: '-1',
   title: '',
   description: '',
   short_description: '',

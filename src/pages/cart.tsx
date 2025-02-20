@@ -84,7 +84,7 @@ export default function CartPage() {
                   <button
                     className="p-1 hover:bg-gray-700 rounded"
                     onClick={() =>
-                      updateQuantity(Number(item.id), item.quantity - 1)
+                      updateQuantity(item.id, item.quantity - 1)
                     }
                   >
                     -
@@ -93,14 +93,14 @@ export default function CartPage() {
                   <button
                     className="p-1 hover:bg-gray-700 rounded"
                     onClick={() =>
-                      updateQuantity(Number(item.id), item.quantity + 1)
+                      updateQuantity(item.id, item.quantity + 1)
                     }
                   >
                     +
                   </button>
                   <button
                     className="ml-4 text-red-400 hover:text-red-300"
-                    onClick={() => removeFromCart(Number(item.id))}
+                    onClick={() => removeFromCart(item.id)}
                   >
                     Borrar
                   </button>

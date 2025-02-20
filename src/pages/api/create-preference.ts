@@ -4,8 +4,8 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 const client = new MercadoPagoConfig({
   accessToken: process.env.NEXT_PUBLIC_MP_ACCESS_TOKEN!,
   options: {
-    integratorId: process.env.NEXT_PUBLIC_MP_INTEGRATOR_ID!
-  }
+    integratorId: process.env.NEXT_PUBLIC_MP_INTEGRATOR_ID!,
+  },
 });
 
 const preference = new Preference(client);
@@ -37,7 +37,7 @@ export default async function handler(
           pending: `${process.env.NEXT_PUBLIC_BASE_URL}/pending`,
         },
         auto_return: 'approved',
-      }
+      },
     });
 
     return res.status(200).json(result);
@@ -45,7 +45,7 @@ export default async function handler(
     console.error('Preference creation error:', error);
     return res.status(500).json({
       error: true,
-      message: error.message
+      message: error.message,
     });
   }
 }

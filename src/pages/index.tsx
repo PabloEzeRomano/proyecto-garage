@@ -57,7 +57,7 @@ export default function Home({ events: initialEvents }: HomeProps) {
     }
   };
 
-  const handleEventClick = (id: number) => {
+  const handleEventClick = (id: string) => {
     router.push(`/events/${id}`);
   };
 
@@ -79,10 +79,7 @@ export default function Home({ events: initialEvents }: HomeProps) {
 
       <SearchBar handleSearch={handleSearch} isLoading={isLoading} />
 
-      <EventGrid
-        events={events}
-        onEventClick={handleEventClick}
-      />
+      <EventGrid events={events} onEventClick={handleEventClick} />
     </div>
   );
 }

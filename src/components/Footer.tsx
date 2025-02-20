@@ -53,13 +53,18 @@ export const Footer = () => {
           <address className="contact-info">
             <p>Buenos Aires, Argentina</p>
             <p>
-              <a href="mailto:proyecto.garage.dp@gmail.com">proyecto.garage.dp@gmail.com</a>
+              <a href="mailto:proyecto.garage.dp@gmail.com">
+                proyecto.garage.dp@gmail.com
+              </a>
             </p>
           </address>
         </div>
       </div>
       <div className="footer-bottom">
-        <p>© {new Date().getFullYear()} Proyecto Garage. Todos los derechos reservados.</p>
+        <p>
+          © {new Date().getFullYear()} Proyecto Garage. Todos los derechos
+          reservados.
+        </p>
       </div>
     </footer>
   );

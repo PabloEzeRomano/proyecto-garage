@@ -79,7 +79,8 @@ export const useAuthMutations = () => {
     options?: AuthMutationOptions
   ) => {
     return performAuthOperation(
-      () => createServerSupabaseAdmin()!.auth.admin.updateUserById(userId, data),
+      () =>
+        createServerSupabaseAdmin()!.auth.admin.updateUserById(userId, data),
       options
     );
   };
@@ -94,10 +95,7 @@ export const useAuthMutations = () => {
     );
   };
 
-  const deleteUser = async (
-    userId: string,
-    options?: AuthMutationOptions
-  ) => {
+  const deleteUser = async (userId: string, options?: AuthMutationOptions) => {
     return performAuthOperation(
       () => createServerSupabaseAdmin()!.auth.admin.deleteUser(userId),
       options

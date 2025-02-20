@@ -1,7 +1,7 @@
-import { ItemForm } from "@/components/ItemForm";
-import { Item } from "@/types/database";
-import { Role } from "@/types/database";
-import { createServerSideProps } from "@/utils/serverProps";
+import { ItemForm } from '@/components/ItemForm';
+import { Item } from '@/types/database';
+import { Role } from '@/types/database';
+import { createServerSideProps } from '@/utils/serverProps';
 
 export default function UpdateItem() {
   return <ItemForm />;

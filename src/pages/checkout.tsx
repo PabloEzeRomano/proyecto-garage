@@ -88,14 +88,14 @@ export default function CheckoutPage() {
           <Payment
             initialization={{
               amount: total,
-              preferenceId: preferenceId
+              preferenceId: preferenceId,
             }}
             customization={{
               paymentMethods: {
-                ticket: "all",
-                creditCard: "all",
-                debitCard: "all",
-                mercadoPago: "all"
+                ticket: 'all',
+                creditCard: 'all',
+                debitCard: 'all',
+                mercadoPago: 'all',
               },
             }}
             onSubmit={async ({ selectedPaymentMethod, formData }) => {

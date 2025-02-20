@@ -9,10 +9,13 @@ interface ImageSize {
 const SIZES: Record<'thumbnail' | 'medium' | 'large', ImageSize> = {
   thumbnail: { width: 150, height: 150, quality: 80 },
   medium: { width: 400, height: 300, quality: 85 },
-  large: { width: 800, height: 600, quality: 90 }
+  large: { width: 800, height: 600, quality: 90 },
 };
 
-export const getOptimizedImageUrl = (imageUrl?: string | null, size: keyof typeof SIZES = 'medium'): string => {
+export const getOptimizedImageUrl = (
+  imageUrl?: string | null,
+  size: keyof typeof SIZES = 'medium'
+): string => {
   if (!imageUrl) return '/placeholder.jpg';
   if (imageUrl.startsWith('data:')) return imageUrl;
 
@@ -27,7 +30,7 @@ export const getOptimizedImageUrl = (imageUrl?: string | null, size: keyof typeo
         height: height.toString(),
         quality: quality?.toString() || '80',
         resize: 'contain',
-        format: 'webp'
+        format: 'webp',
       });
       return `${imageUrl}?${transformParams.toString()}`;
     }
@@ -88,9 +91,9 @@ export const uploadImageToStorage = async (
     if (error) throw error;
 
     // Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from(bucket)
-      .getPublicUrl(data.path);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from(bucket).getPublicUrl(data.path);
 
     return publicUrl;
   } catch (error) {
@@ -137,7 +140,7 @@ export const optimizeImage = async (file: File): Promise<File | null> => {
     const optimizedBlob = await (await fetch(webpData)).blob();
 
     return new File([optimizedBlob], file.name.replace(/\.[^/.]+$/, '.webp'), {
-      type: 'image/webp'
+      type: 'image/webp',
     });
   } catch (error) {
     console.error('Error optimizing image:', error);
@@ -145,7 +148,9 @@ export const optimizeImage = async (file: File): Promise<File | null> => {
   }
 };
 
-export const validateAndOptimizeImage = async (file: File): Promise<string | null> => {
+export const validateAndOptimizeImage = async (
+  file: File
+): Promise<string | null> => {
   try {
     if (!file.type.startsWith('image/')) {
       throw new Error('File must be an image');

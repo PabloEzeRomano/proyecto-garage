@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 
 const client = new MercadoPagoConfig({
-  accessToken: process.env.NEXT_PUBLIC_MP_ACCESS_TOKEN!
+  accessToken: process.env.NEXT_PUBLIC_MP_ACCESS_TOKEN!,
 });
 
 const payment = new Payment(client);
@@ -28,7 +28,7 @@ export default async function handler(
         payer: {
           email: formData.payer.email,
         },
-      }
+      },
     });
 
     return res.status(200).json(result);
@@ -36,7 +36,7 @@ export default async function handler(
     console.error('Payment error:', error);
     return res.status(500).json({
       error: true,
-      message: error.message
+      message: error.message,
     });
   }
 }
