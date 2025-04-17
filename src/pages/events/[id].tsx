@@ -32,7 +32,7 @@ export default function EventPage({ event }: EventPageProps) {
   };
 
   return (
-    <div className="event-page-container">
+    <div className="event-page-container theme-surface">
       <div className="event-hero">
         {event.image_url && (
           <div className="image-container">
@@ -91,19 +91,10 @@ export default function EventPage({ event }: EventPageProps) {
 
         <div className="event-sidebar">
           <div className="reservation-card">
-            <h3 className="reservation-title">Reservar Entrada</h3>
+            <h3 className="reservation-title">{`Reservar Entrada${
+              quantity > 1 ? `s` : ''
+            }`}</h3>
             <div className="reservation-content">
-              <div className="quantity-selector">
-                <Input
-                  label="Cantidad"
-                  name="quantity"
-                  className="quantity-select"
-                  type="select"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
-                  options={Array.from({ length: 10 }, (_, i) => i + 1)}
-                />
-              </div>
               {event.price && (
                 <div className="price-summary">
                   <span>Total</span>
@@ -112,12 +103,20 @@ export default function EventPage({ event }: EventPageProps) {
                   </span>
                 </div>
               )}
-              <button
-                onClick={handleAddToCart}
-                className="reserve-event-button"
-              >
-                Agregar al Carrito
-              </button>
+              <div className="quantity-selector-container">
+                <Input
+                  removeMargin
+                  name="quantity"
+                  className="quantity-select"
+                  type="select"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  options={Array.from({ length: 10 }, (_, i) => i + 1)}
+                />
+                <button onClick={handleAddToCart} className="primary">
+                  Agregar al Carrito
+                </button>
+              </div>
             </div>
           </div>
         </div>

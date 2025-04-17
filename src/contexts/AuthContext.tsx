@@ -156,6 +156,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       : userRoles.includes(roles);
   };
 
+  console.log('user from auth context', user);
+
   return (
     <AuthContext.Provider value={{ user, loading, hasPermission, hasRole }}>
       {children}

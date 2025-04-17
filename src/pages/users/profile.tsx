@@ -2,27 +2,46 @@
 
 import { Input } from '@/components/Input';
 import { useAuth } from '@/contexts/AuthContext';
-import { Role, User } from '@/types/database';
-import { createServerSupabaseClient } from '@/lib/supabase-server';
-import { GetServerSideProps } from 'next';
+import { Role, UserProfile } from '@/types/database';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import '@/styles/addForm.css';
 
-interface ProfileProps {
-  initialProfile: User;
-}
-
-export default function ProfilePage({ initialProfile }: ProfileProps) {
-  console.log('initialProfile', initialProfile);
+export default function ProfilePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  const [userData, setUserData] = useState<User>({
-    ...initialProfile,
+  const [userData, setUserData] = useState<UserProfile>({
+    ...user,
     password: '',
     confirmPassword: '',
+    roles: user?.app_metadata.roles || [],
+    permissions: user?.app_metadata.permissions || [],
+    name: user?.user_metadata.name || '',
+    email: user?.email || '',
+    id: user?.id || '',
   });
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/auth/sign-in');
+    }
+  }, [loading, user, router]);
+
+  useEffect(() => {
+    if (user) {
+      setUserData({
+        ...user,
+        password: '',
+        confirmPassword: '',
+        roles: user.app_metadata.roles || [],
+        permissions: user.app_metadata.permissions || [],
+        name: user.user_metadata.name || '',
+        email: user.email || '',
+        id: user.id || '',
+      });
+    }
+  }, [user]);
 
   if (loading || !user) {
     return <div>Cargando...</div>;
@@ -80,7 +99,7 @@ export default function ProfilePage({ initialProfile }: ProfileProps) {
       onChange: handleInputChange,
       type: 'select',
       name: 'role',
-      value: userData.roles[0] || '',
+      value: userData.roles?.[0] || '',
       options: [Role.USER, Role.ADMIN],
       className: 'w-full p-4',
     },
@@ -114,44 +133,3 @@ export default function ProfilePage({ initialProfile }: ProfileProps) {
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const supabase = createServerSupabaseClient(context);
-
-  try {
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
-
-    console.log('user', user);
-
-    if (!user) {
-      return {
-        redirect: {
-          destination: '/auth/sign-in',
-          permanent: false,
-        },
-      };
-    }
-
-    if (error) throw error;
-
-    return {
-      props: {
-        initialProfile: {
-          ...user,
-          roles: user.app_metadata.roles,
-          permissions: user.app_metadata.permissions,
-        },
-      },
-    };
-  } catch (error) {
-    console.error('Error fetching profile:', error);
-    return {
-      props: {
-        initialProfile: null,
-      },
-    };
-  }
-};

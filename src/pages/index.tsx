@@ -1,15 +1,15 @@
 'use client';
 
+import { EventGrid } from '@/components/EventGrid';
 import { EventSlider } from '@/components/EventSlider';
 import { SearchBar } from '@/components/SearchBar';
+import { useSupabase } from '@/contexts/SupabaseContext';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { Event } from '@/types/database';
+import dayjs from 'dayjs';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import dayjs from 'dayjs';
-import { useSupabase } from '@/contexts/SupabaseContext';
-import { EventGrid } from '@/components/EventGrid';
 
 import '@/styles/landing.css';
 
@@ -33,6 +33,7 @@ export default function Home({ events: initialEvents }: HomeProps) {
 
     try {
       let eventsQuery = supabase.from('events').select('*');
+      console.log(eventsQuery);
 
       if (query) {
         eventsQuery = eventsQuery.or(
@@ -91,7 +92,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     let eventsQuery = supabase
       .from('events')
       .select('*')
-      .gte('date', new Date().toISOString())
+      // .gte('date', new Date().toISOString())
       .order('date', { ascending: true });
 
     // Apply search filters if present

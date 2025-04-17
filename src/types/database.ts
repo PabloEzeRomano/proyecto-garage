@@ -1,3 +1,5 @@
+import { User as SupabaseUser } from '@supabase/supabase-js';
+
 export enum Role {
   USER = 'user',
   ADMIN = 'admin',
@@ -36,8 +38,8 @@ export interface RolePermission {
   permission: Permission;
 }
 
-export interface User {
-  id: number;
+export interface UserProfile {
+  id: string;
   email: string;
   name: string;
   roles: Role[];
@@ -78,9 +80,9 @@ export type Database = {
   public: {
     Tables: {
       users: {
-        Row: User;
-        Insert: Omit<User, 'id' | 'roles' | 'permissions'>;
-        Update: Partial<Omit<User, 'id' | 'roles' | 'permissions'>>;
+        Row: UserProfile;
+        Insert: Omit<UserProfile, 'id' | 'roles' | 'permissions'>;
+        Update: Partial<Omit<UserProfile, 'id' | 'roles' | 'permissions'>>;
       };
       user_roles: {
         Row: UserRole;

@@ -57,7 +57,9 @@ export const NavBar = () => {
             {navItems.map(
               ({ href, text, roles, requireAuth }) =>
                 (!requireAuth || user) &&
-                (!roles || hasRole(roles)) && (
+                (!roles ||
+                  roles.length === 0 ||
+                  hasRole(roles)) && (
                   <Link key={href} href={href}>
                     <motion.div
                       whileHover="hover"

@@ -1,6 +1,6 @@
 /* Event Page Styles */
 .event-page-container {
-  @apply min-h-screen bg-white dark:bg-gray-900;
+  @apply min-h-screen rounded-lg;
 }
 
 .event-hero {
@@ -8,11 +8,11 @@
 }
 
 .image-container {
-  @apply absolute inset-0 w-full h-full;
+  @apply absolute inset-0 w-full h-full ;
 }
 
 .event-image {
-  @apply object-cover;
+  @apply object-cover rounded-t-lg;
 }
 
 .image-overlay {
@@ -63,7 +63,7 @@
 }
 
 .detail-item {
-  @apply bg-gray-50 dark:bg-gray-800 rounded-lg p-4;
+  @apply bg-gray-300 dark:bg-gray-700 rounded-lg p-4;
   @apply flex flex-col;
 }
 
@@ -76,11 +76,11 @@
 }
 
 .event-sidebar {
-  @apply lg:col-span-1;
+  @apply lg:col-span-1 content-end;
 }
 
 .reservation-card {
-  @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6;
+  @apply bg-gray-300 dark:bg-gray-700 rounded-lg shadow-lg p-6;
   @apply sticky top-24;
 }
 
@@ -92,8 +92,8 @@
   @apply space-y-4;
 }
 
-.quantity-selector {
-  @apply space-y-2;
+.quantity-selector-container {
+  @apply flex items-center gap-2 justify-end;
 }
 
 .quantity-label {
@@ -101,7 +101,8 @@
 }
 
 .quantity-select {
-  @apply w-full rounded-lg border-gray-300 dark:border-gray-700;
+  /* @apply w-full rounded-lg border-gray-300 dark:border-gray-700; */
+  @apply w-12 text-sm p-2;
   @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-white;
   @apply focus:ring-2 focus:ring-blue-500 focus:border-transparent;
 }
@@ -115,9 +116,8 @@
   @apply text-2xl;
 }
 
--button {
-  @apply w-full py-3 px-4 rounded-lg;
-  @apply bg-blue-600 hover:bg-blue-700 text-white;
-  @apply font-medium text-lg transition-colors;
-  @apply flex items-center justify-center gap-2;
+
+
+.card-actions {
+  @apply flex items-center gap-2 mt-1;
 }
